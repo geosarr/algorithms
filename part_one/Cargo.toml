@@ -6,3 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rand = "0.8"
+
+[lib]
+name = "lib"
+path = "src/lib.rs"
+
+# cargo build --bin percolation
+[[bin]]
+name = "percolation"
+path = "src/bin/percolation.rs"
+
+# cargo build --bin main
+# [[bin]]
+# name = "main"
+# path = "src/main.rs"
