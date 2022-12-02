@@ -1,5 +1,6 @@
 pub mod union_find;
-pub use union_find::{Algorithm, UnionFind};
+pub use union_find::UnionFind;
+pub use union_find::algorithm::Algorithm;
 // use union_find::input_output::read_lines;
 use std::thread;
 use rand::prelude::*;
@@ -66,9 +67,6 @@ impl Percolation {
     }
 
     fn is_open(&self, row: usize, col: usize) -> bool {
-        let site_id = row * self.grid_size + col;
-        // println!("({}, {})", row, col); 
-        // println!("{:?}, {:?}", self.uf, self.state);
         self.state[row * self.grid_size + col]
     }
 
@@ -190,3 +188,5 @@ impl PercolationStats{
         HashMap::from([("low", low) , ("up", up)])
     } 
 }
+
+
