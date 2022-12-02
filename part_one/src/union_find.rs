@@ -1,14 +1,9 @@
 pub mod input_output;
+pub mod algorithm;
+use algorithm::Algorithm;
 use std::path::Path;
 use input_output::read_lines;
 
-#[derive(Copy, Clone, Debug)]
-pub enum Algorithm {
-    QuickFind, 
-    QuickUnion, 
-    WeightedQuickUnion, 
-    WeightedQuickUnionPathComp
-}
 
 #[derive(Debug)]
 pub struct UnionFind {
