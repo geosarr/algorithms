@@ -7,17 +7,19 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8"
+clap = { version = "4.0.9", features = ["derive"] }
 
 [lib]
 name = "lib"
 path = "src/lib.rs"
 
-# cargo build --bin percolation
-[[bin]]
+[[example]]
 name = "percolation"
-path = "src/bin/percolation.rs"
+path = "src/examples/percolation.rs"
 
-# cargo build --bin main
+# crate-type = ["staticlib"]
+
+# cargo build --bin search
 # [[bin]]
-# name = "main"
+# name = "search"
 # path = "src/main.rs"
