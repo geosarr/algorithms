@@ -41,6 +41,8 @@ impl BinarySearch{
 
 
 pub struct ThreeSum {
+    // The objective is to find the number of triplets in a list that sum up to 0
+    // All the integers in the list should be different !
     pub algo: BinarySearch,
 }
 
@@ -51,7 +53,7 @@ impl ThreeSum {
         let n = self.algo.list.len();
         let mut res = 0;
         for i in 0..n{
-            for j in i+1..n{
+            for j in (i+1)..n{
                 // search -list[i]-list[j] in list
                 let a = self.algo.list[i];
                 let b = self.algo.list[j];

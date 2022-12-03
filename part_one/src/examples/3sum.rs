@@ -4,8 +4,8 @@ use clap::{Parser};
 
 #[derive(Parser)]
 #[command(
-    about = "\nFinds the number of triplets in a set of integers that sum up to zero",  
-    long_about = "Solutions are counted in terms of triplets not sets, \nE.g solution (-1,0,1) != (1,-1,0)",    
+    about = "\nFinds the number of triplets in a set of integers that sum up to zero. Integers should be unique !",  
+    long_about = "Solutions are counted in terms of triplets (or sets considering the integers to be different).",    
 )]
 struct Cli {
     /// Absolute path to the file with the integers of the problem
@@ -13,7 +13,7 @@ struct Cli {
     file_abs_path: String,
 
     /// Separator between the integers
-    #[arg(short, default_value_t = ';')]
+    #[arg(short)]
     sep: char,
 
 }
