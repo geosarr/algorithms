@@ -1,7 +1,9 @@
 pub mod union_find;
+pub mod binary_search;
 pub use union_find::UnionFind;
 pub use union_find::algorithm::Algorithm;
-// use union_find::input_output::read_lines;
+pub use binary_search::{BinarySearch, ThreeSum};
+pub use union_find::input_output::{read_lines};
 use std::thread;
 use rand::prelude::*;
 use std::thread::JoinHandle;
@@ -154,7 +156,6 @@ impl PercolationStats{
             println!("Running computation {id} over {n_trials}");
             let mut percolation = Percolation::init(grid_size, algo);
             let handle = thread::spawn(move || {
-                // percolation = 
                 percolation.threshold()
             });
             handles.push(handle)
@@ -163,7 +164,6 @@ impl PercolationStats{
         self.results = handles.into_iter()
                               .map(|h| h.join().unwrap())
                               .collect::<Vec<f32>>();
-        // println!("{:?}", self.results);
     }
 
     pub fn mean(&self) -> f32 {
