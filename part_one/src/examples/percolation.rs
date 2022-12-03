@@ -2,6 +2,10 @@ use lib::{PercolationStats, Algorithm};
 use clap::{Parser};
 
 #[derive(Parser)]
+#[command(
+    about = "\nGives an estimate of the percolation transition probability using a Union Find alogrithm",  
+    long_about = "A higher number of trials will give more robust confidence intervals.",    
+)]
 struct Cli {
     /// Size of the grid (number of rows or columns)
     #[arg(short, long)]
