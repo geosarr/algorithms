@@ -16,10 +16,8 @@ path = "src/lib.rs"
 [[example]]
 name = "percolation"
 path = "src/examples/percolation.rs"
-
 # crate-type = ["staticlib"]
 
-# cargo build --bin search
-# [[bin]]
-# name = "search"
-# path = "src/main.rs"
+[[example]]
+name = "3sum"
+path = "src/examples/3sum.rs"
