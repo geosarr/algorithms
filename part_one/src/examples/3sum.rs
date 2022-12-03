@@ -3,6 +3,10 @@ use clap::{Parser};
 
 
 #[derive(Parser)]
+#[command(
+    about = "\nFinds the number of triplets in a set of integers that sum up to zero",  
+    long_about = "Solutions are counted in terms of triplets not sets, \nE.g solution (-1,0,1) != (1,-1,0)",    
+)]
 struct Cli {
     /// Absolute path to the file with the integers of the problem
     #[arg(short, long)]
