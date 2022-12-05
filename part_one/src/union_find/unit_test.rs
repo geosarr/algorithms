@@ -21,8 +21,14 @@ mod tests {
         assert_eq!(qu.ids.len(), n);
     }
 
-    // #[test]
-    // fn 
+    #[test]
+    fn test_root_connected_union(){
+        let mut uf = UnionFind::init(6, Algorithm::QuickUnion);
+        uf.union(0,1); uf.union(2,3); uf.union(1,3); uf.union(4,5);
+        assert_eq!(uf.connected(0,3), true);
+        assert_eq!(uf.connected(1,2), true);
+        assert_eq!(uf.connected(0,4), false);
+    }
 
     
 
