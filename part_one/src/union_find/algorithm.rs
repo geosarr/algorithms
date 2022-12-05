@@ -1,9 +1,11 @@
+#[cfg(test)]
+mod unit_test;
 use std::fmt;
 use std::str::FromStr;
 use std::error::Error;
 
-
-#[derive(Copy, Clone, Debug)]
+// Enumerating the different types of algorithms
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Algorithm {
     QuickFind, 
     QuickUnion, 
@@ -12,6 +14,7 @@ pub enum Algorithm {
 }
 const ALGORITHMS: &str = "[QuickFind, QuickUnion, WeightedQuickUnion, WeightedQuickUnionPathComp]";
 
+// Formatting an Algorithm type (for printing purpose for e.g.)
 impl fmt::Display for Algorithm {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -23,6 +26,7 @@ impl fmt::Display for Algorithm {
     }
 }
 
+// Parsing a string slice (&str) to Algorithm
 impl FromStr for Algorithm {
     type Err = ParseAlgorithmError;
 
@@ -37,7 +41,7 @@ impl FromStr for Algorithm {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ParseAlgorithmError;
 
 impl fmt::Display for ParseAlgorithmError {
