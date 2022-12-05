@@ -1,3 +1,5 @@
+#[cfg(test)]
+mod unit_test;
 pub mod input_output;
 pub mod algorithm;
 use algorithm::Algorithm;
@@ -15,7 +17,7 @@ pub struct UnionFind {
     pub algo: Algorithm,
     
     // objects connection information data
-    // each objects is j is is connected to ids[j]
+    // each objects j is connected to ids[j]
     pub ids: Vec<usize>,
     
     // optional size of the trees the objects belong to,
@@ -57,7 +59,7 @@ impl UnionFind {
         }
     }
 
-    pub fn union_find_from<P>(filename: P, sep: char, algo: Algorithm) -> UnionFind
+    pub fn from_file<P>(filename: P, sep: char, algo: Algorithm) -> Self
     where
         P: AsRef<Path>,
     {
@@ -87,43 +89,47 @@ impl UnionFind {
                         }
                     }
                 }
-            }
-            
+            } 
         }
         uf
     }
 
     pub fn root(&mut self, mut i: usize) -> usize {
         // Finding the root of an object i
-        match self.algo {
+        if let Algorithm::QuickFind = self.algo {
             // For QuickFind algorithm we could return whatever compiles 
             // because this algo does not use the notion of root
-            Algorithm::QuickFind => self.ids[i],
-            _ => { 
+            self.ids[i]
+        } else { 
+            if let Algorithm::WeightedQuickUnionPathComp = self.algo {
                 while i != self.ids[i] {
-                // one-pass path compression
-                self.ids[i] = self.ids[self.ids[i]]; 
-                i = self.ids[i];
+                    // one-pass path compression
+                    self.ids[i] = self.ids[self.ids[i]];
+                    i = self.ids[i];
                 }
-                i 
+                i
+            } else {
+                while i != self.ids[i] {
+                    i = self.ids[i];
+                }
+                i
             }
-        }
-        
-    }
+    }} 
+  
 
     pub fn connected(&mut self, p: usize, q: usize) -> bool {
-        match self.algo {
-            Algorithm::QuickFind => self.ids[p] == self.ids[q],
-            _ => self.root(p) == self.root(q),
-        }
-    }
+        if let Algorithm::QuickFind = self.algo {
+            self.ids[p] == self.ids[q]
+        } else {
+            self.root(p) == self.root(q)
+    }}
 
     pub fn union(&mut self, p: usize, q: usize) {
         match self.algo {
             Algorithm::QuickFind => {
                 let pid: usize = self.ids[p];
                 let qid: usize = self.ids[q];
-                // Replace the 
+                // Connect to q all objects connected to p 
                 for i in 0..self.ids.len() {
                     if self.ids[i] == pid {
                         self.ids[i] = qid;
