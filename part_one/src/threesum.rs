@@ -20,9 +20,10 @@ impl ThreeSum{
             let mut ind = binary_search(key, &self.vec[(j+1)..]);
             if ind >= 0 {
                 // a solution is found
-                ind = j as isize + 1 + ind ; //
-                // println!("({}) + ({}) + ({})", a, b, self.vec[ind as usize]);
                 res+=1;
+                // ind = j as isize + 1 + ind ; // index in vec
+                // println!("({}) + ({}) + ({})", a, b, self.vec[ind as usize]);
+                
     }}} 
         // println!("Result:");
         res
