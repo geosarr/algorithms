@@ -37,12 +37,12 @@ impl LinkedListStack {
         }
     }
 
-    pub fn pop(&mut self) -> String {
+    pub fn pop(&mut self) -> Option<String> {
         match self.first{
             Some(ref node) => {
                 let item = node.item.clone();
                 self.first = node.next.clone();
-                item
+                Some(item)
             },
             None => panic!("cannot pop, stack is empty"),
         }

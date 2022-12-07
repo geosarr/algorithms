@@ -18,7 +18,7 @@ mod tests{
     fn test_linked_list_stack_pop(){
         let string = "test".to_string();
         let mut stack = LinkedListStack::init(string.clone());
-        assert_eq!(string.clone(), stack.pop()); 
+        assert_eq!(Some(string.clone()), stack.pop()); 
         stack.pop();
     }
 
@@ -27,7 +27,7 @@ mod tests{
         let string = "test".to_string();
         let mut stack = LinkedListStack::new();
         stack.push(string.clone());
-        assert_eq!(string.clone(), stack.pop());        
+        assert_eq!(Some(string.clone()), stack.pop());        
     }
 
     #[test]
