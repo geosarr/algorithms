@@ -19,5 +19,5 @@ path = "src/examples/percolation.rs"
 # crate-type = ["staticlib"]
 
 [[example]]
-name = "3sum"
+name = "threesum"
 path = "src/examples/3sum.rs"
