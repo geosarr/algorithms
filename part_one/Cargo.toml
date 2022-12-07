@@ -20,4 +20,4 @@ path = "src/examples/percolation.rs"
 
 [[example]]
 name = "threesum"
-path = "src/examples/3sum.rs"
+path = "src/examples/threesum.rs"
