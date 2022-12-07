@@ -54,8 +54,9 @@ mod tests{
     #[should_panic]
     fn test_vec_pop(){
         let string = "test".to_string();
-        let mut stack = LinkedListStack::init(string.clone());
-        assert_eq!(string.clone(), stack.pop()); 
+        let mut stack = VecStack::<String>::init(1);
+        stack.push(string.clone());
+        assert_eq!(Some(string.clone()), stack.pop()); 
         stack.pop();
     }
 
@@ -64,7 +65,7 @@ mod tests{
         let string = "test".to_string();
         let mut stack = VecStack::<String>::new();
         stack.push(string.clone());
-        assert_eq!(string.clone(), stack.pop().unwrap());        
+        assert_eq!(Some(string.clone()), stack.pop()); 
     }
 
     #[test]
