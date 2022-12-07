@@ -1,11 +1,10 @@
+#[cfg(test)]
+mod unit_test;
 // use std::collections::LinkedList;
 use std::mem::replace;
 
-// fn unbox(value: Box) -> T {
-//     *value
-// }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct Node {
     item: String,
     // Box helps avoid infinity memory allocation
@@ -24,7 +23,7 @@ impl LinkedListStack {
         Default::default()
     }
 
-    pub fn from(s: String) -> Self {
+    pub fn init(s: String) -> Self {
         let node = Node {item: s, next: None};
         Self {
             first: Some(Box::new(node)),
@@ -56,10 +55,10 @@ impl LinkedListStack {
     }
 }
 
-
+#[derive(Debug, Clone)]
 pub struct VecStack<T>{
     // Number of not None values in vec
-    n: isize,
+    n: usize,
     // Contains the objects
     pub vec: Vec<Option<T>>, 
 }
@@ -68,20 +67,22 @@ impl<T> VecStack<T> {
     pub fn new() -> Self {
         Self {
             n: 0,
-            vec: Vec::new()
+            vec: vec![None],
         }
     }
 
-    pub fn from(capacity: usize) -> Self {
-        let mut vector = Vec::new();
-        for _ in 0..capacity {
-            vector.push(None);
-        }
+    pub fn init(capacity: usize) -> Self {
+        if capacity > 0 {
+            let mut vector = Vec::new();
+            for _ in 0..capacity {
+                vector.push(None);
+            }
 
-        Self {
-            n: 0,
-            vec: vector,
-        }
+            Self {
+                n: 0,
+                vec: vector,
+            }
+        } else {panic!("capacity shoul be > 0");}
     }
 
     pub fn is_empty(&self) -> bool {
@@ -89,22 +90,34 @@ impl<T> VecStack<T> {
     }
 
     pub fn push(&mut self, obj: T) {
-        let n = self.n;
-        if n < self.vec.len() {
+        // let n = self.n;
+        if self.n < self.vec.len() {
             // The stack is not full yet
-            if n > 0 {
-            let _ = replace(&mut self.vec[self.n - 1], Some(obj));}
+            // This works only if the stack has a capacity > 0
+            // If the capacity is zero then panic
+            let _ = replace(&mut self.vec[self.n], Some(obj));
             self.n += 1;
-        } else {
-            panic!("cannot push, stack is full");
-        }
+            if self.n == self.vec.len() {
+                // resize the stack to allow more capacity
+                self.resize();
+            }
+        } else {panic!("cannot push, stack is full or has capacity 0");}
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        if self.n > 0 && self.n < self.vec.len() {
+        if self.n > 0 && self.n <= self.vec.len() {
             let elt = replace(&mut self.vec[self.n - 1], None);
             self.n -= 1;
-            elt
-        } else {panic!("cannot pop, stack has no object.");}
+            return elt;
+        } else {panic!("cannot pop, stack is empty");}
+    }
+
+    fn resize(&mut self) {
+        // doubling the size of the stack when it is full
+        let mut vector = Vec::new();
+        for _ in 0..self.vec.len() {
+            vector.push(None);
+        } 
+        self.vec.append(&mut vector);
     }
 }
