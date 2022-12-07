@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use super::super::*;
+    use super::super::super::*;
     use rand::Rng;
     use std::thread;
     use std::thread::JoinHandle;
