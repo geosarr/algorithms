@@ -15,10 +15,10 @@ mod tests {
         let mut rng = rand::thread_rng();
         let mut vec: Vec<isize> = Vec::new();
         if let RandKind::Range = kind {
-            for i in 0..n{
+            for _ in 0..n{
                 vec.push(rng.gen_range(-10000000isize..10000000isize));
         }} else {
-            for i in 0..n{
+            for _ in 0..n{
                 vec.push(rng.gen::<isize>());
         }} 
         vec
