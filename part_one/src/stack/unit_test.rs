@@ -7,37 +7,72 @@ mod tests{
     }
 
     #[test]
-    fn test_linked_list_stack_init(){
+    fn test_linked_list_stack_str_init(){
         let string = "test".to_string();
-        let stack = LinkedListStack::init(string.clone());
+        let stack = LinkedListStackOfString::init(string.clone());
         assert_eq!(string, unbox(stack.first.unwrap()).item);
+        assert_eq!(1, stack.len);
     }
 
     #[test]
     #[should_panic]
-    fn test_linked_list_stack_pop(){
+    fn test_linked_list_stack_str_pop(){
         let string = "test".to_string();
-        let mut stack = LinkedListStack::init(string.clone());
+        let mut stack = LinkedListStackOfString::init(string.clone());
         assert_eq!(Some(string.clone()), stack.pop()); 
+        assert_eq!(0, stack.len); 
         stack.pop();
     }
 
     #[test]
-    fn test_linked_list_stack_push(){
+    fn test_linked_list_stack_str_push(){
         let string = "test".to_string();
-        let mut stack = LinkedListStack::new();
+        let mut stack = LinkedListStackOfString::new();
+        assert_eq!(0, stack.len); 
         stack.push(string.clone());
+        assert_eq!(1, stack.len); 
         assert_eq!(Some(string.clone()), stack.pop());        
     }
 
     #[test]
-    fn test_linked_list_stack_is_empty(){
-        let mut stack = LinkedListStack::new();
+    fn test_linked_list_stack_str_is_empty(){
+        let mut stack = LinkedListStackOfString::new();
         assert!(stack.is_empty());
         stack.push("test".to_string());
         assert!(!stack.is_empty());
     }
 
+    #[test]
+    fn test_linked_list_stack_new(){
+        let stack = LinkedListStack::<usize>::new();
+        assert!(stack.is_empty());
+    }
+
+    #[test]
+    fn test_linked_list_stack_init(){
+        let string = "test".to_string();
+        let mut stack = LinkedListStack::init(string.clone());
+        assert_eq!(Some(string), stack.pop());
+    }
+
+    #[test]
+    fn test_linked_list_stack_pop(){
+        let num = -1isize;
+        let mut stack = LinkedListStack::init(num);
+        assert_eq!(Some(num), stack.pop()); 
+        assert_eq!(None, stack.pop());
+    }
+
+    #[test]
+    fn test_linked_list_stack_push(){
+        let string1 = "test".to_string();
+        let string2 = string1.clone(); 
+        let mut stack = LinkedListStack::new();
+        stack.push(string1.clone());
+        stack.push(string2.clone());
+        assert_eq!(Some(string1.clone()), stack.pop());   
+        assert_eq!(Some(string2.clone()), stack.pop());      
+    }
 
     #[test]
     #[should_panic]

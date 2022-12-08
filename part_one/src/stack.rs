@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod unit_test;
-// use std::collections::LinkedList;
+
+use std::collections::LinkedList;
 use std::mem::replace;
 
 
@@ -13,12 +14,13 @@ struct Node {
 }
 
 #[derive(Default, Clone)]
-pub struct LinkedListStack {
+pub struct LinkedListStackOfString {
     first: Option<Box<Node>>,
+    len: usize,
 }
 
 
-impl LinkedListStack {
+impl LinkedListStackOfString {
     pub fn new() -> Self {
         Default::default()
     }
@@ -27,6 +29,7 @@ impl LinkedListStack {
         let node = Node {item: s, next: None};
         Self {
             first: Some(Box::new(node)),
+            len: 1,
         }
     }
 
@@ -39,6 +42,7 @@ impl LinkedListStack {
             Some(ref node) => {
                 let item = node.item.clone();
                 self.first = node.next.clone();
+                self.len -= 1;
                 Some(item)
             },
             None => panic!("cannot pop, stack is empty"),
@@ -49,7 +53,43 @@ impl LinkedListStack {
         let oldfirst = self.first.clone();
         let new_node = Node {item: s, next: oldfirst};
         self.first = Some(Box::new(new_node));
+        self.len += 1;
     }
+}
+
+
+#[derive(Default, Clone, Debug)]
+pub struct LinkedListStack<T> {
+    list: LinkedList<T>,
+}
+
+impl<T> LinkedListStack<T>{
+    pub fn new() -> Self {
+        Self{
+            list: LinkedList::new(),
+        }
+    }
+    
+    pub fn init(s: T) -> Self {
+        let mut res = Self{
+            list: LinkedList::new(),
+        };
+        res.push(s);
+        res
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.list.is_empty()
+    }
+
+    pub fn pop(&mut self) -> Option<T> {
+        self.list.pop_front()
+    }
+
+    pub fn push(&mut self, element: T) {
+        self.list.push_back(element)
+    }
+    
 }
 
 #[derive(Debug, Clone)]
