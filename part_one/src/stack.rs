@@ -31,10 +31,7 @@ impl LinkedListStack {
     }
 
     pub fn is_empty(&self) -> bool {
-        match self.first {
-            Some(_) => false,
-            None => true
-        }
+        self.first.is_none()
     }
 
     pub fn pop(&mut self) -> Option<String> {
