@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests{
-    use super::super::super::*;
+    use super::super::*;
 
     #[test]
     fn test_linked_list_queue_new(){

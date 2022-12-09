@@ -34,6 +34,5 @@ impl<T> LinkedListQueue<T>{
 
     pub fn enqueue(&mut self, element: T) {
         self.list.push_back(element)
-    }
-    
+    } 
 }
