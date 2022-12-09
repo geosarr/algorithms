@@ -2,8 +2,10 @@
 mod unit_test;
 mod stack;
 mod queue;
+mod deque;
 pub use stack::{LinkedListStack};
 pub use queue::{LinkedListQueue};
+pub use deque::{LinkedListDeque};
 
 // Implementation of the Djikstra two-stack algorithm
 #[derive(Default, Debug)]
