@@ -1,4 +1,5 @@
 - check binary search, threesum pb
 - add tests
 - see if necessary to add binary crates
-- test stack
+- test percolation deeper
+- test evaluation
