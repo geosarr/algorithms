@@ -3,3 +3,4 @@
 - see if necessary to add binary crates
 - test percolation deeper
 - test evaluation
+- test mergesort recursive and bottomup
