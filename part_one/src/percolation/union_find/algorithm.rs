@@ -6,7 +6,7 @@ use std::error::Error;
 
 // Enumerating the different types of algorithms
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub enum Algorithm {
+pub enum UnionFindAlgorithm {
     QuickFind, 
     QuickUnion, 
     WeightedQuickUnion, 
@@ -14,37 +14,37 @@ pub enum Algorithm {
 }
 const ALGORITHMS: &str = "[QuickFind, QuickUnion, WeightedQuickUnion, WeightedQuickUnionPathComp]";
 
-// Formatting an Algorithm type (for printing purpose for e.g.)
-impl fmt::Display for Algorithm {
+// Formatting an UnionFindAlgorithm type (for printing purpose for e.g.)
+impl fmt::Display for UnionFindAlgorithm {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Algorithm::QuickFind => write!(f, "QuickFind"),
-            Algorithm::QuickUnion => write!(f, "QuickUnion"),
-            Algorithm::WeightedQuickUnion => write!(f, "WeightedQuickUnion"),
-            Algorithm::WeightedQuickUnionPathComp => write!(f, "WeightedQuickUnionPathComp"),
+            UnionFindAlgorithm::QuickFind => write!(f, "QuickFind"),
+            UnionFindAlgorithm::QuickUnion => write!(f, "QuickUnion"),
+            UnionFindAlgorithm::WeightedQuickUnion => write!(f, "WeightedQuickUnion"),
+            UnionFindAlgorithm::WeightedQuickUnionPathComp => write!(f, "WeightedQuickUnionPathComp"),
         }
     }
 }
 
 // Parsing a string slice (&str) to Algorithm
-impl FromStr for Algorithm {
-    type Err = ParseAlgorithmError;
+impl FromStr for UnionFindAlgorithm {
+    type Err = ParseUnionFindAlgorithmError;
 
-    fn from_str(s: &str) -> std::result::Result<Self, ParseAlgorithmError> {
+    fn from_str(s: &str) -> std::result::Result<Self, ParseUnionFindAlgorithmError> {
         match s {
-            "QuickFind" => Ok(Algorithm::QuickFind),
-            "QuickUnion" => Ok(Algorithm::QuickUnion),
-            "WeightedQuickUnion" => Ok(Algorithm::WeightedQuickUnion),
-            "WeightedQuickUnionPathComp" => Ok(Algorithm::WeightedQuickUnionPathComp),
-            _ => Err(ParseAlgorithmError),
+            "QuickFind" => Ok(UnionFindAlgorithm::QuickFind),
+            "QuickUnion" => Ok(UnionFindAlgorithm::QuickUnion),
+            "WeightedQuickUnion" => Ok(UnionFindAlgorithm::WeightedQuickUnion),
+            "WeightedQuickUnionPathComp" => Ok(UnionFindAlgorithm::WeightedQuickUnionPathComp),
+            _ => Err(ParseUnionFindAlgorithmError),
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct ParseAlgorithmError;
+pub struct ParseUnionFindAlgorithmError;
 
-impl fmt::Display for ParseAlgorithmError {
+impl fmt::Display for ParseUnionFindAlgorithmError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let desc_init0: &str = "algorithm spelling incorrect, only available are";
         let desc_init1 = format!("{} {}", desc_init0, ALGORITHMS);
@@ -53,4 +53,4 @@ impl fmt::Display for ParseAlgorithmError {
     }
 }
 
-impl Error for ParseAlgorithmError {}
+impl Error for ParseUnionFindAlgorithmError {}

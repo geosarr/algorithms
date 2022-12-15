@@ -1,6 +1,6 @@
 pub mod union_find;
 pub use union_find::UnionFind;
-pub use union_find::algorithm::Algorithm;
+pub use union_find::algorithm::UnionFindAlgorithm;
 use std::thread;
 use rand::prelude::*;
 use std::thread::JoinHandle;
@@ -22,7 +22,7 @@ impl Percolation {
         }
     }
 
-    pub fn init(n: usize, algo: Algorithm) -> Self {
+    pub fn init(n: usize, algo: UnionFindAlgorithm) -> Self {
         Self {
             grid_size: n,
             uf: UnionFind::init(n*n, algo),
@@ -119,7 +119,7 @@ impl Percolation {
 #[derive(Debug)]
 pub struct PercolationStats{
     grid_size: usize,
-    algo: Algorithm,
+    algo: UnionFindAlgorithm,
     n_trials: usize,
     results: Vec<f32>,
 }
@@ -128,13 +128,13 @@ impl PercolationStats{
     pub fn new() -> Self {
         Self {
             grid_size: 50,
-            algo: Algorithm::QuickFind,
+            algo: UnionFindAlgorithm::QuickFind,
             n_trials: 10,
             results: Vec::new(),
         }
     } 
 
-    pub fn init(n: usize, algorithm: Algorithm, trials: usize) -> Self {
+    pub fn init(n: usize, algorithm: UnionFindAlgorithm, trials: usize) -> Self {
         Self {
             grid_size: n,
             algo: algorithm,
@@ -144,7 +144,7 @@ impl PercolationStats{
     }
     pub fn compute(&mut self) {
         let grid_size: usize = self.grid_size; 
-        let algo: Algorithm=self.algo; 
+        let algo: UnionFindAlgorithm=self.algo; 
         let n_trials: usize=self.n_trials;
         let mut handles: Vec<JoinHandle<f32>> = Vec::new();
 

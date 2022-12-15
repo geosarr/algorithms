@@ -1,4 +1,4 @@
-use lib::{PercolationStats, Algorithm};
+use lib::{PercolationStats, UnionFindAlgorithm};
 use clap::{Parser};
 
 #[derive(Parser)]
@@ -17,7 +17,7 @@ struct Cli {
 
     /// Union-Find algorithm
     #[arg(short, long)]
-    algorithm: Algorithm,
+    algorithm: UnionFindAlgorithm,
 }
 
 fn main() {

@@ -4,20 +4,20 @@ mod tests {
 
     #[test]
     fn test_algo_format(){
-        let algo = Algorithm::QuickFind;
+        let algo = UnionFindAlgorithm::QuickFind;
         assert_eq!(algo.to_string(), "QuickFind");
-        let algo = Algorithm::QuickUnion;
+        let algo = UnionFindAlgorithm::QuickUnion;
         assert_eq!(algo.to_string(), "QuickUnion");
-        let algo = Algorithm::WeightedQuickUnion;
+        let algo = UnionFindAlgorithm::WeightedQuickUnion;
         assert_eq!(algo.to_string(), "WeightedQuickUnion");
-        let algo = Algorithm::WeightedQuickUnionPathComp;
+        let algo = UnionFindAlgorithm::WeightedQuickUnionPathComp;
         assert_eq!(algo.to_string(), "WeightedQuickUnionPathComp");
     }
 
     #[test]
     fn test_parse_str_to_algo(){
-        let bad_algo = Algorithm::from_str("NotImplementedAlgo");
-        let error =  Err(ParseAlgorithmError);
+        let bad_algo = UnionFindAlgorithm::from_str("NotImplementedAlgo");
+        let error =  Err(ParseUnionFindAlgorithmError);
         assert_eq!(bad_algo, error);
     }
 }
