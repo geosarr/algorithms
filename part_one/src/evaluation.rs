@@ -22,7 +22,7 @@ impl Evaluation {
         }
     }
 
-    pub fn run(&mut self, mut expression: String) -> usize {
+    pub fn run(&mut self, expression: String) -> usize {
         // operations, parentheses and operands should be separated
         // by white spaces, e.g.  ( ( 1 * ( 2 + 3 ) ) + ( 4 * ( 5 + 6 ) ) )
         for elt in expression.split_whitespace(){
