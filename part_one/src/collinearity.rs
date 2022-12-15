@@ -1,24 +1,33 @@
+pub mod merge_sort;
+pub use merge_sort::{MergeSort, MergeSortAlgorithm};
 use std::cmp::PartialOrd;
 use std::cmp::Ordering;
 use std::fmt;
 
-#[derive(Debug, Default, Clone)]
-pub struct Point<T> where T: Clone{
-    x: T,
-    y: T,
+
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
+pub struct Point<T>{
+    pub x: T,
+    pub y: T,
 }
 
 
-impl<T: fmt::Display + Clone> fmt::Display for Point<T> {
+impl<T: fmt::Display> fmt::Display for Point<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result{
         write!(f, "({}, {})", self.x, self.y)
     }
 }
 
+// Implementing the PartialOrd trait for Point<T> for ordering purpose
+impl<T: Default + ToString + PartialOrd> PartialOrd for Point<T>{
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering>{
+        Some(self.compare_to(other))
+    }
+}
 
 
 
-impl<T: Default + ToString + PartialOrd + Clone> Point<T> {
+impl<T: Default + ToString + PartialOrd> Point<T> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -47,16 +56,19 @@ impl<T: Default + ToString + PartialOrd + Clone> Point<T> {
         
     }
 
-    pub fn compare_to(&self, other: &Self) -> isize {
+    pub fn compare_to(&self, other: &Self) -> Ordering {
         if self.y < other.y || (self.y == other.y && self.x < other.x) {
             // self < other
-            return -1;
+            // return -1;
+            return Ordering::Less;
         } else if self.x == other.x && self.y == other.y {
             // self == other
-            return 0
+            // return 0
+            return Ordering::Equal;
         } else {
             // self > other
-            return 1
+            // return 1
+            return Ordering::Greater;
         }
     }
 
@@ -64,17 +76,17 @@ impl<T: Default + ToString + PartialOrd + Clone> Point<T> {
         let slope_01 = self.slope_to(&p1);
         let slope_02 = self.slope_to(&p2);
         if slope_01 < slope_02 {
-            return Ordering::Less
+            return Ordering::Less;
         } else if slope_01 == slope_02 {
-            return Ordering::Equal
+            return Ordering::Equal;
         } else {
-            return Ordering::Greater
+            return Ordering::Greater;
         }
     }
 }
 
-#[derive(Debug, Default)]
-pub struct LineSegment<T> where T: Clone{
+#[derive(Debug, Default, Clone)]
+pub struct LineSegment<T>{
     pub p: Point<T>,
     pub q: Point<T>,
 }
@@ -85,51 +97,75 @@ impl<T: fmt::Display + Clone> fmt::Display for LineSegment<T> {
     }
 }
 
-impl<T: Default + Clone> LineSegment<T> {
+impl<T: Default> LineSegment<T> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    pub fn init(_p: Point<T>, _q: Point<T>) -> Self {
+        Self {p: _p, q: _q}
     }
 }
 
 #[derive(Debug, Default)]
-pub struct BruteCollinearPoints<T> where T: Clone {
+pub struct BruteCollinearPoints<T> {
+    // List of Points
     pub vec: Vec<Point<T>>,
+    // Line segments of 4 points
+    pub seg: Option<Vec<LineSegment<T>>>,
 }
 
-impl<T: Default + Clone> BruteCollinearPoints<T> {
+impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> {
     pub fn new() -> Self {
         Default::default()
     }
 
     pub fn init(v: Vec<Point<T>>) -> Self {
-        Self { vec: v }
+        Self { vec: v, seg: None }
     }
 
-    pub fn number_of_segments(&self) -> usize {
-        self.segments().len()
+    pub fn number_of_segments(&mut self) -> usize {
+        match &self.seg {
+            None => self.segments().len(),
+            Some(lsegments) => lsegments.len(),
+        }
     }
 
-    pub fn segments(&self) -> Vec<LineSegment<T>> {
-        let mut v = Vec::<LineSegment<T>>::new();
-        let n = v.len();
+    pub fn segments(&mut self) -> Vec<LineSegment<T>> {
+        // In this brute force version of finding all line segments
+        // we check if 4 Points are collinear by checking if the slopes
+        // between one of them and the rest are equal
+        let mut v = Vec::new();
+        let n = self.vec.len();
         for i in 0..n {
-            let p = self.vec[i].clone();
             for j in i+1..n{
-                let q = self.vec[j].clone();
-                let slope1 = p.slope_to(q);
+                let slope1 = self.vec[i].slope_to(&self.vec[j]);
                 for k in j+1..n{
-                    let r = self.vec[k].clone();
-                    let slope2 = p.slope_to(r);
+                    let slope2 = self.vec[i].slope_to(&self.vec[k]);
                     for l in k+1..n{
-                        let s = self.vec[l].clone();
-                        let slope3 = p.slope_to(s);
+                        let slope3 = self.vec[i].slope_to(&self.vec[l]);
+                        // println!("{slope1}  {slope2}  {slope3}");
                         if slope1 == slope2 && slope2 == slope3 {
-                            v.push(LineSegment::<T>::new()) // to change
+                            // self.vec[i], self.vec[j], self.vec[k], self.vec[l] are collinear,
+                            // they are ordered with the self.compare_to(other)/partial_cmp order
+                            // The extremal points will represent the line segment
+                            let mut m = MergeSort{ 
+                                vec: vec![
+                                    self.vec[i].clone(), 
+                                    self.vec[j].clone(), 
+                                    self.vec[k].clone(),
+                                    self.vec[l].clone()
+                                ], 
+                                algo: MergeSortAlgorithm::BottomUp
+                            };
+                            m.sort();
+                            v.push(LineSegment::init(m.vec[0], m.vec[3])); 
                         }
                     }
                 }
             }
         }
+        self.seg = Some(v.clone());
         v
     }
 }
