@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use super::super::{*};
+    use super::super::*;
 
     #[test]
     fn test_new() {
@@ -22,15 +22,14 @@ mod tests {
     }
 
     #[test]
-    fn test_root_connected_union(){
+    fn test_root_connected_union() {
         let mut uf = UnionFind::init(6, UnionFindAlgorithm::QuickUnion);
-        uf.union(0,1); uf.union(2,3); uf.union(1,3); uf.union(4,5);
-        assert_eq!(uf.connected(0,3), true);
-        assert_eq!(uf.connected(1,2), true);
-        assert_eq!(uf.connected(0,4), false);
+        uf.union(0, 1);
+        uf.union(2, 3);
+        uf.union(1, 3);
+        uf.union(4, 5);
+        assert_eq!(uf.connected(0, 3), true);
+        assert_eq!(uf.connected(1, 2), true);
+        assert_eq!(uf.connected(0, 4), false);
     }
-
-    
-
-    
 }
