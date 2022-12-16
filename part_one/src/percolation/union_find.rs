@@ -1,29 +1,27 @@
+pub mod algorithm;
+pub mod input_output;
 #[cfg(test)]
 mod unit_test;
-pub mod input_output;
-pub mod algorithm;
 use algorithm::UnionFindAlgorithm;
-use std::path::Path;
 use input_output::read_lines;
+use std::path::Path;
 
-
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct UnionFind {
     // number of objects in the graph/tree
     // objects are 0..(nb_objects - 1)
-    pub nb_objects: usize,
+    nb_objects: usize,
 
-    // union-find algorithm 
-    pub algo: UnionFindAlgorithm,
-    
+    // union-find algorithm
+    algo: UnionFindAlgorithm,
+
     // objects connection information data
     // each objects j is connected to ids[j]
-    pub ids: Vec<usize>,
-    
+    ids: Vec<usize>,
+
     // optional size of the trees the objects belong to,
     // except for QuickFind algorithm (no tree representation)
-    pub size: Vec<usize>,
-
+    size: Vec<usize>,
     // Some axioms of the connection relation:
     //  - reflexive: object p is connected to p
     //  - transitive: p connected to q and q connected to r => q connected to r
@@ -32,17 +30,17 @@ pub struct UnionFind {
 
 impl UnionFind {
     pub fn new() -> Self {
-        // defining a simple union find structure
         let nb = 2;
         Self {
             nb_objects: nb,
-            algo: UnionFindAlgorithm::QuickFind,
+            algo: UnionFindAlgorithm::default(),
             ids: (0..nb).collect::<Vec<usize>>(),
-            size: Vec::new(),
+            size: vec![1; nb],
         }
     }
 
     pub fn init(nb: usize, algorithm: UnionFindAlgorithm) -> Self {
+        // complexity: O(N)
         match algorithm {
             UnionFindAlgorithm::QuickFind => Self {
                 nb_objects: nb,
@@ -54,7 +52,7 @@ impl UnionFind {
                 nb_objects: nb,
                 algo: algorithm,
                 ids: (0..nb).collect::<Vec<usize>>(),
-                size: vec![1;nb],
+                size: vec![1; nb],
             },
         }
     }
@@ -64,7 +62,7 @@ impl UnionFind {
         P: AsRef<Path>,
     {
         // Builds an Union Find object from a file
-        // first elements is the number of objects
+        // first element is the number of objects
         // the subsequent rows give the pairs of
         // connected objects
         let mut nb_iter = 0;
@@ -89,7 +87,7 @@ impl UnionFind {
                         }
                     }
                 }
-            } 
+            }
         }
         uf
     }
@@ -97,10 +95,8 @@ impl UnionFind {
     pub fn root(&mut self, mut i: usize) -> usize {
         // Finding the root of an object i
         if let UnionFindAlgorithm::QuickFind = self.algo {
-            // For QuickFind algorithm we could return whatever compiles 
-            // because this algo does not use the notion of root
             self.ids[i]
-        } else { 
+        } else {
             if let UnionFindAlgorithm::WeightedQuickUnionPathComp = self.algo {
                 while i != self.ids[i] {
                     // one-pass path compression
@@ -114,22 +110,26 @@ impl UnionFind {
                 }
                 i
             }
-    }} 
-  
+        }
+    }
 
     pub fn connected(&mut self, p: usize, q: usize) -> bool {
         if let UnionFindAlgorithm::QuickFind = self.algo {
+            // complexity: O(1)
             self.ids[p] == self.ids[q]
         } else {
+            // complexity: O(N) for QuickUnion, O(log(N)) for WeightedQuickUnion*
             self.root(p) == self.root(q)
-    }}
+        }
+    }
 
     pub fn union(&mut self, p: usize, q: usize) {
         match self.algo {
             UnionFindAlgorithm::QuickFind => {
+                // complexity: O(N)
                 let pid: usize = self.ids[p];
                 let qid: usize = self.ids[q];
-                // Connect to q all objects connected to p 
+                // Connect to q all objects connected to p
                 for i in 0..self.ids.len() {
                     if self.ids[i] == pid {
                         self.ids[i] = qid;
@@ -137,11 +137,14 @@ impl UnionFind {
                 }
             }
             UnionFindAlgorithm::QuickUnion => {
+                // complexity: O(N) (tall trees)
                 let i = self.root(p);
                 let j = self.root(q);
                 self.ids[i] = j;
             }
             _ => {
+                // complexity: given roots (of complexity O(log(N)))
+                // O(log(N)) or O(log*(N)) ~ O(1) with PathComp (path compression)
                 let i = self.root(p);
                 let j = self.root(q);
                 // Put the smallest tree under the tallest one
