@@ -14,7 +14,7 @@ pub enum UnionFindAlgorithm {
 }
 const ALGORITHMS: &str = "[QuickFind, QuickUnion, WeightedQuickUnion, WeightedQuickUnionPathComp]";
 
-impl Default for UnionFindAlgorithm{
+impl Default for UnionFindAlgorithm {
     fn default() -> Self {
         Self::QuickFind
     }

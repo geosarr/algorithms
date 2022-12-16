@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use super::super::*; 
+    use super::super::*;
 
     #[test]
-    fn test_algo_format(){
+    fn test_algo_format() {
         let algo = UnionFindAlgorithm::QuickFind;
         assert_eq!(algo.to_string(), "QuickFind");
         let algo = UnionFindAlgorithm::QuickUnion;
@@ -15,9 +15,9 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_str_to_algo(){
+    fn test_parse_str_to_algo() {
         let bad_algo = UnionFindAlgorithm::from_str("NotImplementedAlgo");
-        let error =  Err(ParseUnionFindAlgorithmError);
+        let error = Err(ParseUnionFindAlgorithmError);
         assert_eq!(bad_algo, error);
     }
 }
