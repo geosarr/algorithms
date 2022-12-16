@@ -3,21 +3,20 @@ mod unit_test;
 
 use std::collections::LinkedList;
 
-
 #[derive(Default, Clone, Debug)]
 pub struct LinkedListDeque<T> {
     list: LinkedList<T>,
 }
 
-impl<T> LinkedListDeque<T>{
+impl<T> LinkedListDeque<T> {
     pub fn new() -> Self {
-        Self{
+        Self {
             list: LinkedList::new(),
         }
     }
-    
+
     pub fn init(s: T) -> Self {
-        let mut res = Self{
+        let mut res = Self {
             list: LinkedList::new(),
         };
         res.add_first(s);
@@ -47,5 +46,4 @@ impl<T> LinkedListDeque<T>{
     pub fn remove_last(&mut self) -> Option<T> {
         self.list.pop_back()
     }
-    
 }

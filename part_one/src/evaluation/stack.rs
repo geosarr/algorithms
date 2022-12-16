@@ -4,7 +4,6 @@ mod unit_test;
 use std::collections::LinkedList;
 use std::mem::replace;
 
-
 #[derive(Debug, Clone)]
 struct Node {
     item: String,
@@ -19,14 +18,16 @@ pub struct LinkedListStackOfString {
     len: usize,
 }
 
-
 impl LinkedListStackOfString {
     pub fn new() -> Self {
         Default::default()
     }
 
     pub fn init(s: String) -> Self {
-        let node = Node {item: s, next: None};
+        let node = Node {
+            item: s,
+            next: None,
+        };
         Self {
             first: Some(Box::new(node)),
             len: 1,
@@ -38,40 +39,42 @@ impl LinkedListStackOfString {
     }
 
     pub fn pop(&mut self) -> Option<String> {
-        match self.first{
+        match self.first {
             Some(ref node) => {
                 let item = node.item.clone();
                 self.first = node.next.clone();
                 self.len -= 1;
                 Some(item)
-            },
+            }
             None => panic!("cannot pop, stack is empty"),
         }
     }
 
     pub fn push(&mut self, s: String) {
         let oldfirst = self.first.clone();
-        let new_node = Node {item: s, next: oldfirst};
+        let new_node = Node {
+            item: s,
+            next: oldfirst,
+        };
         self.first = Some(Box::new(new_node));
         self.len += 1;
     }
 }
-
 
 #[derive(Default, Clone, Debug)]
 pub struct LinkedListStack<T> {
     list: LinkedList<T>,
 }
 
-impl<T> LinkedListStack<T>{
+impl<T> LinkedListStack<T> {
     pub fn new() -> Self {
-        Self{
+        Self {
             list: LinkedList::new(),
         }
     }
-    
+
     pub fn init(s: T) -> Self {
-        let mut res = Self{
+        let mut res = Self {
             list: LinkedList::new(),
         };
         res.push(s);
@@ -89,15 +92,14 @@ impl<T> LinkedListStack<T>{
     pub fn push(&mut self, element: T) {
         self.list.push_back(element)
     }
-    
 }
 
 #[derive(Debug, Clone)]
-pub struct VecStack<T>{
+pub struct VecStack<T> {
     // Number of not None values in vec
     n: usize,
     // Contains the objects
-    pub vec: Vec<Option<T>>, 
+    pub vec: Vec<Option<T>>,
 }
 
 impl<T> VecStack<T> {
@@ -115,11 +117,10 @@ impl<T> VecStack<T> {
                 vector.push(None);
             }
 
-            Self {
-                n: 0,
-                vec: vector,
-            }
-        } else {panic!("capacity shoul be > 0");}
+            Self { n: 0, vec: vector }
+        } else {
+            panic!("capacity shoul be > 0");
+        }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -138,7 +139,9 @@ impl<T> VecStack<T> {
                 // resize the stack to allow more capacity
                 self.resize();
             }
-        } else {panic!("cannot push, stack is full or has capacity 0");}
+        } else {
+            panic!("cannot push, stack is full or has capacity 0");
+        }
     }
 
     pub fn pop(&mut self) -> Option<T> {
@@ -146,7 +149,9 @@ impl<T> VecStack<T> {
             let elt = replace(&mut self.vec[self.n - 1], None);
             self.n -= 1;
             return elt;
-        } else {panic!("cannot pop, stack is empty");}
+        } else {
+            panic!("cannot pop, stack is empty");
+        }
     }
 
     fn resize(&mut self) {
@@ -154,7 +159,7 @@ impl<T> VecStack<T> {
         let mut vector = Vec::new();
         for _ in 0..self.vec.len() {
             vector.push(None);
-        } 
+        }
         self.vec.append(&mut vector);
     }
 }

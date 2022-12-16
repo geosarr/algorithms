@@ -1,14 +1,16 @@
+mod algorithm;
 #[cfg(test)]
 mod unit_test;
-mod algorithm;
 pub use algorithm::MergeSortAlgorithm;
-use std::mem::replace;
 use std::cmp::min;
+use std::mem::replace;
 
 #[derive(Debug, Default)]
 pub struct MergeSort<T> {
     pub vec: Vec<T>,
     pub algo: MergeSortAlgorithm,
+    // MergeSort is stable in the sense that
+    // items with equal keys are not exchanged ?
 }
 
 impl<T: PartialOrd + Default + Copy> MergeSort<T> {
@@ -21,21 +23,22 @@ impl<T: PartialOrd + Default + Copy> MergeSort<T> {
             return true;
         }
         for k in low..high {
-            if self.vec[k] > self.vec[k+1] {
+            if self.vec[k] > self.vec[k + 1] {
                 return false;
             }
         }
         true
     }
 
-    pub fn merge(&mut self, mut aux_vec: Vec<T>, low: usize, high: usize, mid: usize) {
+    fn merge(&mut self, mut aux_vec: Vec<T>, low: usize, high: usize, mid: usize) {
         // The halves of v, that is v[lo..mid+1] and v[mid+1..], should be sorted
         assert!(self.is_sorted(low, mid));
-        assert!(self.is_sorted(mid+1, high));
+        assert!(self.is_sorted(mid + 1, high));
 
         aux_vec = self.vec.clone();
-        let mut i = low; let mut j = mid+1;
-        for k in low..high+1 {
+        let mut i = low;
+        let mut j = mid + 1;
+        for k in low..high + 1 {
             if i > mid {
                 let _ = replace(&mut self.vec[k], aux_vec[j]);
                 j += 1;
@@ -52,12 +55,14 @@ impl<T: PartialOrd + Default + Copy> MergeSort<T> {
         }
         assert!(self.is_sorted(low, high));
     }
-    
+
     fn recursive_sort(&mut self, aux_vec: Vec<T>, low: usize, high: usize) {
         let mid = low + (high - low) / 2;
-        if high <= low { return }
+        if high <= low {
+            return;
+        }
         self.recursive_sort(aux_vec.clone(), low, mid);
-        self.recursive_sort(aux_vec.clone(), mid+1, high);
+        self.recursive_sort(aux_vec.clone(), mid + 1, high);
         self.merge(aux_vec.clone(), low, high, mid);
     }
 
@@ -69,16 +74,21 @@ impl<T: PartialOrd + Default + Copy> MergeSort<T> {
                 self.recursive_sort(aux_vec, 0, n - 1);
             }
             MergeSortAlgorithm::BottomUp => {
-                let mut sizes : Vec<usize> = (1..n).collect::<Vec<usize>>();
+                let mut sizes: Vec<usize> = (1..n).collect::<Vec<usize>>();
                 sizes.retain(|x| x.is_power_of_two());
                 // println!("{:?}", sizes);
                 // Looping over subvectors of sizes equal to
                 // powers of 2 that are >= 1 and < N
                 for size in &sizes {
-                    let double_size = size+size;
+                    let double_size = size + size;
                     // println!("{:?}", self.vec);
-                    for low in (0..n-size).step_by(double_size){
-                        self.merge(aux_vec.clone(), low, min(low+double_size-1, n-1), low+size-1)
+                    for low in (0..n - size).step_by(double_size) {
+                        self.merge(
+                            aux_vec.clone(),
+                            low,
+                            min(low + double_size - 1, n - 1),
+                            low + size - 1,
+                        )
                     }
                 }
             }

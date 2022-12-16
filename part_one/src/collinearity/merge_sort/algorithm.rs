@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod unit_test;
+use std::error::Error;
 use std::fmt;
 use std::str::FromStr;
-use std::error::Error;
 
 // Enumerating the different types of algorithms
 #[derive(Copy, Clone, Debug, PartialEq)]

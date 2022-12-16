@@ -3,21 +3,20 @@ mod unit_test;
 
 use std::collections::LinkedList;
 
-
 #[derive(Default, Clone, Debug)]
 pub struct LinkedListQueue<T> {
     list: LinkedList<T>,
 }
 
-impl<T> LinkedListQueue<T>{
+impl<T> LinkedListQueue<T> {
     pub fn new() -> Self {
-        Self{
+        Self {
             list: LinkedList::new(),
         }
     }
-    
+
     pub fn init(s: T) -> Self {
-        let mut res = Self{
+        let mut res = Self {
             list: LinkedList::new(),
         };
         res.enqueue(s);
@@ -34,5 +33,5 @@ impl<T> LinkedListQueue<T>{
 
     pub fn enqueue(&mut self, element: T) {
         self.list.push_back(element)
-    } 
+    }
 }

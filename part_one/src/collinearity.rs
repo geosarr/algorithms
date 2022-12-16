@@ -1,31 +1,29 @@
 pub mod merge_sort;
+pub mod quick_sort;
 pub use merge_sort::{MergeSort, MergeSortAlgorithm};
-use std::cmp::PartialOrd;
+pub use quick_sort::QuickSort;
 use std::cmp::Ordering;
+use std::cmp::PartialOrd;
 use std::fmt;
 
-
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
-pub struct Point<T>{
+pub struct Point<T> {
     pub x: T,
     pub y: T,
 }
 
-
 impl<T: fmt::Display> fmt::Display for Point<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }
 }
 
 // Implementing the PartialOrd trait for Point<T> for ordering purpose
-impl<T: Default + ToString + PartialOrd> PartialOrd for Point<T>{
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering>{
+impl<T: Default + ToString + PartialOrd> PartialOrd for Point<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.compare_to(other))
     }
 }
-
-
 
 impl<T: Default + ToString + PartialOrd> Point<T> {
     pub fn new() -> Self {
@@ -33,27 +31,41 @@ impl<T: Default + ToString + PartialOrd> Point<T> {
     }
 
     pub fn init(_x: T, _y: T) -> Self {
-        Self {x: _x, y: _y}
+        Self { x: _x, y: _y }
     }
 
-    pub fn slope_to(&self, other: &Self) -> f32
-    {
+    pub fn slope_to(&self, other: &Self) -> f32 {
         // computes the slope between two points
         // this computation can be wrong when the coordinates
         // are too large (due to conversions)
-        let y0 = self.y.to_string().parse::<f32>().expect("Failed to convert to f32"); 
-        let x0 = self.x.to_string().parse::<f32>().expect("Failed to convert to f32");
-        let y1 = other.y.to_string().parse::<f32>().expect("Failed to convert to f32");
-        let x1 = other.x.to_string().parse::<f32>().expect("Failed to convert to f32");
-        
+        let y0 = self
+            .y
+            .to_string()
+            .parse::<f32>()
+            .expect("Failed to convert to f32");
+        let x0 = self
+            .x
+            .to_string()
+            .parse::<f32>()
+            .expect("Failed to convert to f32");
+        let y1 = other
+            .y
+            .to_string()
+            .parse::<f32>()
+            .expect("Failed to convert to f32");
+        let x1 = other
+            .x
+            .to_string()
+            .parse::<f32>()
+            .expect("Failed to convert to f32");
+
         if x1 != x0 {
-            (y1 - y0) / (x1 - x0) 
+            (y1 - y0) / (x1 - x0)
         } else if x1 == x0 && y1 != y0 {
             f32::INFINITY
         } else {
             f32::NEG_INFINITY
-        }  
-        
+        }
     }
 
     pub fn compare_to(&self, other: &Self) -> Ordering {
@@ -86,7 +98,7 @@ impl<T: Default + ToString + PartialOrd> Point<T> {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct LineSegment<T>{
+pub struct LineSegment<T> {
     pub p: Point<T>,
     pub q: Point<T>,
 }
@@ -103,7 +115,7 @@ impl<T: Default> LineSegment<T> {
     }
 
     pub fn init(_p: Point<T>, _q: Point<T>) -> Self {
-        Self {p: _p, q: _q}
+        Self { p: _p, q: _q }
     }
 }
 
@@ -138,28 +150,28 @@ impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> 
         let mut v = Vec::new();
         let n = self.vec.len();
         for i in 0..n {
-            for j in i+1..n{
+            for j in i + 1..n {
                 let slope1 = self.vec[i].slope_to(&self.vec[j]);
-                for k in j+1..n{
+                for k in j + 1..n {
                     let slope2 = self.vec[i].slope_to(&self.vec[k]);
-                    for l in k+1..n{
+                    for l in k + 1..n {
                         let slope3 = self.vec[i].slope_to(&self.vec[l]);
                         // println!("{slope1}  {slope2}  {slope3}");
                         if slope1 == slope2 && slope2 == slope3 {
                             // self.vec[i], self.vec[j], self.vec[k], self.vec[l] are collinear,
                             // they are ordered with the self.compare_to(other)/partial_cmp order
                             // The extremal points will represent the line segment
-                            let mut m = MergeSort{ 
+                            let mut m = MergeSort {
                                 vec: vec![
-                                    self.vec[i].clone(), 
-                                    self.vec[j].clone(), 
+                                    self.vec[i].clone(),
+                                    self.vec[j].clone(),
                                     self.vec[k].clone(),
-                                    self.vec[l].clone()
-                                ], 
-                                algo: MergeSortAlgorithm::BottomUp
+                                    self.vec[l].clone(),
+                                ],
+                                algo: MergeSortAlgorithm::BottomUp,
                             };
                             m.sort();
-                            v.push(LineSegment::init(m.vec[0], m.vec[3])); 
+                            v.push(LineSegment::init(m.vec[0], m.vec[3]));
                         }
                     }
                 }
