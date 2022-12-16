@@ -1,18 +1,24 @@
 #[cfg(test)]
 mod unit_test;
+use std::error::Error;
 use std::fmt;
 use std::str::FromStr;
-use std::error::Error;
 
 // Enumerating the different types of algorithms
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum UnionFindAlgorithm {
-    QuickFind, 
-    QuickUnion, 
-    WeightedQuickUnion, 
-    WeightedQuickUnionPathComp
+    QuickFind,
+    QuickUnion,
+    WeightedQuickUnion,
+    WeightedQuickUnionPathComp,
 }
 const ALGORITHMS: &str = "[QuickFind, QuickUnion, WeightedQuickUnion, WeightedQuickUnionPathComp]";
+
+impl Default for UnionFindAlgorithm{
+    fn default() -> Self {
+        Self::QuickFind
+    }
+}
 
 // Formatting an UnionFindAlgorithm type (for printing purpose for e.g.)
 impl fmt::Display for UnionFindAlgorithm {
@@ -21,12 +27,14 @@ impl fmt::Display for UnionFindAlgorithm {
             UnionFindAlgorithm::QuickFind => write!(f, "QuickFind"),
             UnionFindAlgorithm::QuickUnion => write!(f, "QuickUnion"),
             UnionFindAlgorithm::WeightedQuickUnion => write!(f, "WeightedQuickUnion"),
-            UnionFindAlgorithm::WeightedQuickUnionPathComp => write!(f, "WeightedQuickUnionPathComp"),
+            UnionFindAlgorithm::WeightedQuickUnionPathComp => {
+                write!(f, "WeightedQuickUnionPathComp")
+            }
         }
     }
 }
 
-// Parsing a string slice (&str) to Algorithm
+// Parsing a string slice (&str) to UnionFindAlgorithm
 impl FromStr for UnionFindAlgorithm {
     type Err = ParseUnionFindAlgorithmError;
 
