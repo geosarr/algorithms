@@ -1,6 +1,8 @@
-- check binary search, threesum pb
 - add tests
 - see if necessary to add binary crates
-- test percolation deeper
-- test evaluation
-- test mergesort recursive and bottomup
+- test collinearity 
+- add fastcollinearity
+- test quicksort and quickselect
+- add improvements of quicksort (3 way)
+- test binary heap priority queue
+- implement with Binary Heap in std::collectionss::BinaryHeap
