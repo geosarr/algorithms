@@ -1,5 +1,7 @@
 pub mod merge_sort;
 pub mod quick_sort;
+pub mod insertion_sort;
+pub use insertion_sort::InsertionSort;
 pub use merge_sort::{MergeSort, MergeSortAlgorithm};
 pub use quick_sort::QuickSort;
 use std::cmp::Ordering;
@@ -8,8 +10,8 @@ use std::fmt;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Point<T> {
-    pub x: T,
-    pub y: T,
+    x: T,
+    y: T,
 }
 
 impl<T: fmt::Display> fmt::Display for Point<T> {
@@ -69,6 +71,7 @@ impl<T: Default + ToString + PartialOrd> Point<T> {
     }
 
     pub fn compare_to(&self, other: &Self) -> Ordering {
+        // compares two points
         if self.y < other.y || (self.y == other.y && self.x < other.x) {
             // self < other
             // return -1;
@@ -99,8 +102,8 @@ impl<T: Default + ToString + PartialOrd> Point<T> {
 
 #[derive(Debug, Default, Clone)]
 pub struct LineSegment<T> {
-    pub p: Point<T>,
-    pub q: Point<T>,
+    p: Point<T>,
+    q: Point<T>,
 }
 
 impl<T: fmt::Display + Clone> fmt::Display for LineSegment<T> {
@@ -122,7 +125,7 @@ impl<T: Default> LineSegment<T> {
 #[derive(Debug, Default)]
 pub struct BruteCollinearPoints<T> {
     // List of Points
-    pub vec: Vec<Point<T>>,
+    vec: Vec<Point<T>>,
     // Line segments of 4 points
     pub seg: Option<Vec<LineSegment<T>>>,
 }
@@ -161,14 +164,14 @@ impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> 
                             // self.vec[i], self.vec[j], self.vec[k], self.vec[l] are collinear,
                             // they are ordered with the self.compare_to(other)/partial_cmp order
                             // The extremal points will represent the line segment
-                            let mut m = MergeSort {
+                            let mut m = InsertionSort {
                                 vec: vec![
                                     self.vec[i].clone(),
                                     self.vec[j].clone(),
                                     self.vec[k].clone(),
                                     self.vec[l].clone(),
                                 ],
-                                algo: MergeSortAlgorithm::BottomUp,
+                                // algo: MergeSortAlgorithm::BottomUp,
                             };
                             m.sort();
                             v.push(LineSegment::init(m.vec[0], m.vec[3]));
