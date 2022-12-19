@@ -5,4 +5,4 @@
 - test quicksort and quickselect
 - add improvements of quicksort (3 way)
 - test binary heap priority queue
-- implement with Binary Heap in std::collectionss::BinaryHeap
+- implement with Binary Heap in std::collections::BinaryHeap
