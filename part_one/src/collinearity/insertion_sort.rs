@@ -1,3 +1,5 @@
+#[cfg(test)]
+mod unit_test;
 use std::mem::replace;
 
 
