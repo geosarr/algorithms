@@ -5,7 +5,7 @@ mod priority_queue;
 #[cfg(test)]
 mod unit_test;
 pub use deque::LinkedListDeque;
-pub use priority_queue::{UnorderedVecPriorityQueue, PriorityQueue, PriorityQueueKind};
+pub use priority_queue::{BinaryHeapPriorityQueue, UnorderedVecPriorityQueue, PriorityQueue, PriorityQueueKind};
 pub use queue::{LinkedListQueue, Queue};
 pub use stack::LinkedListStack;
 

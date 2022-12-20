@@ -3,9 +3,46 @@ mod unit_test;
 pub mod kind;
 pub use kind::PriorityQueueKind;
 use std::mem::replace;
+use std::collections::BinaryHeap;
 
+#[derive(Debug)]
+pub struct BinaryHeapPriorityQueue<T>{
+    heap: BinaryHeap<T>,
+}
 
-// Implementation using Binary Heap data structure
+// by default the binary heap is max oriented
+// implement the Ord trait, to orient it to min accordingly
+impl<T: Ord> BinaryHeapPriorityQueue<T>{
+    pub fn init(capacity: usize) -> Self {
+        Self {
+            heap: BinaryHeap::<T>::with_capacity(capacity),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool{
+        self.heap.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.heap.len()
+    }
+
+    pub fn insert(&mut self, key: T) {
+        self.heap.push(key)
+    }
+
+    pub fn delete(&mut self) -> Option<T> {
+        self.heap.pop()
+    }
+
+    pub fn extremum(&self) -> Option<&T> {
+        self.heap.peek()
+        // self.heap.pop() -> Option<T>
+    }
+
+}
+
+// Implementation "from scratch" using Binary Heap data structure on vec
 #[derive(Debug, Default)]
 pub struct PriorityQueue<T>{
     // vector of objects
@@ -57,6 +94,7 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
     fn swim(&mut self, mut k: usize){
         // moves data at position k up in the "tree" following the
         // Peter principle: Nodes are promoted to their level of incompetence
+        // run time complexity O(log(N))
         match self.kind {
             PriorityQueueKind::Max => {
                 while k > 1 && self.vec[k] > self.vec[k/2]{
@@ -76,6 +114,8 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
     }
 
     pub fn insert(&mut self, key: T){
+        // run time complexity O(log(N)) (without resizing)
+        // and O(N) with resizing
         if self.n < self.vec.len() {
             self.vec[self.n] = Some(key);
             self.swim(self.n);
@@ -92,6 +132,7 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
     fn sink(&mut self, mut k: usize){
         // moves data at position k down in the "tree" following the
         // Power struggle principle: Better nodes are promoted
+        // run time complexity O(log(N))
         if self.is_empty(){
             panic!("cannot sink data, queue is empty.")
         } else {
@@ -99,8 +140,11 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
                 PriorityQueueKind::Max => {
                     while 2*k < self.n {
                         let mut j = 2*k;
+                        // find the largest child of node k
                         if j < self.n - 1 && self.vec[j] < self.vec[j+1]{ j += 1;}
-                        if k >= j {break;}
+                        // compare it to node k
+                        if self.vec[k] >= self.vec[j] {break;}
+                        // exchange them if it is larger than node k
                         let val = self.vec[k].clone();
                         self.vec[k] = replace(&mut self.vec[j], val);
                         k = j;
@@ -109,8 +153,11 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
                 PriorityQueueKind::Min => {
                     while 2*k < self.n {
                         let mut j = 2*k;
+                        // find the smallest child of node k
                         if j < self.n - 1 && self.vec[j] > self.vec[j+1]{ j += 1;}
-                        if k >= j {break;}
+                        // compare it to node k
+                        if self.vec[k] <= self.vec[j] {break;}
+                        // exchange them if it is smaller than node k
                         let val = self.vec[k].clone();
                         self.vec[k] = replace(&mut self.vec[j], val);
                         k = j;
@@ -120,7 +167,18 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
         }
     }
     pub fn delete(&mut self){
-
+        // delete the extremal value
+        // run time complexity O(log(N))
+        if self.is_empty() {
+            panic!("cannot delete, queue is empty");
+        } else {
+            let res = self.vec[1].clone();
+            // Put the last object at the beginning of the root of the tree
+            self.vec[1] = replace(&mut self.vec[self.n-1], None);
+            // sink the root object
+            self.sink(1);
+            self.n -= 1;
+        }
     }
 
     pub fn extremum(&self) -> Option<T>{
