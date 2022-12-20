@@ -19,7 +19,7 @@ mod tests{
     #[test]
     #[should_panic]
     fn test_min_priority_queue(){
-        let len = 10000000; 
+        let len = 1000000; 
         let mut rng = rand::thread_rng();
         let mut queue = PriorityQueue::<isize>::init(2, PriorityQueueKind::Min);
         assert!(queue.is_empty());
