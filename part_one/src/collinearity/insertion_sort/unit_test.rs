@@ -2,7 +2,6 @@
 mod tests {
     use super::super::super::*;
     use rand::Rng;
-    use std::thread;
 
     fn gen_vec_rand_int(n: usize) -> Vec<isize> {
         // Generate random integers
