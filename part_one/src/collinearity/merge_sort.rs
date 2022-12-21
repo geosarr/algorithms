@@ -13,7 +13,7 @@ pub struct MergeSort<T> {
     // items with equal keys are not exchanged ?
 }
 
-impl<T: PartialOrd + Copy> MergeSort<T> {
+impl<T: PartialOrd + Clone> MergeSort<T> {
     pub fn init(v: Vec<T>, algorithm: MergeSortAlgorithm) -> Self {
         Self {
             vec: v,
@@ -43,16 +43,16 @@ impl<T: PartialOrd + Copy> MergeSort<T> {
         let mut j = mid + 1;
         for k in low..high + 1 {
             if i > mid {
-                let _ = replace(&mut self.vec[k], aux_vec[j]);
+                let _ = replace(&mut self.vec[k], aux_vec[j].clone());
                 j += 1;
             } else if j > high {
-                let _ = replace(&mut self.vec[k], aux_vec[i]);
+                let _ = replace(&mut self.vec[k], aux_vec[i].clone());
                 i += 1;
             } else if aux_vec[j] <= aux_vec[i] {
-                let _ = replace(&mut self.vec[k], aux_vec[j]);
+                let _ = replace(&mut self.vec[k], aux_vec[j].clone());
                 j += 1;
             } else {
-                let _ = replace(&mut self.vec[k], aux_vec[i]);
+                let _ = replace(&mut self.vec[k], aux_vec[i].clone());
                 i += 1;
             }
         }
