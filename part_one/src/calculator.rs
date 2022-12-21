@@ -30,8 +30,8 @@ impl Calculator {
         // by white spaces, e.g.  ( ( 1 * ( 2 + 3 ) ) + ( 4 * ( 5 + 6 ) ) )
         for elt in expression.split_whitespace() {
             let c = elt.to_string();
-            println!("{:?}", self.vals);
-            println!("{:?}", self.ops);
+            // println!("{:?}", self.vals);
+            // println!("{:?}", self.ops);
 
             if c == "+" || c == "*" || c == ":" || c == "/" {
                 self.ops.push(c);
@@ -53,7 +53,7 @@ impl Calculator {
             } else {
                 self.vals.push(c.parse::<usize>().unwrap());
             }
-            println!("\n");
+            // println!("\n");
         }
 
         let res = self.vals.pop().expect("Failed poping result");
