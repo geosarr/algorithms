@@ -1,7 +1,9 @@
 pub mod merge_sort;
 pub mod quick_sort;
 pub mod insertion_sort;
+pub mod heap_sort;
 pub use insertion_sort::InsertionSort;
+pub use heap_sort::{HeapSort, BinaryHeapSort};
 pub use merge_sort::{MergeSort, MergeSortAlgorithm};
 pub use quick_sort::QuickSort;
 use std::cmp::Ordering;
