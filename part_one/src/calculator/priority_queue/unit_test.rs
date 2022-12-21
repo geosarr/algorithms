@@ -18,6 +18,11 @@ mod tests{
 
     #[test]
     #[should_panic]
+    fn test_init_priority_queue(){
+        PriorityQueue::<String>::init(0, PriorityQueueKind::Min);
+    }
+
+    #[test]
     fn test_min_priority_queue(){
         let len = 1000000; 
         let mut rng = rand::thread_rng();
@@ -31,7 +36,7 @@ mod tests{
             queue.insert(rng.gen::<isize>());
         }
         queue.delete();
-        assert_eq!(queue.len(), len);
+        assert_eq!(queue.len(), len-1);
         assert_eq!(queue.extremum(), queue.vec[1]);
         for k in 1..(queue.len()-1)/2{
             assert!(
@@ -39,11 +44,9 @@ mod tests{
                 queue.vec[k] <= queue.vec[2*k+1]
             );
         }
-        let queue = PriorityQueue::<String>::init(0, PriorityQueueKind::Min);
     }
 
     #[test]
-    #[should_panic]
     fn test_max_priority_queue(){
         let len = 1000000; 
         let mut rng = rand::thread_rng();
@@ -57,7 +60,7 @@ mod tests{
             queue.insert(rng.gen::<isize>());
         }
         queue.delete();
-        assert_eq!(queue.len(), len);
+        assert_eq!(queue.len(), len-1);
         assert_eq!(queue.extremum(), queue.vec[1]);
         for k in 1..(queue.len()-1)/2{
             assert!(
@@ -65,11 +68,15 @@ mod tests{
                 queue.vec[k] >= queue.vec[2*k+1]
             );
         }
-        let queue = PriorityQueue::<String>::init(0, PriorityQueueKind::Max);
     }
 
     #[test]
     #[should_panic]
+    fn test_init_inordered_vec_priority_queue(){
+        UnorderedVecPriorityQueue::<String>::init(0, PriorityQueueKind::Max);
+    }
+
+    #[test]
     fn test_unordered_vec_min_priority_queue(){
         let mut queue = UnorderedVecPriorityQueue::<usize>::init(2, PriorityQueueKind::Min);
         assert!(queue.is_empty());
@@ -83,11 +90,9 @@ mod tests{
         queue.delete();
         assert_eq!(queue.len(), 3);
         assert_eq!(queue.extremum(), Some(1));
-        let queue = UnorderedVecPriorityQueue::<String>::init(0, PriorityQueueKind::Min);
     }
 
     #[test]
-    #[should_panic]
     fn test_unordered_vec_max_priority_queue(){
         let mut queue = UnorderedVecPriorityQueue::<usize>::init(2, PriorityQueueKind::Max);
         assert!(queue.is_empty());
@@ -99,6 +104,5 @@ mod tests{
         queue.delete();
         assert_eq!(queue.len(), 2);
         assert_eq!(queue.extremum(), Some(2));
-        let queue = UnorderedVecPriorityQueue::<String>::init(0, PriorityQueueKind::Max);
     }
 }
