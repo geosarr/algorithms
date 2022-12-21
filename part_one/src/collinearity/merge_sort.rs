@@ -7,17 +7,20 @@ use std::mem::replace;
 
 #[derive(Debug, Default)]
 pub struct MergeSort<T> {
-    pub vec: Vec<T>,
-    pub algo: MergeSortAlgorithm,
+    vec: Vec<T>,
+    algo: MergeSortAlgorithm,
     // MergeSort is stable in the sense that
     // items with equal keys are not exchanged ?
 }
 
-impl<T: PartialOrd + Default + Copy> MergeSort<T> {
-    pub fn new() -> Self {
-        Default::default()
+impl<T: PartialOrd + Copy> MergeSort<T> {
+    pub fn init(v: Vec<T>, algorithm: MergeSortAlgorithm) -> Self {
+        Self {
+            vec: v,
+            algo: algorithm,
+        }
     }
-
+    
     fn is_sorted(&mut self, low: usize, high: usize) -> bool {
         if self.vec[low..high].is_empty() {
             return true;
@@ -66,7 +69,7 @@ impl<T: PartialOrd + Default + Copy> MergeSort<T> {
         self.merge(aux_vec.clone(), low, high, mid);
     }
 
-    pub fn sort(&mut self) {
+    pub fn into_sorted_vec(mut self) -> Vec<T> {
         let aux_vec = Vec::<T>::new();
         let n = self.vec.len();
         match self.algo {
@@ -93,5 +96,6 @@ impl<T: PartialOrd + Default + Copy> MergeSort<T> {
                 }
             }
         }
+        self.vec
     }
 }

@@ -25,10 +25,10 @@ mod tests {
             vec: v.clone(),
             algo: MergeSortAlgorithm::Recursive,
         };
-        mbup.sort();
-        mrec.sort();
+        let vec1 = mbup.into_sorted_vec();
+        let vec2 = mrec.into_sorted_vec();
         v.sort(); // std sort of a vec
-        assert_eq!(mbup.vec, v);
-        assert_eq!(mrec.vec, v);
+        assert_eq!(vec1, v);
+        assert_eq!(vec2, v);
     }
 }
