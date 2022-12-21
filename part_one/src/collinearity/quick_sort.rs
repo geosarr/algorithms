@@ -6,33 +6,35 @@ use std::mem::replace;
 
 #[derive(Debug, Default)]
 pub struct QuickSort<T> {
-    pub vec: Vec<T>,
-    // pub algo: MergeSortAlgorithm,
+    vec: Vec<T>,
     // QuickSort is unstable in the sense that
     // items with equal keys can be exchanged ?
 }
 
-impl<T: PartialOrd + Default + Clone> QuickSort<T> {
-    pub fn new() -> Self {
-        Default::default()
+impl<T: PartialOrd + Clone + std::fmt::Debug> QuickSort<T> {
+    pub fn init(v: Vec<T>) -> Self {
+        Self {vec: v}
     }
 
     fn partition(&mut self, low: usize, high: usize) -> usize {
-        let mut i = low;
-        // let mut j = high+1;
-        let mut j = high + 1;
+        // Finds a partitioning index j, i.e such that elements at the left of index j
+        // are no greater than element j and elements at the right of index j are no larger
+        // than element j.
+        // run time complexity O(N)
+        let mut i = low+1;
+        let mut j = high;
         loop {
             // find item on left to swap
-            while self.vec[i + 1] <= self.vec[low] {
+            while self.vec[i] <= self.vec[low] {
                 i += 1;
-                if i == high {
+                if i >= high {
                     break;
                 }
             }
             // find item on right to swap
-            while self.vec[low] <= self.vec[j - 1] {
+            while self.vec[low] <= self.vec[j] {
                 j -= 1;
-                if j == low {
+                if j <= low {
                     break;
                 }
             }
@@ -40,16 +42,17 @@ impl<T: PartialOrd + Default + Clone> QuickSort<T> {
             if i >= j {
                 break;
             }
+            // exchange i^th and j^th object to respect partitioning 
             let n = self.vec[j].clone();
             self.vec[j] = replace(&mut self.vec[i], n);
         }
-        // swap with partitionning item
+        // swap with partitioning item
         let n = self.vec[j].clone();
         self.vec[j] = replace(&mut self.vec[low], n);
         return j;
     }
 
-    pub fn sort(&mut self) {
+    fn sort(&mut self) {
         // shuffle garantees performance
         let mut rng = thread_rng();
         self.vec.shuffle(&mut rng);
@@ -61,15 +64,23 @@ impl<T: PartialOrd + Default + Clone> QuickSort<T> {
             return;
         }
         let j: usize = self.partition(low, high);
-        // println!("{j}");
-        // if j >= 1 && j < self.vec.len() - 1{
-        self.recursive_sort(low, j - 1);
-        self.recursive_sort(j + 1, high);
-        // }
+        if j >= 1 && j < self.vec.len() - 1{
+            self.recursive_sort(low, j - 1);
+            self.recursive_sort(j + 1, high);
+        } else if j == 0 {
+            self.recursive_sort(j+1, high);
+        } else {
+            self.recursive_sort(low, j-1);
+        }
+    }
+    
+    pub fn into_sorted_vec(mut self) -> Vec<T> {
+        self.sort();
+        self.vec
     }
 
     pub fn select(&mut self, k: usize) -> T {
-        // Selects the k^th element in self.vec
+        // Selects the k^th largest element in self.vec (quick select algorithm)
         // in linear time on average for median (k = N/2)
         let mut rng = thread_rng();
         self.vec.shuffle(&mut rng);
@@ -78,10 +89,13 @@ impl<T: PartialOrd + Default + Clone> QuickSort<T> {
         while high > low {
             let j = self.partition(low, high);
             if j < k {
+                // the k^th largest is on the right of element j
                 low = j + 1;
-            } else if j < k {
+            } else if j > k {
+                // the k^th largest is on the left of element j
                 high = j - 1;
             } else {
+                // j = k, we are done
                 return self.vec[k].clone();
             }
         }
