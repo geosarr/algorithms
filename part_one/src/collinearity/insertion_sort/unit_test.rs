@@ -19,8 +19,8 @@ mod tests {
         let mut insert = InsertionSort {
             vec: v.clone(),
         };
-        insert.sort();
+        let vec = insert.into_sorted_vec();
         v.sort(); // std sort of a vec
-        assert_eq!(insert.vec, v);
+        assert_eq!(vec, v);
     }
 }

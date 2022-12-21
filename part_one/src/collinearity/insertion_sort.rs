@@ -5,19 +5,15 @@ use std::mem::replace;
 
 #[derive(Debug, Default)]
 pub struct InsertionSort<T>{
-    pub vec: Vec<T>
+    vec: Vec<T>
 }
 
-impl<T: Default + Clone + PartialOrd> InsertionSort<T>{
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+impl<T: Clone + PartialOrd> InsertionSort<T>{
     pub fn init(v: Vec<T>) -> Self {
         Self {vec: v}
     }
 
-    pub fn sort(&mut self) {
+    pub fn into_sorted_vec(mut self) -> Vec<T>{
         let n = self.vec.len();
         for i in 0..n{
             let mut j = i;
@@ -27,6 +23,7 @@ impl<T: Default + Clone + PartialOrd> InsertionSort<T>{
                 j -= 1;
             }
         }
+        self.vec
     }
 
 }
