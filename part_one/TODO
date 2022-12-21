@@ -1,8 +1,4 @@
-- add tests
 - see if necessary to add binary crates
 - test collinearity 
 - add fastcollinearity
-- test quicksort and quickselect
 - add improvements of quicksort (3 way)
-- test binary heap priority queue
-- implement with Binary Heap in std::collections::BinaryHeap
