@@ -132,7 +132,7 @@ pub struct BruteCollinearPoints<T> {
     pub seg: Option<Vec<LineSegment<T>>>,
 }
 
-impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> {
+impl<T: Default + ToString + PartialOrd + Clone> BruteCollinearPoints<T> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -152,7 +152,7 @@ impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> 
         // In this brute force version of finding all line segments
         // we check if 4 Points are collinear by checking if the slopes
         // between one of them and the rest are equal
-        let mut v = Vec::new();
+        let mut v = Vec::<LineSegment<T>>::new();
         let n = self.vec.len();
         for i in 0..n {
             for j in i + 1..n {
@@ -166,17 +166,15 @@ impl<T: Default + ToString + PartialOrd + Clone + Copy> BruteCollinearPoints<T> 
                             // self.vec[i], self.vec[j], self.vec[k], self.vec[l] are collinear,
                             // they are ordered with the self.compare_to(other)/partial_cmp order
                             // The extremal points will represent the line segment
-                            let mut m = InsertionSort {
-                                vec: vec![
-                                    self.vec[i].clone(),
-                                    self.vec[j].clone(),
-                                    self.vec[k].clone(),
-                                    self.vec[l].clone(),
-                                ],
-                                // algo: MergeSortAlgorithm::BottomUp,
-                            };
-                            m.sort();
-                            v.push(LineSegment::init(m.vec[0], m.vec[3]));
+                            let vec: Vec<Point<T>> = vec![
+                                self.vec[i].clone(),
+                                self.vec[j].clone(),
+                                self.vec[k].clone(),
+                                self.vec[l].clone(),
+                            ];
+                            let mut m = InsertionSort::init(vec);
+                            let vec = m.into_sorted_vec();
+                            v.push(LineSegment::init(vec[0].clone(), vec[3].clone()));
                         }
                     }
                 }
