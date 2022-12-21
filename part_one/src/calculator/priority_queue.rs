@@ -166,8 +166,9 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
             }
         }
     }
-    pub fn delete(&mut self){
-        // delete the extremal value
+    
+    pub fn delete(&mut self) -> Option<T>{
+        // delete the extremal value and returns it
         // run time complexity O(log(N))
         if self.is_empty() {
             panic!("cannot delete, queue is empty");
@@ -178,6 +179,7 @@ impl<T: PartialOrd + Clone> PriorityQueue<T>{
             // sink the root object
             self.sink(1);
             self.n -= 1;
+            res
         }
     }
 
