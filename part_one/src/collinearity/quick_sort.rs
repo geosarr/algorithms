@@ -53,7 +53,7 @@ impl<T: PartialOrd + Clone + std::fmt::Debug> QuickSort<T> {
     }
 
     fn sort(&mut self) {
-        // shuffle garantees performance
+        // shuffle garantees performance ?
         let mut rng = thread_rng();
         self.vec.shuffle(&mut rng);
         self.recursive_sort(0, self.vec.len() - 1);
