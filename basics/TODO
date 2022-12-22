@@ -1,0 +1,8 @@
+- see if necessary to add binary crates
+- test collinearity 
+- add fastcollinearity
+- add improvements of quicksort (3 way)
+- priority queues: event-driven simulation and puzzle
+- test heapsort thouroughly (use PriorityQueue in implementation of HeapSort?)
+- finish Queue implementation
+- improve bin collinearity to take file input of points (clap)
