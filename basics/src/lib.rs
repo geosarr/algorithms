@@ -19,8 +19,9 @@ pub use crate::sort_algorithm::{
 };
 pub use crate::utils::{
     ThreeSum,
+    Reader,
     Calculator,
     read_lines,
     PercolationStats,
-    Point, LineSegment, BruteCollinearPoints 
+    Point, LineSegment, FastCollinearPoints, BruteCollinearPoints
 };
