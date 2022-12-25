@@ -145,19 +145,20 @@ impl<T: Ord + Clone> PriorityQueue<T>{
         }
     }
 
-    fn sink(&mut self, mut k: usize){
+    fn sink(&mut self, mut k: usize, n: usize){
         // moves data at position k down in the "tree" following the
         // Power struggle principle: Better nodes are promoted
+        // Nodes beyond node n are untouched.
         // run time complexity O(log(N))
         if self.is_empty(){
             panic!("cannot sink data, queue is empty.")
         } else {
             match self.kind {
                 PriorityQueueKind::Max => {
-                    while 2*k < self.n {
+                    while 2*k < n {
                         let mut j = 2*k;
                         // find the largest child of node k
-                        if j < self.n - 1 && self.vec[j] < self.vec[j+1]{ j += 1;}
+                        if j < n - 1 && self.vec[j] < self.vec[j+1]{ j += 1;}
                         // compare it to node k
                         if self.vec[k] >= self.vec[j] {break;}
                         // exchange them if it is larger than node k
@@ -167,10 +168,10 @@ impl<T: Ord + Clone> PriorityQueue<T>{
                     }
                 },
                 PriorityQueueKind::Min => {
-                    while 2*k < self.n {
+                    while 2*k < n {
                         let mut j = 2*k;
                         // find the smallest child of node k
-                        if j < self.n - 1 && self.vec[j] > self.vec[j+1]{ j += 1;}
+                        if j < n - 1 && self.vec[j] > self.vec[j+1]{ j += 1;}
                         // compare it to node k
                         if self.vec[k] <= self.vec[j] {break;}
                         // exchange them if it is smaller than node k
@@ -193,7 +194,7 @@ impl<T: Ord + Clone> PriorityQueue<T>{
             // Put the last object at the beginning of the root of the tree
             self.vec[1] = replace(&mut self.vec[self.n-1], None);
             // sink the root object
-            self.sink(1);
+            self.sink(1, self.n);
             self.n -= 1;
             res
         }

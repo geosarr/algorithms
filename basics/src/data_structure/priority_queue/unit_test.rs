@@ -72,7 +72,7 @@ mod tests{
 
     #[test]
     #[should_panic]
-    fn test_init_inordered_vec_priority_queue(){
+    fn test_init_unordered_vec_priority_queue(){
         UnorderedVecPriorityQueue::<String>::init(0, PriorityQueueKind::Max);
     }
 
