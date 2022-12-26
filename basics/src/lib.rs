@@ -6,7 +6,8 @@ mod utils;
 pub use crate::data_structure::{
     Stack, VecStack, LinkedListStack, 
     LinkedListQueue, LinkedListDeque,
-    BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue
+    BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue,
+    UnorderedVecSymbolTable, OrderedVecSymbolTable
 };
 pub use crate::search_algorithm::{
     UnionFind, UnionFindAlgorithm
