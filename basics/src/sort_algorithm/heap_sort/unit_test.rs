@@ -5,7 +5,7 @@ mod tests {
 
     #[test]
     fn test_heap_sort(){
-        let mut vec = gen_vec_rand_int(100, RandKind::Full);
+        let mut vec = gen_vec_rand_int(100000, RandKind::Full);
         let h = HeapSort::init(vec.clone());
         let v = h.into_sorted_vec();
         vec.sort();

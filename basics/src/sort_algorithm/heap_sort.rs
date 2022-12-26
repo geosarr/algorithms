@@ -60,7 +60,7 @@ impl<T: Ord + Clone> HeapSort<T> {
         // design a Binary Heap from self.vec
         // run time complexity O(N log(N))
         let n = self.vec.len();
-        for j in (1..n/2).rev(){
+        for j in (1..(n+1)/2).rev(){
             let new_j = j;
             self.sink(new_j, n);
         }
@@ -80,7 +80,7 @@ impl<T: Ord + Clone> HeapSort<T> {
 
     pub fn into_sorted_vec(mut self) -> Vec<T>{
         // run time complexity O(N log(N))
-        self.sink_all();
-        self.sort_down()    
+        self.sink_all(); // creates a binary heap 
+        self.sort_down() // sort the objects in the binary heap
     }
 }
