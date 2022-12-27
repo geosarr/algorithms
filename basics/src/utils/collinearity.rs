@@ -1,4 +1,4 @@
-use crate::utils::{Point, LineSegment};
+use crate::utils::{Point, LineSegment, Segment};
 use crate::sort_algorithm::InsertionSort;
 // use std::collections::HashSet;
 
@@ -74,7 +74,7 @@ pub struct FastCollinearPoints<T> {
     // List of Points
     vec: Vec<Point<T>>,
     // Line segments of 4 points
-    seg: Option<Vec<LineSegment<T>>>,
+    seg: Option<Vec<Segment<T>>>,
 }
 
 impl<T> FastCollinearPoints<T>{
@@ -92,15 +92,15 @@ impl<T: ToString + Ord + Clone + std::fmt::Debug> FastCollinearPoints<T> {
         }
     }
 
-    pub fn segments(&mut self) -> Vec<LineSegment<T>> {
+    pub fn segments(&mut self) -> Vec<Segment<T>> {
         // run time complexity O(N^2)
         // may returns many times the same line(with different points)
         if !self.seg.is_none(){}
         else {
-            let mut vec = Vec::<LineSegment<T>>::new();
+            let mut vec = Vec::<Segment<T>>::new();
             let n = self.vec.len();
             let mut vec_indices = (0..n).collect::<Vec<usize>>();
-            println!("{:?}", vec_indices);
+            // println!("{:?}", vec_indices);
             for k in 0..n {
                 // build the lines passing throught the k^th point 
                 vec_indices.retain(|&e| e != k);
@@ -112,12 +112,11 @@ impl<T: ToString + Ord + Clone + std::fmt::Debug> FastCollinearPoints<T> {
                     ))
                     .collect::<Vec<LineSegment<T>>>();
                 vec_indices.push(k);
-                // println!("{:?}", vec_indices);
-                println!("{:?}", lines_with_point_k);
+                // println!("{:?}", lines_with_point_k);
                 
                 // ordering the lines with respect to their slope
                 lines_with_point_k.sort();
-                println!("{:?}", lines_with_point_k);
+                // println!("{:?}", lines_with_point_k);
                 
                 // collinear points with point k are consecutive in lines_with_point_k 
                 let mut i = 0;
@@ -130,19 +129,19 @@ impl<T: ToString + Ord + Clone + std::fmt::Debug> FastCollinearPoints<T> {
                         temp_vec.push(lines_with_point_k[l].get_q());                        
                         l += 1;
                     }
-                    println!("temp_vec = {:?}, l={}", temp_vec, l);
+                    // println!("temp_vec = {:?}, l={}", temp_vec, l);
                     if temp_vec.len() >= 4 {
                         // a line of at least 4 points is found
                         temp_vec.sort();
-                        vec.push(LineSegment::<T>::init(temp_vec[0].clone(), temp_vec.pop().unwrap()));
+                        vec.push(Segment::<T>::init(temp_vec[0].clone(), temp_vec.pop().unwrap()));
                     }
-                    println!("vec = {:?}", vec);
+                    // println!("vec = {:?}", vec);
                     i = l;
-                    println!("\n");
+                    // println!("\n");
                 }
             }
             vec.sort();
-            // vec.dedup();
+            vec.dedup();
             self.seg = Some(vec);
         }
         self.seg.clone().expect("Failed to get LineSegments")
