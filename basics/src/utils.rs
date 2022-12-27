@@ -6,7 +6,7 @@ mod threesum;
 mod rand_vec_gen;
 mod calculator;
 
-pub use point::{Point, LineSegment};
+pub use point::{Point, LineSegment, Segment};
 pub use percolation::PercolationStats;
 pub use collinearity::{FastCollinearPoints, BruteCollinearPoints};
 pub use input_output::{read_lines, Reader};
