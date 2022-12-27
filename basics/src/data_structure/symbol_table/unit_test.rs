@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests{
-    use super::super::{OrderedVecSymbolTable, BinarySearchTree};
+    use super::super::{OrderedVecSymbolTable, BinarySearchTree, BTreeSymbolTable};
 
     #[test]
     fn test_ordered_vec_symbol_table(){
@@ -19,8 +19,18 @@ mod tests{
     fn test_binary_search_tree(){
         let mut st = BinarySearchTree::<usize, String>::init(1,"test".to_owned());
         assert_eq!(st.len(), 1);
-        assert_eq!(st.get(1), Some(&"test".to_owned()));
-        assert_eq!(st.get(0), None);
-        
+        assert_eq!(st.get(&1), Some(&"test".to_owned()));
+        assert_eq!(st.get(&0), None);
+    
+    }
+
+    #[test]
+    fn test_b_tree_symbol_table(){
+        assert!(BTreeSymbolTable::<usize, String>::new().is_empty());
+        let mut st = BTreeSymbolTable::<usize, &str>::init(1,"test");
+        assert_eq!(st.len(), 1);
+        assert!(!st.is_empty());
+        assert_eq!(st.get(&1), Some(&"test"));
+        assert_eq!(st.get(&0), None);
     }
 }

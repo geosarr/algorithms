@@ -1,6 +1,39 @@
 #[cfg(test)]
 mod unit_test;
 use std::cmp::Ordering;
+use std::collections::BTreeMap;
+
+#[derive(Debug, Clone, Default)]
+pub struct BTreeSymbolTable<T,U>{
+    tree: BTreeMap<T,U>,
+}
+impl<T: Ord,U> BTreeSymbolTable<T,U>{
+    pub fn new() -> Self {
+        Self {
+            tree: BTreeMap::<T,U>::new(),
+        }
+    }
+    pub fn init(_key: T, _value: U) -> Self {
+        let mut tree = Self::new();
+        tree.insert(_key, _value);
+        tree 
+    }
+    pub fn contains(&self, key: &T) -> bool{
+        self.tree.get(key).is_some()
+    }
+    pub fn get(&self, key: &T) -> Option<&U>{
+        self.tree.get(key)
+    }
+    pub fn insert(&mut self, key: T, value: U){
+        self.tree.insert(key, value);
+    }
+    pub fn is_empty(&self) -> bool {
+        self.tree.is_empty()
+    }
+    pub fn len(&self) -> usize{
+        self.tree.len()
+    }
+}
 
 #[derive(Clone, Debug, PartialEq)]
 struct Node<T,U>{
@@ -35,18 +68,18 @@ impl<T, U> BinarySearchTree<T,U>{
     }
 }
 impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
-    pub fn cointains(&self, key: T) -> bool{
+    pub fn cointains(&self, key: &T) -> bool{
         self.get(key).is_some()
     }
-    pub fn get(&self, key: T) -> Option<&U>{
+    pub fn get(&self, key: &T) -> Option<&U>{
         // gets the value associated to key if key is in 
         // the tree, otherwise returns None,
-        // run time complexity O(log(N))
+        // run time complexity on average O(log(N)), O(N) guaranteed (unbalanced tree) 
         let mut node = &self.root;
         while node != &None {
-            if key < node.as_ref().unwrap().key {
+            if key < &node.as_ref().unwrap().key {
                 node = &node.as_ref().unwrap().left;
-            } else if key > node.as_ref().unwrap().key {
+            } else if key > &node.as_ref().unwrap().key {
                 node = &node.as_ref().unwrap().right;
             } else { return Some(&node.as_ref().unwrap().value); }
         }
