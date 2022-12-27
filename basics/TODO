@@ -1,8 +1,4 @@
 - test collinearity (using Brute and Fast)
-- add fastcollinearity and drop duplicates in results (use HashSet in std collections ?)
-    implement another LineSegment2 with another Ord ? PartialEq <=> points of lines are equal ? 
-- add improvements of quicksort (3 way)
 - priority queues: event-driven simulation and puzzle
-- test heapsort thouroughly (use PriorityQueue in implementation of HeapSort?)
 - finish Queue implementation
-- threesum with Reader
+- finish BinarySearchTree and implementent Red-Black Binary Search Tree
