@@ -18,8 +18,8 @@ fn main(){
     let sep = cli.sep;
     let points = Point::<isize>::from_file_to_vec(filename, sep);
     // println!("{:?} {:?}", points[0], points[1]);
-    let mut brute_force = FastCollinearPoints::<isize>::init(points);
-    let segments = brute_force.segments();
+    let mut collinear = FastCollinearPoints::<isize>::init(points);
+    let segments = collinear.segments();
     println!("{}", segments.len()); 
     println!("{:?}", segments);
 }
