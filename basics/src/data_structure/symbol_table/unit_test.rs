@@ -4,33 +4,49 @@ mod tests{
 
     #[test]
     fn test_ordered_vec_symbol_table(){
-        let mut st = OrderedVecSymbolTable::<usize, String>::init(1,"test".to_owned());
+        assert!(OrderedVecSymbolTable::<usize, isize>::new().is_empty());
+        let mut st = OrderedVecSymbolTable::<usize, &str>::init(2,"test2");
         assert_eq!(st.len(), 1);
-        assert!(st.contains(1));
-        st.insert(0, "test2".to_owned());
-        assert_eq!(st.vec[0].get_first(), Some(&0));
-        assert_eq!(st.vec[0].get_second(), Some(&Some("test2".to_owned())));
-        st.delete(0);
-        assert_eq!(st.vec[0].get_first(), Some(&0));
-        assert_eq!(st.vec[0].get_second(), Some(&None));
+        assert!(st.contains(&2));
+        st.insert(0, "test0");
+        assert_eq!(st.get(&0), Some(&"test0"));
+        assert_eq!(st.get(&2), Some(&"test2"));
+        // println!("{:?}", st);
+        st.delete(&0);
+        assert!(!st.contains(&0));
+        st.insert(1, "test1");
+        assert_eq!(st.min(), Some(&0));
+        assert_eq!(st.max(), Some(&2));
+        assert_eq!(st.floor(&1), Some(&1));
+        assert_eq!(st.floor(&3), Some(&2));
+        assert_eq!(st.ceil(&4), None);
     }
 
     #[test]
     fn test_binary_search_tree(){
-        let mut st = BinarySearchTree::<usize, String>::init(1,"test".to_owned());
+        let mut st = BinarySearchTree::<usize, &str>::init(10,"test10");
         assert_eq!(st.len(), 1);
-        assert_eq!(st.get(&1), Some(&"test".to_owned()));
+        assert_eq!(st.get(&10), Some(&"test10"));
         assert_eq!(st.get(&0), None);
-    
+        st.insert(1, "test1");
+        assert_eq!(st.get(&1), Some(&"test1"));
+        // println!("{:#?}", st);
     }
 
     #[test]
     fn test_b_tree_symbol_table(){
         assert!(BTreeSymbolTable::<usize, String>::new().is_empty());
-        let mut st = BTreeSymbolTable::<usize, &str>::init(1,"test");
+        let mut st = BTreeSymbolTable::<usize, &str>::init(5,"test5");
         assert_eq!(st.len(), 1);
         assert!(!st.is_empty());
-        assert_eq!(st.get(&1), Some(&"test"));
+        assert_eq!(st.get(&5), Some(&"test5"));
         assert_eq!(st.get(&0), None);
+        assert_eq!(st.strict_floor(&10), Some(&5));
+        assert_eq!(st.ceil(&2), Some(&5));
+        st.insert(2, "test2");
+        assert_eq!(st.ceil(&2), Some(&2));
+        st.insert(3, "test3");
+        st.insert(10, "test10");
+        assert_eq!(st.range_search(&0, &5), vec![&2, &3]);
     }
 }

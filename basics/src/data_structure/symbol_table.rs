@@ -7,6 +7,14 @@ use std::collections::BTreeMap;
 pub struct BTreeSymbolTable<T,U>{
     tree: BTreeMap<T,U>,
 }
+impl<T,U> BTreeSymbolTable<T,U>{
+    pub fn is_empty(&self) -> bool {
+        self.tree.is_empty()
+    }
+    pub fn len(&self) -> usize{
+        self.tree.len()
+    }
+}
 impl<T: Ord,U> BTreeSymbolTable<T,U>{
     pub fn new() -> Self {
         Self {
@@ -27,13 +35,38 @@ impl<T: Ord,U> BTreeSymbolTable<T,U>{
     pub fn insert(&mut self, key: T, value: U){
         self.tree.insert(key, value);
     }
-    pub fn is_empty(&self) -> bool {
-        self.tree.is_empty()
+}
+impl<T: Ord, U: Ord> BTreeSymbolTable<T,U>
+{
+    pub fn strict_floor<'a>(&'a self, key: &T) -> Option<&'a T>{
+        // the largest key in the tree map, strictly inferior to key
+        let res = self.tree.range(..key).max();
+        if let Some(item) = res {
+            Some(item.0)
+        } else{ None }
     }
-    pub fn len(&self) -> usize{
-        self.tree.len()
+    pub fn ceil<'a>(&'a self, key: &T) -> Option<&'a T>{
+        // the smallest key in the tree map larger ot equal to key
+        let res = self.tree.range(key..).min();
+        if let Some(item) = res {
+            Some(item.0)
+        } else{ None }
+    }
+    pub fn range_search<'a>(&'a self, low: &T, high: &T) -> Vec<&'a T>{
+        // returns the keys between low (included) and high (excluded)
+        self.tree.range(low..high)
+            .into_iter()
+            .map(|(k, v)| k)
+            .collect::<Vec<&'a T>>()
+    }
+    pub fn range_count<'a>(&'a self, low: &T, high: &T) -> usize{
+        // counts the keys between low (included) and high (excluded)
+        self.range_search(low, high).len()
     }
 }
+
+
+
 
 #[derive(Clone, Debug, PartialEq)]
 struct Node<T,U>{
@@ -52,11 +85,18 @@ impl<T,U> Node<T,U> {
         }
     }
 }
+#[derive(Debug, Clone)]
 pub struct BinarySearchTree<T,U> {
     root: Option<Box<Node<T,U>>>,
     len: usize,
 }
 impl<T, U> BinarySearchTree<T,U>{
+    pub fn new() -> Self{
+        Self {
+            root: None,
+            len: 0,
+        }
+    }
     pub fn init(key: T, value: U) -> Self {
         Self { 
             root: Some(Box::new(Node::init(key, value))),
@@ -85,26 +125,25 @@ impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
         }
         return None;
     }
-    fn put(&mut self, node: &mut Option<Box<Node<T,U>>>, key: T, value: U)
-    -> Option<Box<Node<T,U>>>
+    fn put<'a>(node: &mut Option<Box<Node<T,U>>>, key: T, value: U)
     {
         match node {
-            None => Some(Box::new(Node::init(key, value))),
+            None => *node = Some(Box::new(Node::init(key, value))),
             Some(ref mut nod) => {
                 if key < nod.key {
-                    nod.left = self.put(&mut nod.left, key, value);
+                    Self::put(&mut nod.left, key, value);
                 } else if key > nod.key{
-                    nod.right = self.put(&mut nod.right, key, value);
+                    Self::put(&mut nod.right, key, value);
                 } else { nod.value = value; }
-                node.clone()
             }
         }
     }
     pub fn insert(&mut self, key: T, value: U)
     {
-        // self.root = self.put(&mut self.root, key, value);
+        Self::put(&mut self.root, key, value);
         self.len += 1;
     }
+    // pub fn ceil()
 }
 
 
@@ -114,7 +153,7 @@ impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
 #[derive(Default, Clone, Debug)]
 pub struct OrderedVecSymbolTable<T, U> {
     // collection of key-value pair (no duplicate keys)
-    vec: Vec<Pair<T,Option<U>>>
+    vec: Vec<Pair<T, Option<U>>>
 }
 impl<T, U> OrderedVecSymbolTable<T, U> {
     pub fn new() -> Self {
@@ -127,128 +166,137 @@ impl<T, U> OrderedVecSymbolTable<T, U> {
         symbol_table.vec.push(Pair::init(key, Some(value)));
         symbol_table
     }
-}
-impl<T: Eq + Clone + Ord, U: Eq + Clone> OrderedVecSymbolTable<T, U> {
-    pub fn contains(&self, key: T) -> bool {
-        // run time complexity O(log(N))
-        self.get(key) != None
-    }
-
-    pub fn get(&self, key: T) -> Option<&U> {
-        // run time complexity O(log(N))
-        if let Ok(index) = self.vec.binary_search(&Pair::init(key, None)){
-            if let Some(ref option) = self.vec[index].get_second(){
-                return option.as_ref();
-            } else {panic!("problem in binary search or get_second()")}
-        } else {None}
-    }
-
-    fn put(&mut self, key: T, value: Option<U>) {
-        // run time complexity O(N) due to insertion
-        let index = self.vec.binary_search(&Pair::init(key.clone(), None));
-        match index {
-            // key is found
-            Ok(ind) => self.vec.insert(ind, Pair::init(key, value)),
-            Err(index) => { 
-                // index where to insert key to keep self.vec sorted 
-                if index < self.vec.len(){
-                    self.vec.insert(index, Pair::init(key, value));
-                } else { self.vec.push(Pair::init(key, value)) }
-            }
-        }
-    } 
-
-    pub fn insert(&mut self, key: T, value: U) {
-        // run time complexity O(N)
-        self.put(key, Some(value))
-    }
-
-    pub fn delete(&mut self, key: T) -> Option<T>
-    // run time complexity O(N)
-    {
-        self.put(key.clone(), None); // lazy implementation ?
-        Some(key)
-    }
-    
-    pub fn len(&self) -> usize{
-        // number of keys O(1)
+    pub fn len(&self) -> usize {
         self.vec.len()
     }
-    
     pub fn is_empty(&self) -> bool {
         self.vec.is_empty()
     }
-
-    pub fn min(&self) -> Option<&T>{
+    pub fn min<'a>(&'a self) -> Option<&'a T>{
         // smallest key O(1)
         if self.is_empty(){
             None
         }else {
-            self.vec[0].get_first()
+            Some(self.vec[0].get_first())
         }
     }
-    
-    pub fn max(&self) -> Option<&T>{
+    pub fn max<'a>(&'a self) -> Option<&'a T>{
         // largest key O(1)
         if self.vec.is_empty(){
             None
         } else {
-            self.vec[self.vec.len()-1].get_first()
+            Some(self.vec[self.vec.len()-1].get_first())
         }
     }
+}
+impl<T: Ord + Clone, U: Eq> OrderedVecSymbolTable<T, U> {
+    pub fn contains(&self, key: &T) -> bool {
+        // run time complexity O(log(N))
+        self.get(key).is_some()
+    }
 
-    pub fn floor(&self, key: T) -> Option<&T>{
+    pub fn get<'a>(&'a self, key: &T) -> Option<&'a U> {
+        // run time complexity O(log(N))
+        if let Ok(index) = self.vec.binary_search(&Pair::init(key.clone(), None)){
+            return self.vec[index].get_second().as_ref();
+        } else {None}
+    }
+    pub fn floor<'a>(&'a self, key: &T) -> Option<&'a T>{
         // largest key smaller or equal to key O(log(N))
         if self.is_empty() {None}
         else {
             let index = self.vec.binary_search(&Pair::init(key.clone(), None));
             match index {
-                Ok(ind) => self.vec[ind].get_first(),
+                Ok(ind) => Some(self.vec[ind].get_first()),
                 Err(ind) => {
                     if ind > 0 {
-                        self.vec[ind-1].get_first()
+                        Some(self.vec[ind-1].get_first())
                     } else {
-                        self.vec[ind].get_first()
+                        // all keys in the table are > keys
+                        None
                     }
                 }
             }
         }
     }
-
-    pub fn ceil(&self, key: T) -> Option<&T>{
+    pub fn ceil<'a>(&'a self, key: &T) -> Option<&'a T>{
         // smallest key larger or equal to key , O(log(N))
         if self.is_empty() {None}
         else {
-            let index = self.vec.binary_search(&Pair::init(key, None));
+            let index = self.vec.binary_search(&Pair::init(key.clone(), None));
             match index {
-                Ok(ind) => self.vec[ind].get_first(),
+                Ok(ind) => Some(self.vec[ind].get_first()),
                 Err(ind) => {
                     if ind < self.vec.len()-1 {
-                        self.vec[ind+1].get_first()
+                        Some(self.vec[ind+1].get_first())
                     } else {
-                        self.vec[ind].get_first()
+                        // all keys in the table are < key
+                        None
                     }
                 }
             }
         }
     }
 }
+impl<T: Ord + Clone, U: Eq + Clone> OrderedVecSymbolTable<T, U> {
+    fn put(&mut self, key: T, value: Option<U>) -> Option<U> {
+        // run time complexity O(N) due to insertion
+        let index = self.vec.binary_search(&Pair::init(key.clone(), None));
+        match index {
+            // key is found
+            Ok(ind) => {
+                let temp_val = self.vec[ind].get_second().as_ref().cloned();
+                let mut_val = self.vec[ind].set_second();
+                *mut_val = value;
+                // self.vec[ind] = Pair::init(key, value);
+                return temp_val;
+            },
+            Err(ind) => { 
+                // index where to insert key to keep self.vec sorted 
+                if ind < self.vec.len(){
+                    self.vec.insert(ind, Pair::init(key, value));
+                } else { self.vec.push(Pair::init(key, value)) }
+                None
+            }
+        }
+    } 
+    pub fn insert(&mut self, key: T, value: U) {
+        // run time complexity O(N)
+        self.put(key, Some(value));
+    }
+
+    pub fn delete(&mut self, key: &T) -> Option<U>
+    // run time complexity O(N)
+    {
+        let val = self.put(key.clone(), None); // lazy implementation
+        val
+    }
+}    
+    
+
+
+
+
 #[derive(Default, Clone, Debug)]
 struct Pair<T,U>{
     tuple: (T,U)
 }
-impl<T,U> Pair<T,U>{
+impl<T, U> Pair<T,U>{
     pub fn init(key: T, value: U) -> Self{
         Self{tuple:(key, value)}
     }
-}
-impl<T: Clone, U: Clone> Pair<T,U>{
-    pub fn get_first(&self) -> Option<&T> {
-        Some(&self.tuple.0)
+    pub fn get_first<'a>(&'a self) -> &'a T {
+        &self.tuple.0
     }
 
-    pub fn get_second(&self) -> Option<&U> {
-        Some(&self.tuple.1)
+    pub fn get_second<'a>(&'a self) -> &'a U {
+        &self.tuple.1
+    }
+    pub fn set_first<'a>(&'a mut self) -> &'a mut U{
+        &mut self.tuple.1
+    }
+    pub fn set_second<'a>(&'a mut self) -> &'a mut U{
+        &mut self.tuple.1
     }
 }
 impl<T: Ord, U> Ord for Pair<T,U>{
@@ -288,28 +336,32 @@ impl<T, U> UnorderedVecSymbolTable<T, U> {
         symbol_table
     }
 }
-impl<T: Eq + Clone, U: Eq + Clone> UnorderedVecSymbolTable<T, U> {
-    pub fn contains(&self, key: T) -> bool {
+impl<T: Eq, U: Eq> UnorderedVecSymbolTable<T, U> {
+    pub fn contains(&self, key: &T) -> bool {
         // run time complexity O(N)
         self.get(key) != None
         // self.list.iter().any(|e| e.0 == key)
     }
-
-    pub fn get(&self, key: T) -> Option<U> {
+}
+impl<T: Eq, U> UnorderedVecSymbolTable<T, U> {
+    pub fn get(&self, key: &T) -> Option<&U> {
         // run time complexity O(N)
         for k in 0..self.vec.len(){
-            if self.vec[k].0 == key {
-                return self.vec[k].1.clone();
+            if &self.vec[k].0 == key {
+                return self.vec[k].1.as_ref();
             }
         }
         None
     }
-
-    fn put(&mut self, key: T, value: Option<U>)  {
+}
+impl<T: Eq, U: Clone> UnorderedVecSymbolTable<T, U> {
+    fn put(&mut self, key: T, value: Option<U>) -> Option<U> {
         // run time complexity O(N)
         let mut k = 0;
+        let mut val = None;
         while k < self.vec.len(){
             if self.vec[k].0 == key {
+                val = self.vec[k].1.clone();
                 self.vec[k].1 = value.clone();
                 break;
             }
@@ -321,17 +373,19 @@ impl<T: Eq + Clone, U: Eq + Clone> UnorderedVecSymbolTable<T, U> {
             // key is not in self.vec
             self.vec.push((key, value));
         } 
+        val
     } 
 
     pub fn insert(&mut self, key: T, value: U) {
         // run time complexity O(N)
-        self.put(key, Some(value))
+        let _ = self.put(key, Some(value));
     }
-
-    pub fn delete(&mut self, key: T) -> Option<T>
+}
+impl<T: Eq + Clone, U: Clone> UnorderedVecSymbolTable<T, U> {
+    pub fn delete(&mut self, key: &T) -> Option<U>
     // run time complexity O(N)
     {
-        self.put(key.clone(), None); // lazy implementation ?
-        Some(key)
+        let val = self.put(key.clone(), None); // lazy implementation
+        val
     }
 }
