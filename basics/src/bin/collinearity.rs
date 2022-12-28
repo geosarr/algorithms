@@ -22,6 +22,7 @@ fn main(){
     let segments = collinear.segments();
     println!("{}", segments.len()); 
     println!("{:?}", segments);
+    // println!("{}", segments[0].intersects(&segments[2]));
 }
 
 
