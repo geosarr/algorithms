@@ -1,4 +1,6 @@
 - test collinearity (using Brute and Fast)
 - priority queues: event-driven simulation and puzzle
 - finish Queue implementation
-- finish BinarySearchTree and implementent Red-Black Binary Search Tree
+- finish BinarySearchTree and implementent Red-Black Binary Search Tree()
+- Geometric applications of symbol tables
+    - check intersection between segments (update bin/collinearity.rs)
