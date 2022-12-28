@@ -95,8 +95,10 @@ impl<T: ToString> Point<T> {
         if x1 != x0 {
             (y1 - y0) / (x1 - x0)
         } else if x1 == x0 && y1 != y0 {
+            // self and other make a vertical segment
             f32::INFINITY
         } else {
+            // self and other are the same point
             f32::NEG_INFINITY
         }
     }
@@ -166,26 +168,24 @@ impl<T: fmt::Display> fmt::Display for LineSegment<T> {
         write!(f, "{} --> {}", self.p, self.q)
     }
 }
-impl<T: Clone> LineSegment<T> {
+impl<T> LineSegment<T> {
     pub fn init(point1: Point<T>, point2: Point<T>) -> Self {
         Self { p: point1, q: point2 }
     }
-
-    pub fn get_p(&self) -> Point<T>{
-        self.p.clone()
+    pub fn get_p<'a>(&'a self) -> &'a Point<T>{
+        &self.p
     }
-
-    pub fn get_q(&self) -> Point<T>{
-        self.q.clone()
+    pub fn get_q<'a>(&'a self) -> &'a Point<T>{
+        &self.q
     }
 }
-impl<T: Ord + Clone> LineSegment<T> {
-    pub fn largest_point(&self) -> Point<T>{
-        max(self.p.clone(), self.q.clone())
+impl<T: Ord> LineSegment<T> {
+    pub fn largest_point<'a>(&'a self) -> &'a Point<T>{
+        max(&self.p, &self.q)
     }
 
-    pub fn smallest_point(&self) -> Point<T>{
-        min(self.p.clone(), self.q.clone())
+    pub fn smallest_point<'a>(&'a self) -> &'a Point<T>{
+        min(&self.p, &self.q)
     }
 }
 impl<T: ToString> LineSegment<T> {
@@ -232,26 +232,55 @@ impl<T: fmt::Display> fmt::Display for Segment<T> {
         write!(f, "{} --> {}", self.p, self.q)
     }
 }
-impl<T: Clone> Segment<T> {
+impl<T> Segment<T> {
     pub fn init(point1: Point<T>, point2: Point<T>) -> Self {
         Self { p: point1, q: point2 }
     }
-
-    pub fn get_p(&self) -> Point<T>{
-        self.p.clone()
+    pub fn get_p<'a>(&'a self) -> &'a Point<T>{
+        &self.p
     }
-
-    pub fn get_q(&self) -> Point<T>{
-        self.q.clone()
+    pub fn get_q<'a>(&'a self) -> &'a Point<T>{
+        &self.q
     }
 }
-impl<T: Ord + Clone> Segment<T> {
-    pub fn largest_point(&self) -> Point<T>{
-        max(self.p.clone(), self.q.clone())
+impl<T: Clone + ToString> Segment<T> {
+    fn intersects(&self, other: &Self) -> bool {
+        // tells whether or not self and other intersect
+        if self.slope() != other.slope(){
+            // the lines supporting both segments self and other interect
+            // with intersection point given by the following:
+            let other_point = other.get_p();
+            let self_point = self.get_p();
+            let intersect_abscissa = 
+                ((other_point.get_y() - other.slope()*other_point.get_x()) -
+                 (self_point.get_y() - other.slope()*self_point.get_x())) / (self.slope() - other.slope());
+            let intersect_ordinate = self.slope()*(intersect_abscissa - self_point.get_x()) + self_point.get_y();
+            let intersection_point = Point::init(intersect_abscissa, intersect_ordinate);
+            // check if the intersection point belongs to both segments self and other (horrible!!)
+            let self_max_x = if self.get_p().get_x() < self.get_q().get_x() {self.get_q().get_x()} else {self.get_p().get_x()};
+            let self_min_x = if self.get_p().get_x() > self.get_q().get_x() {self.get_q().get_x()} else {self.get_p().get_x()};
+            let self_max_y = if self.get_p().get_y() < self.get_q().get_y() {self.get_q().get_y()} else {self.get_p().get_y()};
+            let self_min_y = if self.get_p().get_y() > self.get_q().get_y() {self.get_q().get_y()} else {self.get_p().get_y()};
+            let other_max_x = if other.get_p().get_x() < other.get_q().get_x() {other.get_q().get_x()} else {other.get_p().get_x()};
+            let other_min_x = if other.get_p().get_x() > other.get_q().get_x() {other.get_q().get_x()} else {other.get_p().get_x()};
+            let other_max_y = if other.get_p().get_y() < other.get_q().get_y() {other.get_q().get_y()} else {other.get_p().get_y()};
+            let other_min_y = if other.get_p().get_y() > other.get_q().get_y() {other.get_q().get_y()} else {other.get_p().get_y()};
+
+            return (self_min_x <= intersect_abscissa && intersect_abscissa <= self_max_x) 
+            && (self_min_y <= intersect_ordinate && intersect_ordinate <= self_max_y)
+            && (other_min_x <= intersect_abscissa && intersect_abscissa <= other_max_x) 
+            && (other_min_y <= intersect_ordinate && intersect_ordinate <= other_max_y);            
+        }
+        false
+    }
+}
+impl<T: Ord> Segment<T> {
+    pub fn largest_point<'a>(&'a self) -> &'a Point<T>{
+        max(&self.p, &self.q)
     }
 
-    pub fn smallest_point(&self) -> Point<T>{
-        min(self.p.clone(), self.q.clone())
+    pub fn smallest_point<'a>(&'a self) -> &'a Point<T>{
+        min(&self.p, &self.q)
     }
 }
 impl<T: ToString> Segment<T> {
@@ -262,18 +291,27 @@ impl<T: ToString> Segment<T> {
 impl<T: Ord + ToString + Clone> Ord for Segment<T> {
     fn cmp(&self, other: &Self) -> Ordering {
         // segments with strictly larger (smaller) slopes are larger (smaller)
-        // 
+        // for equal slope segments, the segment that belongs to the half plan
+        // in the normal direction (-slope, 1) to one of the segments is larger, 
+        // assuming finite slopes. When the slopes are +infinity, the segments are vertical
+        // the larger will be the one with a higher abscissa. When the slopes are -infinity
+        // the segments are points, we compare them as points (see cmp for a Point<T>).
         let slope1 = self.slope();
         let slope2 = other.slope();
-        if slope1 < slope2 ||
-        (slope1 == slope2 && -slope1 * self.get_p().get_x() + self.get_p().get_y() < -slope1 * other.get_p().get_x() + other.get_p().get_y()
-                          && -slope1 * self.get_q().get_x() + self.get_q().get_y() < -slope1 * other.get_q().get_x() + other.get_q().get_y() // (for security purpose only)
-        ){
-            return Ordering::Less;
-        } else if slope1 > slope2 ||
-        (slope1 == slope2 && -slope1 * self.get_p().get_x() + self.get_p().get_y() > -slope1 * other.get_p().get_x() + other.get_p().get_y()
-                          && -slope1 * self.get_q().get_x() + self.get_q().get_y() > -slope1 * other.get_q().get_x() + other.get_q().get_y() // (for security purpose only)
-        ){   return Ordering::Greater;
+        if slope1 < slope2 || (slope1 == slope2 && slope1 != f32::INFINITY && slope1 != f32::NEG_INFINITY 
+        && -slope1 * self.get_p().get_x() + self.get_p().get_y() < -slope1 * other.get_p().get_x() + other.get_p().get_y()
+        && -slope1 * self.get_q().get_x() + self.get_q().get_y() < -slope1 * other.get_q().get_x() + other.get_q().get_y()) || // (for security purpose only)
+        (slope1 == slope2 && slope1 == f32::INFINITY && self.get_p().get_x() < other.get_p().get_x() && self.get_q().get_x() < other.get_q().get_x()) ||
+        (slope1 == slope2 && slope1 == f32::NEG_INFINITY && self.get_p() < other.get_p() && self.get_q() < other.get_q())
+        {
+        return Ordering::Less;
+        } else if slope1 > slope2 || (slope1 == slope2 && slope1 != f32::INFINITY 
+        && -slope1 * self.get_p().get_x() + self.get_p().get_y() > -slope1 * other.get_p().get_x() + other.get_p().get_y()
+        && -slope1 * self.get_q().get_x() + self.get_q().get_y() > -slope1 * other.get_q().get_x() + other.get_q().get_y()) || // (for security purpose only)
+        (slope1 == slope2 && slope1 == f32::INFINITY && self.get_p().get_x() > other.get_p().get_x() && self.get_q().get_x() > other.get_q().get_x()) ||
+        (slope1 == slope2 && slope1 == f32::NEG_INFINITY && self.get_p() > other.get_p() && self.get_q() > other.get_q())
+        {   
+            return Ordering::Greater;
         } else {
             return Ordering::Equal;
         }
@@ -287,9 +325,17 @@ impl<T: Ord + ToString + Clone> PartialOrd for Segment<T> {
 impl<T: Ord + ToString + Clone> Eq for Segment<T> {}
 impl<T: Ord + ToString + Clone> PartialEq for Segment<T> {
     fn eq(&self, other: &Self) -> bool {
-        // to segments are equal if they belong to the same line (i.e their extremal points are on the same line)
+        // two segments are equal iff they have the same slope and belong to the same line
         // maybe better to put absolute value of differences instead of strict equality (due to f32 not Ord)
-        self.slope()*(other.get_p().get_x() - self.get_p().get_x()) == other.get_p().get_y() - self.get_p().get_y() 
-        && self.slope()*(other.get_q().get_x() - self.get_p().get_x()) == other.get_q().get_y() - self.get_p().get_y() 
+        let slope1 = self.slope();
+        let slope2 = other.slope();
+        (slope1 == slope2) &&
+        (slope1 != f32::INFINITY && slope1 != f32::NEG_INFINITY 
+        && slope1*(other.get_p().get_x() - self.get_p().get_x()) == other.get_p().get_y() - self.get_p().get_y() 
+        && slope1*(other.get_q().get_x() - self.get_p().get_x()) == other.get_q().get_y() - self.get_p().get_y()) ||
+        // self and other are vertical
+        (slope1 == f32::INFINITY && self.get_p().get_x() == other.get_p().get_x() && self.get_q().get_x() == other.get_q().get_x()) ||
+        // self and other are points
+        (slope1 == f32::NEG_INFINITY && self.get_p() == other.get_p() && self.get_q() == other.get_q())
     }
 }
