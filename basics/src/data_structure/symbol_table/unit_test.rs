@@ -20,17 +20,39 @@ mod tests{
         assert_eq!(st.floor(&1), Some(&1));
         assert_eq!(st.floor(&3), Some(&2));
         assert_eq!(st.ceil(&4), None);
+        assert_eq!(st.floor(&4), Some(&2));
+
+        let a = st.get(&2).unwrap();
+        println!("{a}");
+        st.delete(&2);
+        
     }
 
     #[test]
     fn test_binary_search_tree(){
         let mut st = BinarySearchTree::<usize, &str>::init(10,"test10");
         assert_eq!(st.len(), 1);
+        st.insert(1, "test1");
+        st.insert(5, "test5");
         assert_eq!(st.get(&10), Some(&"test10"));
         assert_eq!(st.get(&0), None);
-        st.insert(1, "test1");
         assert_eq!(st.get(&1), Some(&"test1"));
-        // println!("{:#?}", st);
+        assert!(st.contains(&5));
+        println!("{:#?}", st);
+        assert_eq!(st.floor(&5), Some(&5));
+        assert_eq!(st.floor(&1), Some(&1));
+        assert_eq!(st.floor(&4), Some(&1));
+        assert_eq!(st.floor(&0), None);
+        assert_eq!(st.floor(&15), Some(&10));
+        assert_eq!(st.min(), Some(&1));
+        assert_eq!(st.max(), Some(&10));
+        st.insert(20, "test20");
+        assert_eq!(st.max(), Some(&20));
+        // assert_eq!(st.ceil(&5), Some(&5));
+        // assert_eq!(st.ceil(&1), Some(&1));
+        // assert_eq!(st.ceil(&4), Some(&5));
+        // assert_eq!(st.ceil(&0), Some(&1));
+        // assert_eq!(st.ceil(&15), None);
     }
 
     #[test]

@@ -107,8 +107,8 @@ impl<T, U> BinarySearchTree<T,U>{
         self.len
     }
 }
-impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
-    pub fn cointains(&self, key: &T) -> bool{
+impl<T: Eq + Ord, U: Eq> BinarySearchTree<T,U>{
+    pub fn contains(&self, key: &T) -> bool{
         self.get(key).is_some()
     }
     pub fn get(&self, key: &T) -> Option<&U>{
@@ -117,15 +117,18 @@ impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
         // run time complexity on average O(log(N)), O(N) guaranteed (unbalanced tree) 
         let mut node = &self.root;
         while node != &None {
-            if key < &node.as_ref().unwrap().key {
-                node = &node.as_ref().unwrap().left;
-            } else if key > &node.as_ref().unwrap().key {
-                node = &node.as_ref().unwrap().right;
-            } else { return Some(&node.as_ref().unwrap().value); }
+            let temp_node = node.as_ref().unwrap(); 
+            if key < &temp_node.key {
+                node = &temp_node.left;
+            } else if key > &temp_node.key {
+                node = &temp_node.right;
+            } else { return Some(&temp_node.value); }
         }
         return None;
     }
-    fn put<'a>(node: &mut Option<Box<Node<T,U>>>, key: T, value: U)
+}
+impl<T: Ord, U> BinarySearchTree<T,U>{
+    fn put(node: &mut Option<Box<Node<T,U>>>, key: T, value: U)
     {
         match node {
             None => *node = Some(Box::new(Node::init(key, value))),
@@ -143,7 +146,78 @@ impl<T: Eq + Ord + Clone, U: Eq+ Clone> BinarySearchTree<T,U>{
         Self::put(&mut self.root, key, value);
         self.len += 1;
     }
-    // pub fn ceil()
+}
+impl<T: Eq + Ord, U: Ord> BinarySearchTree<T,U>{
+    pub fn min(&self) -> Option<&T>{
+        // finds the minimum key
+        let mut node = &self.root;
+        let mut result = None;
+        while node != &None {
+            // go to the left as long as you do not encounter
+            // a None Node
+            let temp_node = node.as_ref().unwrap();
+            result = Some(&temp_node.key);
+            node = &temp_node.left;
+        }
+        return result;
+    }
+    pub fn max(&self) -> Option<&T>{
+        // finds the maximum key
+        let mut node = &self.root;
+        let mut result = None;
+        while node != &None {
+            // go to the right as long as you do not encounter
+            // a None Node
+            let temp_node = node.as_ref().unwrap();
+            result = Some(&temp_node.key);
+            node = &temp_node.right;
+        }
+        return result;
+    }
+    pub fn floor(&self, key: &T) -> Option<&T>{
+        // the largest key in the tree smaller or equal to key
+        // run time complexity O(log(N)) on average, O(N) (guarenteed)
+        let mut node = &self.root;
+        while node != &None {
+            let temp_node = node.as_ref().unwrap(); 
+            if key < &temp_node.key {
+                // then the floor is potentially here, keep going
+                node = &temp_node.left;
+            } else if key > &temp_node.key {
+                // temp_node.key is a potential candidate,
+                // it is the floor if the right key (when it exists)
+                // is greater than temp_node.key or when the right node is None
+                node = &temp_node.right;
+                if let Some(_) = temp_node.right{
+                    let right = node.as_ref().unwrap();
+                    if &right.key > key{ return Some(&temp_node.key); }
+                } else { return Some(&temp_node.key); }
+            } else { return Some(&temp_node.key); }
+        }
+        return None;
+    }
+    pub fn ceil(&self, key: &T) -> Option<&T>{
+        // the smallest key in the tree larger or equal to key
+        // run time complexity O(log(N)) on average, O(N) (guarenteed)
+        let mut node = &self.root;
+        while node != &None {
+            let temp_node = node.as_ref().unwrap(); 
+            if key < &temp_node.key {
+                // temp_node.key is a potential candidate,
+                // it is the ceil if the left key (when it exists)
+                // is smaller than temp_node.key or when the left node is None
+                node = &temp_node.left;
+                if let Some(_) = temp_node.left{
+                    let left = node.as_ref().unwrap();
+                    if &left.key < key{ return Some(&temp_node.key); }
+                } else { return Some(&temp_node.key); }
+            } else if key > &temp_node.key {
+                // then the ceil is potentially here, keep going
+                node = &temp_node.right;
+            } else { return Some(&temp_node.key); }
+        }
+        return None;
+    }
 }
 
 
@@ -172,7 +246,7 @@ impl<T, U> OrderedVecSymbolTable<T, U> {
     pub fn is_empty(&self) -> bool {
         self.vec.is_empty()
     }
-    pub fn min<'a>(&'a self) -> Option<&'a T>{
+    pub fn min(&self) -> Option<&T>{
         // smallest key O(1)
         if self.is_empty(){
             None
@@ -195,13 +269,13 @@ impl<T: Ord + Clone, U: Eq> OrderedVecSymbolTable<T, U> {
         self.get(key).is_some()
     }
 
-    pub fn get<'a>(&'a self, key: &T) -> Option<&'a U> {
+    pub fn get(&self, key: &T) -> Option<&U> {
         // run time complexity O(log(N))
         if let Ok(index) = self.vec.binary_search(&Pair::init(key.clone(), None)){
             return self.vec[index].get_second().as_ref();
         } else {None}
     }
-    pub fn floor<'a>(&'a self, key: &T) -> Option<&'a T>{
+    pub fn floor(&self, key: &T) -> Option<&T>{
         // largest key smaller or equal to key O(log(N))
         if self.is_empty() {None}
         else {
@@ -219,7 +293,7 @@ impl<T: Ord + Clone, U: Eq> OrderedVecSymbolTable<T, U> {
             }
         }
     }
-    pub fn ceil<'a>(&'a self, key: &T) -> Option<&'a T>{
+    pub fn ceil(&self, key: &T) -> Option<&T>{
         // smallest key larger or equal to key , O(log(N))
         if self.is_empty() {None}
         else {

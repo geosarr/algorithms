@@ -7,7 +7,7 @@ pub use crate::data_structure::{
     Stack, VecStack, LinkedListStack, 
     LinkedListQueue, LinkedListDeque,
     BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue,
-    UnorderedVecSymbolTable, OrderedVecSymbolTable
+    UnorderedVecSymbolTable, OrderedVecSymbolTable, BinarySearchTree
 };
 pub use crate::search_algorithm::{
     UnionFind, UnionFindAlgorithm

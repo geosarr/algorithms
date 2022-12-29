@@ -8,4 +8,4 @@ pub use stack::{Stack, VecStack, LinkedListStack};
 pub use queue::{LinkedListQueue};
 pub use deque::{LinkedListDeque};
 pub use priority_queue::{BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue};
-pub use symbol_table::{UnorderedVecSymbolTable, OrderedVecSymbolTable};
+pub use symbol_table::{UnorderedVecSymbolTable, OrderedVecSymbolTable, BinarySearchTree};
