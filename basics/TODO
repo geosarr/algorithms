@@ -4,3 +4,5 @@
 - finish BinarySearchTree and implementent Red-Black Binary Search Tree()
 - Geometric applications of symbol tables
     - check intersection between segments (update bin/collinearity.rs)
+- Implement resizing for SeparateChainingSymbolTable
+- Implement LinearProbingSymbolTable & resizing method
