@@ -5,12 +5,26 @@ use std::collections::LinkedList;
 use std::mem::replace;
 
 // Implementing stacks relatively "from scratch"
-#[derive(Debug, Clone)]
-struct Node<T> {
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Node<T> {
     item: T,
     // Box helps avoid infinity memory allocation
     // in a recursive definition of a struct
     next: Option<Box<Node<T>>>,
+}
+impl<T> Node<T>{
+    pub fn get_item<'a>(&'a self) -> &'a T{
+        &self.item
+    }
+    pub fn get_mut_item<'a>(&'a mut self) -> &'a mut T{
+        &mut self.item
+    }
+    pub fn get_next<'a>(&'a self) -> &'a Option<Box<Node<T>>>{
+        &self.next
+    }
+    pub fn get_mut_next<'a>(&'a mut self) -> &'a mut Option<Box<Node<T>>>{
+        &mut self.next
+    }
 }
 
 #[derive(Debug, Default, Clone)]
@@ -19,14 +33,14 @@ pub struct Stack<T> {
     len: usize,
 }
 
-impl<T: Default> Stack<T> { 
+impl<T> Stack<T> { 
     pub fn new() -> Self {
         // run time complexity O(1)
-        Default::default()
+        Self {
+            first: None,
+            len: 0
+        }
     }
-}
-
-impl<T: Clone> Stack<T> {
     pub fn init(s: T) -> Self {
         // run time complexity O(1)
         let node = Node {
@@ -38,16 +52,22 @@ impl<T: Clone> Stack<T> {
             len: 1,
         }
     }
-
+    pub fn get_first<'a>(&'a self) -> &'a Option<Box<Node<T>>>{
+        &self.first
+    }
+    pub fn get_mut_first<'a>(&'a mut self) -> &'a mut Option<Box<Node<T>>>{
+        &mut self.first
+    }
     pub fn is_empty(&self) -> bool {
         // run time complexity O(1)
         self.first.is_none()
     }
-
     pub fn len(&self) -> usize {
         self.len
     }
+}
 
+impl<T: Clone> Stack<T> {
     pub fn pop(&mut self) -> Option<T> {
         // run time complexity O(N) (due to cloning) ?
         // space complexity O(N) (due to cloning) ?

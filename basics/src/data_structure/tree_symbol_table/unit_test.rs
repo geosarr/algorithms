@@ -48,11 +48,6 @@ mod tests{
         assert_eq!(st.max(), Some(&10));
         st.insert(20, "test20");
         assert_eq!(st.max(), Some(&20));
-        // assert_eq!(st.ceil(&5), Some(&5));
-        // assert_eq!(st.ceil(&1), Some(&1));
-        // assert_eq!(st.ceil(&4), Some(&5));
-        // assert_eq!(st.ceil(&0), Some(&1));
-        // assert_eq!(st.ceil(&15), None);
     }
 
     #[test]

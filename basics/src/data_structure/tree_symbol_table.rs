@@ -174,49 +174,29 @@ impl<T: Eq + Ord, U: Ord> BinarySearchTree<T,U>{
         }
         return result;
     }
-    pub fn floor(&self, key: &T) -> Option<&T>{
-        // the largest key in the tree smaller or equal to key
-        // run time complexity O(log(N)) on average, O(N) (guarenteed)
-        let mut node = &self.root;
-        while node != &None {
-            let temp_node = node.as_ref().unwrap(); 
-            if key < &temp_node.key {
-                // then the floor is potentially here, keep going
-                node = &temp_node.left;
-            } else if key > &temp_node.key {
-                // temp_node.key is a potential candidate,
-                // it is the floor if the right key (when it exists)
-                // is greater than temp_node.key or when the right node is None
-                node = &temp_node.right;
-                if let Some(_) = temp_node.right{
-                    let right = node.as_ref().unwrap();
-                    if &right.key > key{ return Some(&temp_node.key); }
-                } else { return Some(&temp_node.key); }
-            } else { return Some(&temp_node.key); }
+    fn recursive_floor<'a>(node: &'a Option<Box<Node<T,U>>>, key: &T)
+    -> &'a Option<Box<Node<T,U>>>
+    {   
+        if node.is_none(){
+            return &None;
+        } 
+        let current_node = node.as_ref().unwrap(); 
+        if key == &current_node.key{
+            return node;
+        } 
+        if key < &current_node.key{
+            return Self::recursive_floor(&current_node.left, key);
         }
-        return None;
+        let temp_node = Self::recursive_floor(&current_node.right, key);
+        if temp_node.is_some(){return temp_node;}
+        else { return node; }
     }
-    pub fn ceil(&self, key: &T) -> Option<&T>{
-        // the smallest key in the tree larger or equal to key
-        // run time complexity O(log(N)) on average, O(N) (guarenteed)
-        let mut node = &self.root;
-        while node != &None {
-            let temp_node = node.as_ref().unwrap(); 
-            if key < &temp_node.key {
-                // temp_node.key is a potential candidate,
-                // it is the ceil if the left key (when it exists)
-                // is smaller than temp_node.key or when the left node is None
-                node = &temp_node.left;
-                if let Some(_) = temp_node.left{
-                    let left = node.as_ref().unwrap();
-                    if &left.key < key{ return Some(&temp_node.key); }
-                } else { return Some(&temp_node.key); }
-            } else if key > &temp_node.key {
-                // then the ceil is potentially here, keep going
-                node = &temp_node.right;
-            } else { return Some(&temp_node.key); }
-        }
-        return None;
+    pub fn floor<'a>(&'a self, key: &T) -> Option<&'a T>{
+        // the largest key in the tree smaller or equal to key
+        // run time complexity O(log(N)) on average, O(N) (guaranteed)
+        let node = Self::recursive_floor(&self.root, key);
+        if node.is_none(){ return None; }
+        return Some(&node.as_ref().unwrap().key);
     }
 }
 
