@@ -1,6 +1,12 @@
 #[cfg(test)]
 mod tests{
-    use super::super::{UndirectedGraph};
+    use super::super::{
+        UndirectedGraph, 
+        DepthFirstSearch, 
+        BreadthFirstSearch, 
+        LinkedList,
+        ConnectedComponent,
+    };
 
     #[test]
     fn test_undirected_graph(){
@@ -35,6 +41,68 @@ mod tests{
 
     #[test]
     fn test_dfs(){
-        
+        let mut graph = UndirectedGraph::init(9);
+        graph.add_edge(0,1);
+        graph.add_edge(0,2);
+        graph.add_edge(0,6);
+        graph.add_edge(0,5);
+        graph.add_edge(6,4);
+        graph.add_edge(4,3);
+        graph.add_edge(5,4);
+        graph.add_edge(5,3);
+
+        let mut dfs = DepthFirstSearch::init(graph.nb_vertices,0);
+        dfs.find_paths(&graph);
+        assert_eq!(dfs.path_to(2), Some(LinkedList::from([2,0])));
+        assert!(dfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
+            dfs.path_to(4) == Some(LinkedList::from([4,5,0])) ||
+            dfs.path_to(4) == Some(LinkedList::from([4,3,5,0]))
+        );
+    }
+
+    #[test]
+    fn test_bfs(){
+        let mut graph = UndirectedGraph::init(9);
+        graph.add_edge(0,1);
+        graph.add_edge(0,2);
+        graph.add_edge(0,6);
+        graph.add_edge(0,5);
+        graph.add_edge(6,4);
+        graph.add_edge(4,3);
+        graph.add_edge(5,4);
+        graph.add_edge(5,3);
+
+        let mut bfs = BreadthFirstSearch::init(graph.nb_vertices, 0);
+        bfs.find_paths(&graph);
+        assert_eq!(bfs.path_to(2), Some(LinkedList::from([2,0])));
+        assert!(bfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
+            bfs.path_to(4) == Some(LinkedList::from([4,5,0]))
+        );
+        assert_eq!(bfs.path_to(5), Some(LinkedList::from([5,0])));
+    }
+
+    #[test]
+    fn test_connected_components(){
+        let mut graph = UndirectedGraph::init(13);
+        graph.add_edge(0,1);
+        graph.add_edge(0,2);
+        graph.add_edge(0,6);
+        graph.add_edge(0,5);
+        graph.add_edge(6,4);
+        graph.add_edge(4,3);
+        graph.add_edge(5,4);
+        graph.add_edge(5,3);
+        graph.add_edge(7,8);
+        graph.add_edge(9,10);
+        graph.add_edge(9,11);
+        graph.add_edge(9,12);
+        graph.add_edge(11,12);
+
+        let mut cc = ConnectedComponent::init(graph.nb_vertices);
+        cc.find_cc(&graph);
+        assert_eq!(cc.nb_cc, 3);
+        assert_eq!(&cc.id[0..7], &vec![cc.id[0];7]); // the first 7 objects belong to the same cc
+        assert!(cc.connected(0,3).unwrap());
+        assert!(!cc.connected(5,9).unwrap());
     }
 }
