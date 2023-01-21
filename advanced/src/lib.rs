@@ -4,4 +4,5 @@ pub use crate::graph::{
     UndirectedGraph, 
     DepthFirstSearch, 
     BreadthFirstSearch,
+    ConnectedComponent
 };

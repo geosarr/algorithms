@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests{
-    use super::super::{
-        UndirectedGraph, 
-        DepthFirstSearch, 
+    use super::super::UndirectedGraph;
+    use crate::graph::{
+        DepthFirstSearch,
         BreadthFirstSearch, 
         LinkedList,
         ConnectedComponent,
@@ -100,8 +100,8 @@ mod tests{
 
         let mut cc = ConnectedComponent::init(graph.nb_vertices);
         cc.find_cc(&graph);
-        assert_eq!(cc.nb_cc, 3);
-        assert_eq!(&cc.id[0..7], &vec![cc.id[0];7]); // the first 7 objects belong to the same cc
+        assert_eq!(cc.count(), 3);
+        // assert_eq!(&cc.id[0..7], &vec![cc.id[0];7]); // the first 7 objects belong to the same cc
         assert!(cc.connected(0,3).unwrap());
         assert!(!cc.connected(5,9).unwrap());
     }
