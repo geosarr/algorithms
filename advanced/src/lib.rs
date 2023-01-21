@@ -1,3 +1,7 @@
 mod graph;
 
-pub use crate::graph::{UndirectedGraph};
+pub use crate::graph::{ 
+    UndirectedGraph, 
+    DepthFirstSearch, 
+    BreadthFirstSearch,
+};
