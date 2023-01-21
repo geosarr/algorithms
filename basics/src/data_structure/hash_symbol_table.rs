@@ -8,7 +8,7 @@ use std::hash::{Hash, Hasher};
 
 
 #[derive(Debug)]
-struct SeparateChainingSymbolTable<T,U>{
+pub struct SeparateChainingSymbolTable<T,U>{
     // number of chains in the hash table
     chains: usize, 
     // list of chains
@@ -26,10 +26,21 @@ struct SeparateChainingSymbolTable<T,U>{
 impl<T,U> SeparateChainingSymbolTable<T,U>{
     pub fn new() -> Self {
         Self {
-            chains: 17, 
+            chains: 97, 
             vec: Vec::new(),
             len: 0
         }
+    }
+}
+impl<T: Clone, U: Clone> SeparateChainingSymbolTable<T,U>{
+    fn double(&mut self){
+        // doubles the number of chains
+        self.vec.resize(2*self.chains, Stack::new());
+        self.chains *= 2;
+    }
+    fn halve(&mut self){
+        // reduce the size of the chain to free space
+        // TODO 
     }
 }
 impl<T: Hash,U> SeparateChainingSymbolTable<T,U>{
@@ -75,11 +86,11 @@ impl<T: Hash + Clone + Eq, U: Clone + Eq> SeparateChainingSymbolTable<T,U>{
                 break;
             }
             stack = temp_stack.get_mut_next(); 
-            c += 1
+            c += 1;
         }
         if c >= stack_len {self.vec[index].push((key, value))};
         self.len += 1;
-    }
+        }
 }
 impl<T: Eq + Hash, U: Eq> SeparateChainingSymbolTable<T,U>{
     pub fn contains(&self, key: &T) -> bool {

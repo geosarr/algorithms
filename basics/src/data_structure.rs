@@ -10,4 +10,4 @@ pub use queue::{LinkedListQueue};
 pub use deque::{LinkedListDeque};
 pub use priority_queue::{BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue};
 pub use tree_symbol_table::{UnorderedVecSymbolTable, OrderedVecSymbolTable, BinarySearchTree};
-// pub use hash_symbol_table::{SeparateChainingSymbolTable};
+pub use hash_symbol_table::{SeparateChainingSymbolTable};
