@@ -8,6 +8,7 @@ pub use processing::{
     DepthFirstSearch,
     BreadthFirstSearch,
     ConnectedComponent,
+    TopologicalSort,
 };
 pub use std::collections::{LinkedList, HashSet};
 
