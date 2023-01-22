@@ -5,7 +5,7 @@ mod tests{
         DepthFirstSearch,
         BreadthFirstSearch, 
         LinkedList,
-        ConnectedComponent,
+        TopologicalSort
     };
 
     #[test]
@@ -81,28 +81,29 @@ mod tests{
         assert_eq!(bfs.path_to(5), Some(LinkedList::from([5,0])));
     }
 
+
     #[test]
-    fn test_connected_components(){
-        let mut graph = DirectedGraph::init(13);
+    fn test_topological_sort(){
+        let mut graph = DirectedGraph::init(7);
         graph.add_edge(0,1);
         graph.add_edge(0,2);
-        graph.add_edge(0,6);
         graph.add_edge(0,5);
+        graph.add_edge(1,4);
+        graph.add_edge(3,2);
+        graph.add_edge(3,4);
+        graph.add_edge(3,5);
+        graph.add_edge(3,6);
+        graph.add_edge(5,2);
         graph.add_edge(6,4);
-        graph.add_edge(4,3);
-        graph.add_edge(5,4);
-        graph.add_edge(5,3);
-        graph.add_edge(7,8);
-        graph.add_edge(9,10);
-        graph.add_edge(9,11);
-        graph.add_edge(9,12);
-        graph.add_edge(11,12);
+        graph.add_edge(6,0);
 
-        let mut cc = ConnectedComponent::init(graph.nb_vertices);
-        cc.find_cc(&graph);
-        assert_eq!(cc.count(), 3);
-        // assert_eq!(&cc.id[0..7], &vec![cc.id[0];7]); // the first 7 objects belong to the same cc
-        assert!(cc.connected(0,3).unwrap());
-        assert!(!cc.connected(5,9).unwrap());
+        let mut topo = TopologicalSort::init(graph.nb_vertices);
+        topo.depth_first_order(&graph);
+        // println!("{:?}", topo.reverse_postorder());
+        assert!(
+            topo.reverse_postorder() == &LinkedList::from([4,1,2,5,0,6,3]) ||
+            topo.reverse_postorder() == &LinkedList::from([2,5,4,1,0,6,3]) ||
+            topo.reverse_postorder() == &LinkedList::from([2,4,1,5,0,6,3])                  
+        );
     }
 }
