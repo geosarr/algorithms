@@ -1,5 +1,11 @@
 use std::marker::PhantomData;
-use crate::graph::{VertexInfo, LinkedList, HashSet};
+use crate::graph::{
+    VertexInfo, 
+    LinkedList, 
+    HashSet, 
+    UndirectedGraph, 
+    DirectedGraph
+};
 
 pub struct DepthFirstSearch<G>{
     // Indicates whether or not a vertex w in the graph is visited
@@ -29,12 +35,12 @@ impl<G: VertexInfo> DepthFirstSearch<G>{
 
     fn dfs(graph: &G, marked: &mut Vec<bool>, edge_to: &mut Vec<usize>, w: &usize){
         // finds all reachable vertices from w
-        // run time complexity O(sum of degrees of all reachable vertices from v)
+        // run time complexity O(sum of degrees of all reachable vertices from w)
 
-        // mark vertex v as visited
+        // mark vertex w as visited
         marked[*w] = true;
 
-        // recursively visit all unmarked adjacent vertices to v
+        // recursively visit all unmarked adjacent vertices to w
         let adjacent_vertices = graph.vertex_edges(w);
         for u in adjacent_vertices{
             if !marked[*u] {
@@ -126,7 +132,7 @@ impl<G: VertexInfo> BreadthFirstSearch<G>{
 }
 
 
-pub struct ConnectedComponent<G>{
+pub struct ConnectedComponent{
     // Aims at answering the question are two vertives v and w connected in contant time
     // after preprocessing the graph
     // Identifier of the connected commponent vertices belong to
@@ -137,20 +143,17 @@ pub struct ConnectedComponent<G>{
     nb_cc: usize,
     // Whether or not the algorithm has run
     ran: bool,
-    // type of the graph
-    graph_type: PhantomData<G>
 }
-impl<G: VertexInfo> ConnectedComponent<G>{
+impl ConnectedComponent{
     pub fn init(nb_vertices: usize) -> Self {
         Self {
             marked: vec![false;nb_vertices],
             id: (0..nb_vertices).collect::<Vec<usize>>(), 
             nb_cc: 0,
             ran: false,
-            graph_type: PhantomData
         }
     }
-    pub fn find_cc(&mut self, graph: &G){
+    pub fn find_cc(&mut self, graph: &UndirectedGraph){
         // builds all the connected components from a graph
         let nb = graph.nb_vertices();
         for v in 0..nb{
@@ -179,14 +182,14 @@ impl<G: VertexInfo> ConnectedComponent<G>{
         }
     }
 
-    fn dfs_cc(graph: &G, marked: &mut Vec<bool>, id: &mut Vec<usize>, w: usize, v: usize){
-        // finds all reachable vertices from w and adds them to the connected component v
-        // run time complexity O(sum of degrees of all reachable vertices from v)
+    fn dfs_cc(graph: &UndirectedGraph, marked: &mut Vec<bool>, id: &mut Vec<usize>, w: usize, v: usize){
+        // finds all reachable vertices from w and adds them to the connected component w
+        // run time complexity O(sum of degrees of all reachable vertices from w)
 
-        // mark vertex v as visited
+        // mark vertex w as visited
         marked[w] = true;
 
-        // recursively visit all unmarked adjacent vertices to v
+        // recursively visit all unmarked adjacent vertices to w
         let adjacent_vertices = graph.vertex_edges(&w);
         for u in adjacent_vertices{
             if !marked[*u] {
@@ -194,6 +197,52 @@ impl<G: VertexInfo> ConnectedComponent<G>{
                 id[*u] = v;
             }
         }
+    }
+
+}
+
+pub struct TopologicalSort{
+    // Sorts vertices of a directed **acyclic** graph
+    // 
+    reverse_postorder: LinkedList<usize>,
+    // Indicates wether or not a vertex w in the graph is visited
+    marked: Vec<bool>,
+}
+impl TopologicalSort{
+    pub fn init(nb_vertices: usize) -> Self {
+        Self {
+            reverse_postorder: LinkedList::new(),
+            marked: vec![false;nb_vertices],
+        }
+    }
+    pub fn reverse_postorder<'a>(&'a self) -> &'a LinkedList<usize>{
+        &self.reverse_postorder
+    }
+    pub fn depth_first_order(&mut self, graph: &DirectedGraph){
+        let nb = graph.nb_vertices();
+        for v in 0..nb{
+            if !self.marked[v]{
+                // run DFS for each vertex in each component
+                Self::dfs(graph, &mut self.marked, &mut self.reverse_postorder, v);
+            }
+        }
+        
+    }
+    fn dfs(graph: &DirectedGraph, marked: &mut Vec<bool>, reverse_postorder: &mut LinkedList<usize>, w: usize){
+        // finds all reachable vertices from w and adds them to the connected component w
+        // run time complexity O(sum of degrees of all reachable vertices from w)
+
+        // mark vertex w as visited
+        marked[w] = true;
+
+        // recursively visit all unmarked adjacent vertices to w
+        let adjacent_vertices = graph.vertex_edges(&w);
+        for u in adjacent_vertices{
+            if !marked[*u] {
+                Self::dfs(graph, marked, reverse_postorder, *u);
+            }
+        }
+        reverse_postorder.push_back(w);
     }
 
 }
