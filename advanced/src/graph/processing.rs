@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 use crate::graph::{
-    VertexInfo, 
+    VertexInfo,
     LinkedList, 
     HashSet, 
     UndirectedGraph, 
@@ -50,19 +50,19 @@ impl<G: VertexInfo> DepthFirstSearch<G>{
         }
     }
 
-    pub fn path_to(&self, w: usize) -> Option<LinkedList<usize>> {
+    pub fn path_to(&self, w: usize) -> Option<Vec<usize>> {
         // finds the path from v to w
         // run time complexity O(length of the path)
         // can be very time consuming for some applications
         
         if !self.marked[w] {return None}
-        let mut path = LinkedList::<usize>::new();
+        let mut path = Vec::<usize>::new();
         let mut x = w;
         while x != self.v {
-            path.push_back(x);
+            path.push(x);
             x = self.edge_to[x];
         }
-        path.push_back(self.v);
+        path.push(self.v);
         Some(path)
     }
 }
@@ -114,19 +114,19 @@ impl<G: VertexInfo> BreadthFirstSearch<G>{
         // println!("{:?}\n{:?}", self.edge_to, self.marked);
     }
 
-    pub fn path_to(&self, w: usize) -> Option<LinkedList<usize>> {
+    pub fn path_to(&self, w: usize) -> Option<Vec<usize>> {
         // finds the path from v to w
         // run time complexity O(length of the path)
         // computes shortest paths
 
         if !self.marked[w] {return None}
-        let mut path = LinkedList::<usize>::new();
+        let mut path = Vec::<usize>::new();
         let mut x = w;
         while x != self.v {
-            path.push_back(x);
+            path.push(x);
             x = self.edge_to[x];
         }
-        path.push_back(self.v);
+        path.push(self.v);
         Some(path)
     }
 }
@@ -201,21 +201,27 @@ impl ConnectedComponent{
 
 }
 
+
+
+
+
+
+
 pub struct TopologicalSort{
     // Sorts vertices of a directed **acyclic** graph
     // 
-    reverse_postorder: LinkedList<usize>,
+    reverse_postorder: Vec<usize>,
     // Indicates wether or not a vertex w in the graph is visited
     marked: Vec<bool>,
 }
 impl TopologicalSort{
     pub fn init(nb_vertices: usize) -> Self {
         Self {
-            reverse_postorder: LinkedList::new(),
+            reverse_postorder: Vec::new(),
             marked: vec![false;nb_vertices],
         }
     }
-    pub fn reverse_postorder<'a>(&'a self) -> &'a LinkedList<usize>{
+    pub fn reverse_postorder<'a>(&'a self) -> &'a Vec<usize>{
         &self.reverse_postorder
     }
     pub fn depth_first_order(&mut self, graph: &DirectedGraph){
@@ -228,7 +234,7 @@ impl TopologicalSort{
         }
         
     }
-    fn dfs(graph: &DirectedGraph, marked: &mut Vec<bool>, reverse_postorder: &mut LinkedList<usize>, w: usize){
+    fn dfs(graph: &DirectedGraph, marked: &mut Vec<bool>, reverse_postorder: &mut Vec<usize>, w: usize){
         // finds all reachable vertices from w and adds them to the connected component w
         // run time complexity O(sum of degrees of all reachable vertices from w)
 
@@ -242,7 +248,76 @@ impl TopologicalSort{
                 Self::dfs(graph, marked, reverse_postorder, *u);
             }
         }
-        reverse_postorder.push_back(w);
+        reverse_postorder.push(w);
+    }
+
+}
+
+
+
+
+
+pub struct StrongConnectedComponent{
+    // Aims at answering the question are two vertives v and w connected in contant time
+    // after preprocessing a directed graph
+    // Identifier of the strong connected commponents vertices belong to
+    id: Vec<usize>,
+    // Indicates wether or not a vertex w in the graph is visited
+    marked: Vec<bool>,
+    // Number of strong connected components
+    nb_scc: usize,
+ 
+}
+impl StrongConnectedComponent{
+    pub fn init(nb_vertices: usize) -> Self {
+        Self {
+            marked: vec![false;nb_vertices],
+            id: (0..nb_vertices).collect::<Vec<usize>>(), 
+            nb_scc: 0,
+        }
+    }
+    pub fn find_scc(&mut self, graph: &DirectedGraph){
+        // builds all the string connected components from a directed graph
+
+        // run dfs on the reverse graph
+        let nb = graph.nb_vertices();
+        let mut topo = TopologicalSort::init(nb);
+        topo.depth_first_order(&graph.reverse());
+        let mut order_second_dfs = topo.reverse_postorder();
+        // order_second_dfs.reverse();
+        for v in 0..nb{
+            let v = order_second_dfs[nb-1-v];
+            if !self.marked[v]{
+                // run DFS for each vertex in each component
+                Self::dfs_scc(graph, &mut self.marked, &mut self.id, v, v);
+                self.nb_scc += 1;
+            }
+        }
+    }
+    pub fn connected(&self, v: usize, w: usize) -> Option<bool>{
+        // finds out whether or not two vertices are in the same strong connected component 
+        // run time complexity O(1)
+        if !self.marked[v] || !self.marked[w] {return None;}
+        Some(self.id[v] == self.id[w])
+    }
+    pub fn count(&self) -> usize{
+        self.nb_scc
+    }
+    fn dfs_scc(graph: &DirectedGraph, marked: &mut Vec<bool>, id: &mut Vec<usize>, w: usize, v: usize){
+        // finds all reachable vertices from w and adds them to the strong connected component of w
+        // run time complexity O(sum of degrees of all reachable vertices from w)
+
+        // mark vertex w as visited
+        marked[w] = true;
+
+        // recursively visit all unmarked adjacent vertices to w
+        let adjacent_vertices = graph.vertex_edges(&w);
+        for u in adjacent_vertices{
+            if !marked[*u] {
+                Self::dfs_scc(graph, marked, id, *u, v);
+                id[*u] = v;
+            }
+        }
     }
 
 }

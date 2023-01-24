@@ -4,7 +4,6 @@ mod tests{
     use crate::graph::{
         DepthFirstSearch,
         BreadthFirstSearch, 
-        LinkedList,
         ConnectedComponent,
     };
 
@@ -53,10 +52,10 @@ mod tests{
 
         let mut dfs = DepthFirstSearch::init(graph.nb_vertices,0);
         dfs.find_paths(&graph);
-        assert_eq!(dfs.path_to(2), Some(LinkedList::from([2,0])));
-        assert!(dfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
-            dfs.path_to(4) == Some(LinkedList::from([4,5,0])) ||
-            dfs.path_to(4) == Some(LinkedList::from([4,3,5,0]))
+        assert_eq!(dfs.path_to(2), Some(vec![2,0]));
+        assert!(dfs.path_to(4) == Some(vec![4,6,0]) ||
+            dfs.path_to(4) == Some(vec![4,5,0]) ||
+            dfs.path_to(4) == Some(vec![4,3,5,0])
         );
     }
 
@@ -74,11 +73,11 @@ mod tests{
 
         let mut bfs = BreadthFirstSearch::init(graph.nb_vertices, 0);
         bfs.find_paths(&graph);
-        assert_eq!(bfs.path_to(2), Some(LinkedList::from([2,0])));
-        assert!(bfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
-            bfs.path_to(4) == Some(LinkedList::from([4,5,0]))
+        assert_eq!(bfs.path_to(2), Some(vec![2,0]));
+        assert!(bfs.path_to(4) == Some(vec![4,6,0]) ||
+            bfs.path_to(4) == Some(vec![4,5,0])
         );
-        assert_eq!(bfs.path_to(5), Some(LinkedList::from([5,0])));
+        assert_eq!(bfs.path_to(5), Some(vec![5,0]));
     }
 
     #[test]

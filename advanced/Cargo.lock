@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "advanced"
+name = "advanced-algo-and-struct"
 version = "0.1.0"

@@ -4,8 +4,8 @@ mod tests{
     use crate::graph::{
         DepthFirstSearch,
         BreadthFirstSearch, 
-        LinkedList,
-        TopologicalSort
+        TopologicalSort,
+        StrongConnectedComponent
     };
 
     #[test]
@@ -53,10 +53,10 @@ mod tests{
 
         let mut dfs = DepthFirstSearch::init(graph.nb_vertices,0);
         dfs.find_paths(&graph);
-        assert_eq!(dfs.path_to(2), Some(LinkedList::from([2,0])));
-        assert!(dfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
-            dfs.path_to(4) == Some(LinkedList::from([4,5,0])) ||
-            dfs.path_to(4) == Some(LinkedList::from([4,3,5,0]))
+        assert_eq!(dfs.path_to(2), Some(vec![2,0]));
+        assert!(dfs.path_to(4) == Some(vec![4,6,0]) ||
+            dfs.path_to(4) == Some(vec![4,5,0]) ||
+            dfs.path_to(4) == Some(vec![4,3,5,0])
         );
     }
 
@@ -74,11 +74,11 @@ mod tests{
 
         let mut bfs = BreadthFirstSearch::init(graph.nb_vertices, 0);
         bfs.find_paths(&graph);
-        assert_eq!(bfs.path_to(2), Some(LinkedList::from([2,0])));
-        assert!(bfs.path_to(4) == Some(LinkedList::from([4,6,0])) ||
-            bfs.path_to(4) == Some(LinkedList::from([4,5,0]))
+        assert_eq!(bfs.path_to(2), Some(vec![2,0]));
+        assert!(bfs.path_to(4) == Some(vec![4,6,0]) ||
+            bfs.path_to(4) == Some(vec![4,5,0])
         );
-        assert_eq!(bfs.path_to(5), Some(LinkedList::from([5,0])));
+        assert_eq!(bfs.path_to(5), Some(vec![5,0]));
     }
 
 
@@ -101,9 +101,50 @@ mod tests{
         topo.depth_first_order(&graph);
         // println!("{:?}", topo.reverse_postorder());
         assert!(
-            topo.reverse_postorder() == &LinkedList::from([4,1,2,5,0,6,3]) ||
-            topo.reverse_postorder() == &LinkedList::from([2,5,4,1,0,6,3]) ||
-            topo.reverse_postorder() == &LinkedList::from([2,4,1,5,0,6,3])                  
+            topo.reverse_postorder() == &vec![4,1,2,5,0,6,3] ||
+            topo.reverse_postorder() == &vec![2,5,4,1,0,6,3] ||
+            topo.reverse_postorder() == &vec![2,4,1,5,0,6,3]                  
         );
+    }
+
+
+    #[test]
+    fn test_strong_connected_components(){
+        let mut graph = DirectedGraph::init(13);
+        graph.add_edge(0,1);
+        graph.add_edge(0,5);
+        graph.add_edge(2,0);
+        graph.add_edge(2,3);
+        graph.add_edge(3,2);
+        graph.add_edge(3,5);
+        graph.add_edge(4,2);
+        graph.add_edge(4,3);
+        graph.add_edge(5,4);
+        graph.add_edge(6,0);
+        graph.add_edge(6,4);
+        graph.add_edge(6,8);
+        graph.add_edge(6,9);
+        graph.add_edge(7,6);
+        graph.add_edge(7,9);
+        graph.add_edge(8,6);
+        graph.add_edge(9,10);
+        graph.add_edge(9,11);
+        graph.add_edge(10,12);
+        graph.add_edge(11,4);
+        graph.add_edge(11,12);
+        graph.add_edge(12,9);
+
+
+        let mut scc = StrongConnectedComponent::init(graph.nb_vertices);
+        scc.find_scc(&graph);
+        assert!(scc.connected(0,3).unwrap());
+        assert!(scc.connected(0,2).unwrap());
+        assert!(scc.connected(0,4).unwrap());
+        assert!(scc.connected(0,5).unwrap());
+        assert!(!scc.connected(0,1).unwrap());
+        assert!(scc.connected(9,10).unwrap());
+        assert!(scc.connected(9,11).unwrap());
+        assert!(scc.connected(11,10).unwrap());
+        assert!(!scc.connected(9,8).unwrap());
     }
 }

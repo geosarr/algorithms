@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{LinkedList, HashSet, VertexInfo};
+use crate::graph::{HashSet, VertexInfo};
 
 pub struct UndirectedGraph{
     // implements an adjacency-list graph
