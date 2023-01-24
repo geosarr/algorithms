@@ -1,2 +1,4 @@
 - add tests graph, dfs, bfs
 - add application to smart contracts ?
+- SAP wordnet ancestor add threading ?
+- impl string connected components for digraphs and test
