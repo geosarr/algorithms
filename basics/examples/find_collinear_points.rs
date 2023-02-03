@@ -1,4 +1,4 @@
-use basics::{Point, BruteCollinearPoints};
+use basics::utils::{Point, BruteCollinearPoints};
 
 fn main(){
     let mut points = Vec::<Point<isize>>::new();

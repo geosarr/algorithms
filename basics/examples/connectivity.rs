@@ -1,10 +1,12 @@
-use basics::{UnionFind, UnionFindAlgorithm};
+use basics::{
+    search_algorithm::UnionFind, 
+    search_algorithm::UnionFindAlgorithm};
 
 fn main(){
     // define n objects to connect, and an union-find algorithm 
     let n = 5; 
     let algo = UnionFindAlgorithm::WeightedQuickUnion;
-    let mut uf = UnionFind::init(n, algo);
+    let mut uf = UnionFind::with_capacity(n, algo);
 
     // build the connection graph
     uf.union(0, 4);
