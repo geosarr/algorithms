@@ -4,7 +4,6 @@ mod unit_test;
 use std::collections::LinkedList;
 use std::mem::replace;
 
-// Implementing stacks relatively "from scratch"
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Node<T> {
     item: T,
@@ -27,13 +26,43 @@ impl<T> Node<T>{
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+/// Implementation of the First In Last Out concept, relatively from scratch
+/// # Examples
+/// ```
+/// use basics::data_structure::stack::Stack;
+/// let mut stack = Stack::new();
+/// assert_eq!(stack.len(), 0);
+/// stack.push(0);
+/// stack.push(1);
+/// stack.push(2);
+/// assert_eq!(stack.len(), 3);
+/// assert_eq!(stack.pop(), Some(2));
+/// assert_eq!(stack.len(), 2);
+/// ```
 #[derive(Debug, Default, Clone)]
-pub struct Stack<T> {
+pub struct Stack<T> { 
     first: Option<Box<Node<T>>>,
     len: usize,
 }
 
 impl<T> Stack<T> { 
+    /// Creates an empty stack instance.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let stack = Stack::<usize>::new();
+    /// assert_eq!(stack.len(), 0);
+    /// ```
     pub fn new() -> Self {
         // run time complexity O(1)
         Self {
@@ -41,6 +70,14 @@ impl<T> Stack<T> {
             len: 0
         }
     }
+
+    /// Creates a new stack with an initial object.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let stack = Stack::init(&"stack");
+    /// assert_eq!(stack.len(), 1);
+    /// ```
     pub fn init(s: T) -> Self {
         // run time complexity O(1)
         let node = Node {
@@ -52,22 +89,69 @@ impl<T> Stack<T> {
             len: 1,
         }
     }
+
+    /// Gives an immutable reference to the first object to come out of the stack, 
+    /// i.e the last element inserted in the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let stack = Stack::init(&"0");
+    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"0");
+    /// ```
     pub fn get_first<'a>(&'a self) -> &'a Option<Box<Node<T>>>{
         &self.first
     }
+
+    /// Gives a mutable reference to the last element inserted in the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let mut stack = Stack::init(&"0");
+    /// let mut mut_ref_first = stack.get_mut_first();
+    /// if let Some(ref mut node) = mut_ref_first{
+    ///     *(node.get_mut_item()) = &"1";     
+    ///  } 
+    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"1");
+    /// ```
     pub fn get_mut_first<'a>(&'a mut self) -> &'a mut Option<Box<Node<T>>>{
         &mut self.first
     }
+
+    /// Tests whether or not the stack is empty.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let stack = Stack::<usize>::new();
+    /// assert!(stack.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         // run time complexity O(1)
         self.first.is_none()
     }
+    
+    /// Gives the number of objects in the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let stack = Stack::<isize>::new();
+    /// assert_eq!(stack.len(),0);
+    /// ```
     pub fn len(&self) -> usize {
+        // run time complexity O(1)
         self.len
     }
 }
 
 impl<T: Clone> Stack<T> {
+    /// Deletes and returns the last object in the stack, if any.
+    /// # Panics
+    /// When there is no element in the stack, it panics.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let mut stack = Stack::init(1);
+    /// assert_eq!(stack.pop(), Some(1));
+    /// ```
     pub fn pop(&mut self) -> Option<T> {
         // run time complexity O(N) (due to cloning) ?
         // space complexity O(N) (due to cloning) ?
@@ -82,6 +166,15 @@ impl<T: Clone> Stack<T> {
         }
     }
 
+    /// Inserts an object into the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::Stack;
+    /// let mut stack = Stack::<isize>::new();
+    /// stack.push(-1);
+    /// stack.push(-2);
+    /// assert_eq!(stack.pop(), Some(-2));
+    /// ```
     pub fn push(&mut self, s: T) {
         // run time complexity O(1) (due to cloning) ?
         let oldfirst = self.first.clone();
@@ -94,19 +187,56 @@ impl<T: Clone> Stack<T> {
     }
 }
 
-// Implementation of stacks using the LinkedList std struct
+
+
+
+
+
+
+
+
+
+
+
+/// Implementation of stacks using the standard library
+/// # Examples
+/// ```
+/// use basics::data_structure::stack::LinkedListStack;
+/// let mut stack = LinkedListStack::new();
+/// assert_eq!(stack.len(), 0);
+/// stack.push(0);
+/// stack.push(1);
+/// stack.push(2);
+/// assert_eq!(stack.len(), 3);
+/// assert_eq!(stack.pop(), Some(2));
+/// assert_eq!(stack.len(), 2);
+/// ```
 #[derive(Debug, Clone)]
 pub struct LinkedListStack<T> {
     list: LinkedList<T>,
 }
 
 impl<T> LinkedListStack<T> {
+    /// Creates an empty stack instance.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let stack = LinkedListStack::<usize>::new();
+    /// assert_eq!(stack.len(), 0);
+    /// ```
     pub fn new() -> Self {
         Self {
             list: LinkedList::new(),
         }
     }
-
+    
+    /// Creates a new stack with an initial object.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let stack = LinkedListStack::init(&"stack");
+    /// assert_eq!(stack.len(), 1);
+    /// ```
     pub fn init(s: T) -> Self {
         let mut res = Self {
             list: LinkedList::new(),
@@ -114,34 +244,95 @@ impl<T> LinkedListStack<T> {
         res.push(s);
         res
     }
-
+    
+    /// Tests whether or not the stack is empty.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let stack = LinkedListStack::<usize>::new();
+    /// assert!(stack.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         self.list.is_empty()
     }
-
+    
+    /// Gives the number of objects in the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let stack = LinkedListStack::<isize>::new();
+    /// assert_eq!(stack.len(),0);
+    /// ```
     pub fn len(&self) -> usize {
         self.list.len()
     }
 
+    /// Deletes and returns the last object in the stack, if any.
+    /// Otherwise it returns `None`.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let mut stack = LinkedListStack::init(1);
+    /// assert_eq!(stack.pop(), Some(1));
+    /// ```
     pub fn pop(&mut self) -> Option<T> {
         self.list.pop_back()
     }
 
+    /// Inserts an object into the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::LinkedListStack;
+    /// let mut stack = LinkedListStack::<isize>::new();
+    /// stack.push(-1);
+    /// stack.push(-2);
+    /// assert_eq!(stack.pop(), Some(-2));
+    /// ```
     pub fn push(&mut self, element: T) {
         self.list.push_back(element)
     }
 }
 
-// Implementation using a fixed size vec instead with doubling capacity when full
+
+
+
+
+
+
+
+
+
+
+/// Implementation of stacks using a fixed size `Vec` with 
+/// capacity doubling when full and size halving when 25% full
+/// # Examples
+/// ```
+/// use basics::data_structure::stack::VecStack;
+/// let mut stack = VecStack::<usize>::new();
+/// assert_eq!(stack.len(), 0);
+/// stack.push(0);
+/// stack.push(1);
+/// stack.push(2);
+/// assert_eq!(stack.len(), 3);
+/// assert_eq!(stack.pop(), Some(2));
+/// assert_eq!(stack.len(), 2);
+/// ```
 #[derive(Debug, Clone)]
 pub struct VecStack<T> {
-    // Number of not None values in vec
+    // Number of not None values in vec, i.e the number of objects
     n: usize,
     // Contains the objects
     vec: Vec<Option<T>>,
 }
 
 impl<T> VecStack<T> {
+    /// Creates an empty stack instance.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let stack = VecStack::<usize>::new();
+    /// assert_eq!(stack.len(), 0);
+    /// ```
     pub fn new() -> Self {
         Self {
             n: 0,
@@ -149,10 +340,19 @@ impl<T> VecStack<T> {
         }
     }
 
-    pub fn init(capacity: usize) -> Self {
+    /// Creates a stack with an initial capacity.
+    /// # Panics
+    /// If `capacity = 0`, then it panics. 
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let stack = VecStack::<usize>::with_capacity(2);
+    /// assert_eq!(stack.len(), 0);
+    /// ```
+    pub fn with_capacity(capacity: usize) -> Self {
         // run time complexity O(capacity)
         if capacity > 0 {
-            let mut vector = Vec::new();
+            let mut vector = Vec::with_capacity(capacity);
             for _ in 0..capacity {
                 vector.push(None);
             }
@@ -163,15 +363,38 @@ impl<T> VecStack<T> {
         }
     }
 
+    /// Tests whether or not the stack is empty.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let stack = VecStack::<usize>::new();
+    /// assert!(stack.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         // run time complexity O(1)
         self.n == 0
     }
-
+    
+    /// Gives the number of objects in the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let stack = VecStack::<isize>::new();
+    /// assert_eq!(stack.len(),0);
+    /// ```
     pub fn len(&self) -> usize {
-        self.vec.len()
+        self.n
     }
-
+    
+    /// Inserts an object into the stack.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let mut stack = VecStack::<isize>::new();
+    /// stack.push(-1);
+    /// stack.push(-2);
+    /// assert_eq!(stack.pop(), Some(-2));
+    /// ```
     pub fn push(&mut self, obj: T) {
         // run time complexity O(1)
         if self.n < self.vec.len() {
@@ -181,32 +404,52 @@ impl<T> VecStack<T> {
             let _ = replace(&mut self.vec[self.n], Some(obj));
             self.n += 1;
             if self.n == self.vec.len() {
-                // resize the stack to allow more capacity
-                self.resize();
+                // double the stack to allow more capacity
+                self.double();
             }
         } else {
             panic!("cannot push, stack is full or has capacity 0");
         }
     }
 
+    /// Deletes and returns the last object in the stack, if any.
+    /// # Panics
+    /// When there is no element in the stack, it panics.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::stack::VecStack;
+    /// let mut stack = VecStack::new();
+    /// stack.push(1);
+    /// stack.push(0);
+    /// assert_eq!(stack.pop(), Some(0));
+    /// ```
     pub fn pop(&mut self) -> Option<T> {
         // run time complexity O(1)
         if self.n > 0 && self.n <= self.vec.len() {
             let elt = replace(&mut self.vec[self.n - 1], None);
             self.n -= 1;
+            if self.n <= self.vec.len()/4{
+                self.halve();
+            } 
             return elt;
         } else {
             panic!("cannot pop, stack is empty");
         }
     }
 
-    fn resize(&mut self) {
+    fn double(&mut self) {
         // run time complexity O(N)
-        // doubling the size of the stack when it is full
-        let mut vector = Vec::new();
+        // doubling the size of the stack
+        let mut vector = Vec::with_capacity(self.vec.len());
         for _ in 0..self.vec.len() {
             vector.push(None);
         }
         self.vec.append(&mut vector);
+    }
+
+    fn halve(&mut self){
+        // run time complexity O(N)
+        // halving the size of the stack
+        self.vec.truncate(self.vec.len()/2);
     }
 }

@@ -11,11 +11,11 @@ mod tests {
     #[test]
     fn test_init() {
         let n = 100;
-        let qf = UnionFind::init(n, UnionFindAlgorithm::QuickFind);
+        let qf = UnionFind::with_capacity(n, UnionFindAlgorithm::QuickFind);
         assert_eq!(qf.size.len(), 0);
         assert_eq!(qf.nb_objects, n);
         assert_eq!(qf.ids.len(), n);
-        let qu = UnionFind::init(n, UnionFindAlgorithm::QuickUnion);
+        let qu = UnionFind::with_capacity(n, UnionFindAlgorithm::QuickUnion);
         assert_eq!(qu.size.len(), n);
         assert_eq!(qu.nb_objects, n);
         assert_eq!(qu.ids.len(), n);
@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn test_root_connected_union() {
-        let mut uf = UnionFind::init(6, UnionFindAlgorithm::QuickUnion);
+        let mut uf = UnionFind::with_capacity(6, UnionFindAlgorithm::QuickUnion);
         uf.union(0, 1);
         uf.union(2, 3);
         uf.union(1, 3);

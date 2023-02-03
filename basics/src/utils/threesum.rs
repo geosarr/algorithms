@@ -27,11 +27,14 @@ impl ThreeSum {
                 let b = self.vec[j];
                 let key = self.target - a - b;
                 let mut ind = binary_search(key, &self.vec[(j + 1)..]);
-                ind = j as isize + 1 + ind;
-                if ind >= j as isize + 1 {
-                    // a solution is found
-                    res += 1;
-                    // println!("({}) + ({}) + ({})", a, b, self.vec[ind as usize]);
+                if ind.is_ok(){
+                    let mut ind = ind.unwrap();
+                    ind = j + 1 + ind;
+                    if ind >= j + 1 {
+                        // a solution is found
+                        res += 1;
+                        // println!("({}) + ({}) + ({})", a, b, self.vec[ind as usize]);
+                    }
                 }
             }
         }

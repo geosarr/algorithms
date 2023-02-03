@@ -1,5 +1,9 @@
 use clap::Parser;
-use basics::{Point, FastCollinearPoints, BruteCollinearPoints};
+use basics::{
+    utils::Point, 
+    utils::FastCollinearPoints, 
+    utils::BruteCollinearPoints
+};
 
 #[derive(Parser)]
 struct Cli {

@@ -1,5 +1,5 @@
 use clap::Parser;
-use basics::{read_lines, ThreeSum};
+use basics::{utils::read_lines, utils::ThreeSum};
 
 #[derive(Parser)]
 #[command(

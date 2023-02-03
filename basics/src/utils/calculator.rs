@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-use crate::data_structure::LinkedListStack;
+use crate::data_structure::stack::LinkedListStack;
 
 // Simulating a relatively simple calcutor
 // implemented with the Djikstra two-stack algorithm

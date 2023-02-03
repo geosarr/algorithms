@@ -1,29 +1,19 @@
-mod data_structure;
-mod search_algorithm;
-mod sort_algorithm;
-mod utils;
+//! # Basic algorithms and data structures
+//!
+//! `basics` is a collection of some classic algorithms and data structures
+//! that can be used as basis for complex programs.
 
-pub use crate::data_structure::{
-    Stack, VecStack, LinkedListStack, 
-    LinkedListQueue, LinkedListDeque,
-    BinaryHeapPriorityQueue, PriorityQueue, UnorderedVecPriorityQueue,
-    UnorderedVecSymbolTable, OrderedVecSymbolTable, BinarySearchTree,
-    SeparateChainingSymbolTable, 
-};
-pub use crate::search_algorithm::{
-    UnionFind, UnionFindAlgorithm
-};
-pub use crate::sort_algorithm::{
-    QuickSort, 
-    InsertionSort, 
-    HeapSort, BinaryHeapSort,
-    MergeSort, MergeSortAlgorithm, 
-};
-pub use crate::utils::{
-    ThreeSum,
-    Reader,
-    Calculator,
-    read_lines,
-    PercolationStats,
-    Point, LineSegment, FastCollinearPoints, BruteCollinearPoints
-};
+
+
+/// Encompasses some basic structures
+pub mod data_structure;
+
+/// Regroups some classic search algorithms
+pub mod search_algorithm;
+
+/// Regroups some classic sort algorithms
+pub mod sort_algorithm;
+
+/// Regroups a collection of useful objects
+pub mod utils;
+

@@ -1,9 +1,12 @@
 use clap::Parser;
-use basics::{PercolationStats, UnionFindAlgorithm};
+use basics::{
+    utils::PercolationStats, 
+    search_algorithm::UnionFindAlgorithm
+};
 
 #[derive(Parser)]
 #[command(
-    about = "\nGives an estimate of the percolation transition probability using a Union Find alogrithm",
+    about = "\nGives an estimate of the percolation transition probability using a Union Find algorithm",
     long_about = "A higher number of trials will give more robust confidence intervals."
 )]
 struct Cli {
@@ -24,7 +27,7 @@ fn main() {
     let cli = Cli::parse();
 
     println!("Running {}", cli.algorithm);
-    let mut percol_stats = PercolationStats::init(cli.grid_size, cli.algorithm, cli.n_trials);
+    let mut percol_stats = PercolationStats::with_capacity(cli.grid_size, cli.algorithm, cli.n_trials);
     percol_stats.compute();
     println!("\nmean = {}", percol_stats.mean());
     println!("unbiased standard deviation : {}", percol_stats.stddev());

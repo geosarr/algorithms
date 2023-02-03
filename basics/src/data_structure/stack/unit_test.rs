@@ -78,23 +78,35 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
-    fn test_vec_stack_init() {
+    fn test_vec_stack_with_capacity() {
         let n = 50;
-        let stack = VecStack::<String>::init(50);
+        let stack = VecStack::<String>::with_capacity(50);
         let none: Option<String> = None;
-        assert_eq!(stack.len(), n);
+        assert_eq!(stack.len(), 0);
         assert_eq!(false, stack.vec.iter().any(|e| *e != none));
-        VecStack::<isize>::init(0);
     }
 
     #[test]
     #[should_panic]
+    fn test_vec_stack_with_capacity_panic() {
+        VecStack::<isize>::with_capacity(0);
+    }
+
+    #[test]
     fn test_vec_stack_pop() {
         let string = "test".to_string();
-        let mut stack = VecStack::<String>::init(1);
+        let mut stack = VecStack::<String>::with_capacity(1);
         stack.push(string.clone());
         assert_eq!(Some(string), stack.pop());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_vec_stack_pop_panic() {
+        let string = "test".to_string();
+        let mut stack = VecStack::<String>::with_capacity(1);
+        stack.push(string.clone());
+        stack.pop();
         stack.pop();
     }
 
@@ -113,7 +125,7 @@ mod tests {
     fn test_vec_stack_is_empty() {
         let mut stack = VecStack::<usize>::new();
         assert!(stack.is_empty());
-        assert_eq!(1, stack.len());
+        assert_eq!(0, stack.len());
         stack.push(1);
         assert!(!stack.is_empty());
     }
@@ -121,8 +133,10 @@ mod tests {
     fn test_vec_stack_resize() {
         let mut stack = VecStack::<usize>::new();
         stack.push(1);
-        assert!(stack.len() == 2);
+        assert!(stack.vec.len() == 2);
         stack.push(5);
-        assert!(stack.len() == 4);
+        assert!(stack.vec.len() == 4);
+        stack.pop();
+        assert_eq!(stack.vec.len(), 2);
     }
 }

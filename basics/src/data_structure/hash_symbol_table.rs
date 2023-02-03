@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-use crate::data_structure::Stack;
+use crate::data_structure::stack::Stack;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 

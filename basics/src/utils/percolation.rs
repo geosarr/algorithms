@@ -28,11 +28,11 @@ impl Percolation {
         }
     }
 
-    pub fn init(n: usize, algo: UnionFindAlgorithm) -> Self {
+    pub fn with_capacity(n: usize, algo: UnionFindAlgorithm) -> Self {
         // complexity O(n^2)
         Self {
             grid_size: n,
-            uf: UnionFind::init(n * n, algo),
+            uf: UnionFind::with_capacity(n * n, algo),
             state: vec![false; n * n],
         }
     }
@@ -145,7 +145,7 @@ impl PercolationStats {
         }
     }
 
-    pub fn init(n: usize, algorithm: UnionFindAlgorithm, trials: usize) -> Self {
+    pub fn with_capacity(n: usize, algorithm: UnionFindAlgorithm, trials: usize) -> Self {
         Self {
             grid_size: n,
             algo: algorithm,
@@ -162,7 +162,7 @@ impl PercolationStats {
         for i in 0..n_trials {
             let id = i + 1;
             println!("Running computation {id} over {n_trials}");
-            let mut percolation = Percolation::init(grid_size, algo);
+            let mut percolation = Percolation::with_capacity(grid_size, algo);
             let handle = thread::spawn(move || percolation.threshold());
             handles.push(handle)
         }

@@ -6,16 +6,16 @@ mod tests {
     fn test_linked_list_deque_new() {
         let deque = LinkedListDeque::<usize>::new();
         assert!(deque.is_empty());
-        assert_eq!(deque.size(), 0);
+        assert_eq!(deque.len(), 0);
     }
 
     #[test]
     fn test_linked_list_deque_init() {
         let string = "test".to_string();
         let mut deque = LinkedListDeque::init(string.clone());
-        assert_eq!(1, deque.size());
+        assert_eq!(1, deque.len());
         assert_eq!(Some(string), deque.remove_first());
-        assert_eq!(0, deque.size());
+        assert_eq!(0, deque.len());
     }
 
     #[test]

@@ -4,7 +4,7 @@ mod tests {
 
     #[test]
     fn test_percolation() {
-        let mut p = Percolation::init(3, UnionFindAlgorithm::QuickFind);
+        let mut p = Percolation::with_capacity(3, UnionFindAlgorithm::QuickFind);
         for i in 0..3 {
             for j in 0..3 {
                 assert!(!p.is_open(i, j));

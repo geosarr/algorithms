@@ -5,6 +5,18 @@ pub use algorithm::UnionFindAlgorithm;
 use crate::utils::read_lines;
 use std::path::Path;
 
+/// Implementation of union-find algorithms
+/// # Examples
+/// ```
+/// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+/// let mut uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickUnion);
+/// uf.union(0, 1);
+/// uf.union(2, 3);
+/// assert!(uf.connected(0, 1));
+/// assert!(!uf.connected(1, 3));
+/// assert_eq!(UnionFindAlgorithm::default(), UnionFindAlgorithm::QuickFind);
+/// ```
+/// The default algorithm is **QuickFind**
 #[derive(Debug, Default)]
 pub struct UnionFind {
     // number of objects in the graph/tree
@@ -28,6 +40,7 @@ pub struct UnionFind {
 }
 
 impl UnionFind {
+
     pub fn new() -> Self {
         let nb = 2;
         Self {
@@ -38,7 +51,7 @@ impl UnionFind {
         }
     }
 
-    pub fn init(nb: usize, algorithm: UnionFindAlgorithm) -> Self {
+    pub fn with_capacity(nb: usize, algorithm: UnionFindAlgorithm) -> Self {
         // complexity: O(N)
         match algorithm {
             UnionFindAlgorithm::QuickFind => Self {
@@ -54,6 +67,17 @@ impl UnionFind {
                 size: vec![1; nb],
             },
         }
+    }
+
+    /// Gives the number of objects collected.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickUnion);
+    /// assert_eq!(uf.len(), 4);
+    /// ```
+    pub fn len(&self) -> usize{
+        self.ids.len()
     }
 
     pub fn from_file<P>(filename: P, sep: char, algo: UnionFindAlgorithm) -> Self
@@ -73,7 +97,7 @@ impl UnionFind {
                     let values = row.split(sep).collect::<Vec<&str>>();
                     if pos == 0 {
                         let nb_objects = values[0].parse::<usize>().unwrap();
-                        uf = UnionFind::init(nb_objects, algo);
+                        uf = UnionFind::with_capacity(nb_objects, algo);
                     } else {
                         let (p, q) = (
                             values[0].parse::<usize>().unwrap(),

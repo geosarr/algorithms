@@ -1,7 +1,10 @@
+/// Defines the orientation type of a priority queue (min oriented or max oriented)
 #[derive(Debug, Clone)]
 pub enum PriorityQueueKind {
-    Max, // Max priority queue
-    Min, // Min priority queue
+    /// Max-oriented priority queue
+    Max, 
+    /// Min-oriented priority queue
+    Min,
 }
 
 

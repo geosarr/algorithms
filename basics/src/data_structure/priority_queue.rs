@@ -5,39 +5,123 @@ pub use kind::PriorityQueueKind;
 use std::mem::replace;
 use std::collections::BinaryHeap;
 
+/// Implementation of priority queues with the standard library 
+/// # Examples
+/// ```
+/// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+/// let mut bhqueue = BinaryHeapPriorityQueue::with_capacity(3);
+/// assert_eq!(bhqueue.len(), 0);
+/// bhqueue.insert(0);
+/// bhqueue.insert(1);
+/// bhqueue.insert(2);
+/// assert_eq!(bhqueue.len(), 3);
+/// assert_eq!(bhqueue.delete(), Some(2));
+/// assert_eq!(bhqueue.delete(), Some(1));
+/// assert_eq!(bhqueue.len(), 1);
+/// ```
+/// By default the priority queue is **max oriented**, the user should adapt 
+/// the `Ord` trait to implement a min oriented priority queues. 
 #[derive(Debug)]
 pub struct BinaryHeapPriorityQueue<T>{
     heap: BinaryHeap<T>,
 }
 
-// by default the binary heap is max oriented
-// implement the Ord trait, to orient it to min accordingly
 impl<T: Ord> BinaryHeapPriorityQueue<T>{
-    pub fn init(capacity: usize) -> Self {
+    /// Creates an empty priority queue instance.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let bhqueue = BinaryHeapPriorityQueue::<usize>::new();
+    /// assert_eq!(bhqueue.len(), 0);
+    /// ```
+    pub fn new() -> Self {
+        Self{
+            heap: BinaryHeap::<T>::new(),
+        }
+    }
+
+    /// Creates a new empty priority queue with an initial size.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let bhqueue = BinaryHeapPriorityQueue::<&str>::with_capacity(1);
+    /// assert_eq!(bhqueue.len(), 0);
+    /// ```
+    pub fn with_capacity(capacity: usize) -> Self {
         Self {
             heap: BinaryHeap::<T>::with_capacity(capacity),
         }
     }
 
+    /// Tests whether or not the priority queue is empty.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let mut bhqueue = BinaryHeapPriorityQueue::<usize>::new();
+    /// bhqueue.insert(1);
+    /// assert!(!bhqueue.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool{
         self.heap.is_empty()
     }
 
+    /// Gives the number of objects in the priority queue.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let mut bhqueue = BinaryHeapPriorityQueue::<isize>::new();
+    /// bhqueue.insert(-1);
+    /// bhqueue.insert(-2);
+    /// bhqueue.insert(-4);
+    /// assert_eq!(bhqueue.len(), 3);
+    /// ```
     pub fn len(&self) -> usize {
         self.heap.len()
     }
 
+    /// Inserts an object into the priority queue.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let mut bhqueue = BinaryHeapPriorityQueue::<isize>::new();
+    /// bhqueue.insert(-1);
+    /// bhqueue.insert(-2);
+    /// assert_eq!(bhqueue.len(), 2);
+    /// ```
     pub fn insert(&mut self, key: T) {
         self.heap.push(key)
     }
 
+    /// Deletes and returns the extremal (smallest in min oriented heap 
+    /// and largest in max oriented heap) object in the priority queue, if any.
+    /// Returns `None` otherwise.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let mut bhqueue = BinaryHeapPriorityQueue::new();
+    /// bhqueue.insert(0);
+    /// bhqueue.insert(1);
+    /// assert_eq!(bhqueue.delete(), Some(1));
+    /// ```
     pub fn delete(&mut self) -> Option<T> {
         self.heap.pop()
     }
 
+    /// Returns the extremal (smallest in min oriented heap 
+    /// and largest in max oriented heap) object in the priority queue, if any.
+    /// Returns `None` otherwise.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// let mut bhqueue = BinaryHeapPriorityQueue::new();
+    /// bhqueue.insert(0);
+    /// bhqueue.insert(1);
+    /// assert_eq!(bhqueue.extremum(), Some(&1));
+    /// ```
+    /// # Time complexity
+    /// This is expected to run in O(1)
     pub fn extremum(&self) -> Option<&T> {
         self.heap.peek()
-        // self.heap.pop() -> Option<T>
     }
 
 }
@@ -46,7 +130,26 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
 
 
 
-// Implementation "from scratch" using Binary Heap data structure on vec
+
+
+
+
+
+
+/// Implementation of priority queues using a `Vec` structure
+/// # Examples
+/// ```
+/// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+/// let mut bhqueue = PriorityQueue::with_capacity(3, PriorityQueueKind::Max);
+/// assert_eq!(bhqueue.len(), 0);
+/// bhqueue.insert(0);
+/// bhqueue.insert(1);
+/// bhqueue.insert(2);
+/// assert_eq!(bhqueue.len(), 3);
+/// assert_eq!(bhqueue.delete(), Some(2));
+/// assert_eq!(bhqueue.delete(), Some(1));
+/// assert_eq!(bhqueue.len(), 1);
+/// ```
 #[derive(Debug, Default, Clone)]
 pub struct PriorityQueue<T>{
     // vector of objects
@@ -67,10 +170,19 @@ pub struct PriorityQueue<T>{
 }
 
 impl<T> PriorityQueue<T> {
-    pub fn init(capacity: usize, k: PriorityQueueKind) -> Self {
+    /// Creates a new empty priority queue with an initial size.
+    /// # Panics
+    /// If `capacity = 0`, then it panics.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let bhqueue = PriorityQueue::<&str>::with_capacity(1, PriorityQueueKind::Min);
+    /// assert_eq!(bhqueue.len(), 0);
+    /// ```
+    pub fn with_capacity(capacity: usize, k: PriorityQueueKind) -> Self {
         // running time complexity: O(N)
         if capacity > 0 {
-            let mut vector = Vec::new();
+            let mut vector = Vec::with_capacity(capacity+1);
             for _ in 0..capacity+1 {
                 vector.push(None);
             }
@@ -85,24 +197,66 @@ impl<T> PriorityQueue<T> {
         }
     }
 
+    /// Tests whether or not the priority queue is empty.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let mut bhqueue = PriorityQueue::<usize>::with_capacity(1, PriorityQueueKind::Min);
+    /// bhqueue.insert(1);
+    /// assert!(!bhqueue.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         self.n == 1
     }
 
+    /// Gives the number of objects in the priority queue.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
+    /// bhqueue.insert(-1);
+    /// bhqueue.insert(-2);
+    /// bhqueue.insert(-4);
+    /// assert_eq!(bhqueue.len(), 3);
+    /// ```
     pub fn len(&self) -> usize {
         // number of objects in the queue
         // run time complexity O(1)
         self.n - 1
     }
 
-    fn resize(&mut self) {
+    /// Returns the extremal (smallest in min oriented heap 
+    /// and largest in max oriented heap) object in the priority queue, if any.
+    /// Returns `None` otherwise.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
+    /// bhqueue.insert(0);
+    /// bhqueue.insert(1);
+    /// assert_eq!(bhqueue.extremum(), Some(&0));
+    /// ```
+    /// # Time complexity
+    /// This is expected to run in O(1)
+    pub fn extremum(&self) -> Option<&T>{
+        // run time complexity O(1)
+        self.vec[1].as_ref()
+    }
+
+    fn double(&mut self) {
         // run time complexity O(N)
-        // doubling the size of the stack when it is full
-        let mut vector = Vec::new();
+        // doubling the size of the priority queue
+        let mut vector = Vec::with_capacity(self.vec.len());
         for _ in 0..self.vec.len() {
             vector.push(None);
         }
         self.vec.append(&mut vector);
+    }
+
+    fn halve(&mut self){
+        // run time complexity O(N)
+        // halving the size of the priority queue
+        self.vec.truncate(self.vec.len()/2);
     }
 }
 
@@ -129,6 +283,17 @@ impl<T: Ord + Clone> PriorityQueue<T>{
         }
     }
 
+    /// Inserts an object into the priority queue.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
+    /// bhqueue.insert(-1);
+    /// bhqueue.insert(-2);
+    /// assert_eq!(bhqueue.len(), 2);
+    /// ```
+    /// # Time complexity
+    /// This is expected to run in O(log(N)) on average
     pub fn insert(&mut self, key: T){
         // run time complexity O(log(N)) (without resizing)
         // and O(N) with resizing
@@ -138,7 +303,7 @@ impl<T: Ord + Clone> PriorityQueue<T>{
             self.n += 1;
             if self.n == self.vec.len() {
                 // resize the stack to allow more capacity
-                self.resize();
+                self.double();
             }
         } else {
             panic!("cannot push, stack is full or has capacity 0");
@@ -184,6 +349,19 @@ impl<T: Ord + Clone> PriorityQueue<T>{
         }
     }
     
+    /// Deletes and returns the extremal (smallest in min oriented heap 
+    /// and largest in max oriented heap) object in the priority queue, if any.
+    /// Returns `None` otherwise.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
+    /// bhqueue.insert(0);
+    /// bhqueue.insert(1);
+    /// assert_eq!(bhqueue.delete(), Some(0));
+    /// ```
+    /// # Time complexity
+    /// This is expected to run in O(log(N)) on average
     pub fn delete(&mut self) -> Option<T>{
         // delete the extremal value and returns it
         // run time complexity O(log(N))
@@ -196,14 +374,11 @@ impl<T: Ord + Clone> PriorityQueue<T>{
             // sink the root object
             self.sink(1, self.n);
             self.n -= 1;
+            if self.n <= self.vec.len()/4{
+                self.halve();
+            } 
             res
         }
-    }
-
-    pub fn extremum(&self) -> Option<T>{
-        // run time complexity O(1)
-        self.vec[1].clone()
-
     }
 }
 
@@ -213,9 +388,13 @@ impl<T: Ord + Clone> PriorityQueue<T>{
 
 
 
+
+
+
+
 // Implementation of priority queue with unordered vec
 #[derive(Debug, Default)]
-pub struct UnorderedVecPriorityQueue<T>{
+struct UnorderedVecPriorityQueue<T>{
     // vector of objects
     vec: Vec<Option<T>>,
     // type of priority queue

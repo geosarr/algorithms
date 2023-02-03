@@ -10,8 +10,8 @@ mod tests {
         vec.sort_unstable();
         for i in 0..vec.len() {
             let ind = binary_search(vec[i], &vec);
-            assert_eq!(ind, i as isize);
+            assert_eq!(ind.unwrap(), i);
         }
-        assert_eq!(-1, binary_search(vec[0] - 1, &vec)); // may fail if vec[0] = MIN isize
+        assert!(binary_search(vec[0] - 1, &vec).is_err()); // may fail if vec[0] = MIN isize
     }
 }

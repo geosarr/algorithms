@@ -4,7 +4,7 @@ use std::error::Error;
 use std::fmt;
 use std::str::FromStr;
 
-// Enumerating the different types of algorithms
+/// Enumeration of the different types of union-find algorithm
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum UnionFindAlgorithm {
     QuickFind,
