@@ -40,9 +40,16 @@ pub struct UnionFind {
 }
 
 impl UnionFind {
-
+    /// Creates a union find instance with one object, with a `QuickFind` algorithm.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let uf = UnionFind::new();
+    /// assert_eq!(uf.len(), 1);
+    /// assert_eq!(uf.algo(), UnionFindAlgorithm::QuickFind);
+    /// ```
     pub fn new() -> Self {
-        let nb = 2;
+        let nb = 1;
         Self {
             nb_objects: nb,
             algo: UnionFindAlgorithm::default(),
@@ -69,6 +76,17 @@ impl UnionFind {
         }
     }
 
+    /// Returns the algorithm of a union find instance.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let uf = UnionFind::with_capacity(2, UnionFindAlgorithm::QuickUnion);
+    /// assert_eq!(uf.algo(), UnionFindAlgorithm::QuickUnion);
+    /// ```
+    pub fn algo(&self) -> UnionFindAlgorithm{
+        self.algo.clone()
+    }
+
     /// Gives the number of objects collected.
     /// # Example
     /// ```
@@ -80,6 +98,16 @@ impl UnionFind {
         self.ids.len()
     }
 
+
+    /// Creates a union find instance from a file with objects ids 
+    /// separated by a separator like `,` or `;` or `|`, etc.
+    /// # Panics
+    /// It panics if the ids are not positive integers.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let uf = UnionFind::from_file("file_path", ';', UnionFindAlgorithm::QuickFind);
+    /// ```
     pub fn from_file<P>(filename: P, sep: char, algo: UnionFindAlgorithm) -> Self
     where
         P: AsRef<Path>,
@@ -115,6 +143,22 @@ impl UnionFind {
         uf
     }
 
+    /// Gets the id of the root of an object in a union find instance.
+    /// Depending on the algorithm the root is computed differently and the complexity differs also.
+    /// For `QuickFInd`, the value returned is the parent of the object, in a tree representation.
+    /// For the others, the value returned is the maybe the parent or the great parent or a great great .. parent.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let mut uf = UnionFind::with_capacity(2, UnionFindAlgorithm::WeightedQuickUnion);
+    /// uf.union(0, 1);
+    /// assert_eq!(uf.root(0), uf.root(1));
+    /// ```
+    /// # Time complexity
+    /// For `QuickFind` it is expected to run in O(1).
+    /// For `QuickUnion`, it is expected to run in O(N).
+    /// For `WeightedQuickUnion`, it is expected to run in O(log(N)).
+    /// For `WeightedQuickUnionPathComp`, it is expected to run in O(log*(N)) ~ O(1) (almost in constant time).
     pub fn root(&mut self, mut i: usize) -> usize {
         // Finding the root of an object i
         if let UnionFindAlgorithm::QuickFind = self.algo {
@@ -136,16 +180,46 @@ impl UnionFind {
         }
     }
 
+    /// Indicates whether or not two objects in a union find instance are connected.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let mut uf = UnionFind::with_capacity(2, UnionFindAlgorithm::WeightedQuickUnion);
+    /// uf.union(0, 1);
+    /// assert!(uf.connected(0, 1));
+    /// ```
+    /// # Time complexity
+    /// For `QuickFind`, it is expected to run in O(1).
+    /// For `QuickUnion`, it is expected to run in O(N).
+    /// For `WeightedQuickUnion`, it is expected to run in O(log(N)).
+    /// For `WeightedQuickUnionPathComp`, it is expected to run in O(log*(N)) ~ O(1) (almost in constant time).
     pub fn connected(&mut self, p: usize, q: usize) -> bool {
         if let UnionFindAlgorithm::QuickFind = self.algo {
             // complexity: O(1)
             self.ids[p] == self.ids[q]
         } else {
-            // complexity: O(N) for QuickUnion, O(log(N)) for WeightedQuickUnion*
+            // complexity: O(N) for QuickUnion, 
+            // O(log(N)) for the algorithms WeightedQuickUnion*
             self.root(p) == self.root(q)
         }
     }
 
+
+    /// Connects two objects of a union find algorithm.
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let mut uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickFind);
+    /// uf.union(0, 1);
+    /// uf.union(2, 3);
+    /// assert!(uf.connected(0, 1));
+    /// assert!(!uf.connected(3, 0));
+    /// ```
+    /// # Time complexity
+    /// For `QuickFind`, it is expected to run in O(N).
+    /// For `QuickUnion`, it is expected to run in O(N).
+    /// For `WeightedQuickUnion`, it is expected to run in O(log(N)).
+    /// For `WeightedQuickUnionPathComp`, it is expected to run in O(log*(N)) ~ O(1) (almost in constant time).
     pub fn union(&mut self, p: usize, q: usize) {
         match self.algo {
             UnionFindAlgorithm::QuickFind => {

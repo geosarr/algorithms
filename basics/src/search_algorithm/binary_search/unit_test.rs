@@ -12,6 +12,6 @@ mod tests {
             let ind = binary_search(vec[i], &vec);
             assert_eq!(ind.unwrap(), i);
         }
-        assert!(binary_search(vec[0] - 1, &vec).is_err()); // may fail if vec[0] = MIN isize
+        assert!(binary_search(vec[0] - 1, &vec).is_err());
     }
 }

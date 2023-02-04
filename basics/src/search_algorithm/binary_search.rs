@@ -2,10 +2,12 @@
 mod unit_test;
 use std::result::Result;
 
-/// Get the index of key in vec if key is in vec
-/// vec elements should be ordered in ascending order.
-/// This seems to work only if the length of vec is small enough
-/// so that conversions from usize to isize work normally
+/// Gets the index of a key in a slice if key is in vec
+/// Otherwise returns the index where it should be put 
+/// to keep the `Vec` ordered
+/// # Requirement 
+/// The keys in the `Vec` should be ordered in ascending order
+/// # Time complexity
 /// It is expected to run in O(log(N))
 pub fn binary_search<T>(key: T, vec: &[T]) -> Result<usize, usize>
 where
