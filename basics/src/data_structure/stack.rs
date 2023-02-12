@@ -75,7 +75,7 @@ impl<T> Stack<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::stack::Stack;
-    /// let stack = Stack::init(&"stack");
+    /// let stack = Stack::init("stack");
     /// assert_eq!(stack.len(), 1);
     /// ```
     pub fn init(s: T) -> Self {

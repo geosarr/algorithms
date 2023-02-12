@@ -6,7 +6,15 @@ use std::hash::{Hash, Hasher};
 
 
 
-
+/// Implementation of a separate chaining based symbol table
+/// # Example
+/// ```
+/// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+/// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
+/// st.insert(0, "0");
+/// st.insert(1, "1");
+/// assert_eq!(st.len(), 2);
+/// ```
 #[derive(Debug)]
 pub struct SeparateChainingSymbolTable<T,U>{
     // number of chains in the hash table
@@ -24,12 +32,20 @@ pub struct SeparateChainingSymbolTable<T,U>{
     //   so that N/chains ~ constant (where N is the number of keys in the table) with resizing strategies (e.g doubling and halving)
 }
 impl<T,U> SeparateChainingSymbolTable<T,U>{
-    pub fn new() -> Self {
-        Self {
-            chains: 97, 
-            vec: Vec::new(),
-            len: 0
-        }
+    fn halve(&mut self){
+        // reduce the size of the chain to free space
+        self.vec.truncate(self.vec.len()/2); 
+    }
+    /// Gives the number of (key, value) pairs in the symbol table.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let mut st = SeparateChainingSymbolTable::<isize, usize>::new();
+    /// st.insert(-2, 3);
+    /// assert_eq!(st.len(), 1);
+    /// ```
+    pub fn len(&self) -> usize{
+        self.len
     }
 }
 impl<T: Clone, U: Clone> SeparateChainingSymbolTable<T,U>{
@@ -37,10 +53,6 @@ impl<T: Clone, U: Clone> SeparateChainingSymbolTable<T,U>{
         // doubles the number of chains
         self.vec.resize(2*self.chains, Stack::new());
         self.chains *= 2;
-    }
-    fn halve(&mut self){
-        // reduce the size of the chain to free space
-        // TODO 
     }
 }
 impl<T: Hash,U> SeparateChainingSymbolTable<T,U>{
@@ -57,6 +69,28 @@ impl<T: Hash,U> SeparateChainingSymbolTable<T,U>{
     }
 }
 impl<T: Hash + Clone, U: Clone> SeparateChainingSymbolTable<T,U>{
+    /// Creates an empty symbol table instance.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let st = SeparateChainingSymbolTable::<usize, usize>::new();
+    /// assert_eq!(st.len(), 0);
+    /// ```
+    pub fn new() -> Self {
+        let nb_chains = 97;
+        Self {
+            chains: nb_chains, 
+            vec: vec![Stack::new();nb_chains],
+            len: 0
+        }
+    }
+    /// Creates a new symbol table from an initial (key, value) pair.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let st = SeparateChainingSymbolTable::init(1, 0, "sep_chain");
+    /// assert_eq!(st.len(), 1);
+    /// ```
     pub fn init(_chains: usize, key: T, value: U) -> Self{
         assert!(_chains > 0);
         let mut symbol_table = Self {
@@ -71,6 +105,16 @@ impl<T: Hash + Clone, U: Clone> SeparateChainingSymbolTable<T,U>{
     }
 }
 impl<T: Hash + Clone + Eq, U: Clone + Eq> SeparateChainingSymbolTable<T,U>{
+        /// Inserts a (key, value) pair into the stack.
+        /// # Example
+        /// ```
+        /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+        /// let mut st = SeparateChainingSymbolTable::<isize, isize>::new();
+        /// st.insert(1, -3);
+        /// st.insert(-2, 10);
+        /// assert_eq!(st.len(), 2);
+        /// assert_eq!(st.get(&1), Some(&-3));
+        /// ```
         pub fn insert(&mut self, key: T, value: U){
         // works if chains is small enough so that all index in u64 
         // can be converted to usize (see self.hash() function)
@@ -93,13 +137,34 @@ impl<T: Hash + Clone + Eq, U: Clone + Eq> SeparateChainingSymbolTable<T,U>{
         }
 }
 impl<T: Eq + Hash, U: Eq> SeparateChainingSymbolTable<T,U>{
+    /// Tests whether or not the symbol table contains a given key.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
+    /// st.insert(1, "1");
+    /// assert!(st.contains(&1));
+    /// assert!(!st.contains(&0));
+    /// ```
     pub fn contains(&self, key: &T) -> bool {
         self.get(key).is_some()
     }
+    /// Returns some reference to the value associated to a key, if any. 
+    /// Otherwise returns `None`.
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
+    /// st.insert(1, "1");
+    /// assert_eq!(st.get(&1), Some(&"1"));
+    /// st.insert(1, "0");
+    /// assert_eq!(st.get(&1), Some(&"0"));
+    /// ```
     pub fn get(&self, key: &T) -> Option<&U>{
         // run time complexity on average O(N/chains)
         // because on average the stacks are equally likely to
-        // have the same number of keys due to the coupon collector and load balancing properties
+        // have the same number of keys due to the coupon collector 
+        // and load balancing properties
         let index = self.hash(&key);
         let mut stack = self.vec[index].get_first();
         while stack != &None{

@@ -44,7 +44,7 @@ impl<T> LinkedListQueue<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::queue::LinkedListQueue;
-    /// let queue = LinkedListQueue::init(&"queue");
+    /// let queue = LinkedListQueue::init("queue");
     /// assert_eq!(queue.len(), 1);
     /// ```
     pub fn init(s: T) -> Self {

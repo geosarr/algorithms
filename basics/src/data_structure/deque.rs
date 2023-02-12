@@ -41,7 +41,7 @@ impl<T> LinkedListDeque<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::deque::LinkedListDeque;
-    /// let deque = LinkedListDeque::init(&"deque");
+    /// let deque = LinkedListDeque::init("deque");
     /// assert_eq!(deque.len(), 1);
     /// ```
     pub fn init(s: T) -> Self {
