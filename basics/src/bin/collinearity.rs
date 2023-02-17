@@ -1,9 +1,5 @@
+use basics::utils::{FastCollinearPoints, Point};
 use clap::Parser;
-use basics::{
-    utils::Point, 
-    utils::FastCollinearPoints, 
-    utils::BruteCollinearPoints
-};
 
 #[derive(Parser)]
 struct Cli {
@@ -16,7 +12,7 @@ struct Cli {
     sep: char,
 }
 
-fn main(){
+fn main() {
     let cli = Cli::parse();
     let filename = cli.file_abs_path;
     let sep = cli.sep;
@@ -24,9 +20,7 @@ fn main(){
     // println!("{:?} {:?}", points[0], points[1]);
     let mut collinear = FastCollinearPoints::<isize>::init(points);
     let segments = collinear.segments();
-    println!("{}", segments.len()); 
-    println!("{:?}", segments);
+    println!("{}", segments.len());
+    println!("{segments:?}");
     // println!("{}", segments[0].intersects(&segments[2]));
 }
-
-

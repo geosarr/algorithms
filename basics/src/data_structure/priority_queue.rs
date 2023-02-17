@@ -1,11 +1,11 @@
+mod kind;
 #[cfg(test)]
 mod unit_test;
-mod kind;
 pub use kind::PriorityQueueKind;
-use std::mem::replace;
 use std::collections::BinaryHeap;
+use std::mem::replace;
 
-/// Implementation of priority queues with the standard library 
+/// Implementation of priority queues with the standard library
 /// # Examples
 /// ```
 /// use basics::data_structure::priority_queue::BinaryHeapPriorityQueue;
@@ -19,14 +19,18 @@ use std::collections::BinaryHeap;
 /// assert_eq!(bhqueue.delete(), Some(1));
 /// assert_eq!(bhqueue.len(), 1);
 /// ```
-/// By default the priority queue is **max oriented**, the user should adapt 
-/// the `Ord` trait to implement a min oriented priority queues. 
+/// By default the priority queue is **max oriented**, the user should adapt
+/// the `Ord` trait to implement a min oriented priority queues.
 #[derive(Debug)]
-pub struct BinaryHeapPriorityQueue<T>{
+pub struct BinaryHeapPriorityQueue<T> {
     heap: BinaryHeap<T>,
 }
-
-impl<T: Ord> BinaryHeapPriorityQueue<T>{
+impl<T: Ord> Default for BinaryHeapPriorityQueue<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Creates an empty priority queue instance.
     /// # Example
     /// ```
@@ -35,7 +39,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
     /// assert_eq!(bhqueue.len(), 0);
     /// ```
     pub fn new() -> Self {
-        Self{
+        Self {
             heap: BinaryHeap::<T>::new(),
         }
     }
@@ -61,7 +65,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
     /// bhqueue.insert(1);
     /// assert!(!bhqueue.is_empty());
     /// ```
-    pub fn is_empty(&self) -> bool{
+    pub fn is_empty(&self) -> bool {
         self.heap.is_empty()
     }
 
@@ -92,7 +96,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
         self.heap.push(key)
     }
 
-    /// Deletes and returns the extremal (smallest in min oriented heap 
+    /// Deletes and returns the extremal (smallest in min oriented heap
     /// and largest in max oriented heap) object in the priority queue, if any.
     /// Returns `None` otherwise.
     /// # Example
@@ -107,7 +111,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
         self.heap.pop()
     }
 
-    /// Returns the extremal (smallest in min oriented heap 
+    /// Returns the extremal (smallest in min oriented heap
     /// and largest in max oriented heap) object in the priority queue, if any.
     /// Returns `None` otherwise.
     /// # Example
@@ -123,18 +127,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
     pub fn extremum(&self) -> Option<&T> {
         self.heap.peek()
     }
-
 }
-
-
-
-
-
-
-
-
-
-
 
 /// Implementation of priority queues using a `Vec` structure
 /// # Examples
@@ -151,22 +144,21 @@ impl<T: Ord> BinaryHeapPriorityQueue<T>{
 /// assert_eq!(bhqueue.len(), 1);
 /// ```
 #[derive(Debug, Default, Clone)]
-pub struct PriorityQueue<T>{
+pub struct PriorityQueue<T> {
     // vector of objects
     vec: Vec<Option<T>>,
     // type of priority queue
     kind: PriorityQueueKind,
     // position of the next object in the queue (or 1 + number of objects)
     n: usize,
-
     // Remarks:
     // - objects are nodes of the tree
-    // - in the implementation objects are stored in self.vec from index = 1 to index = capacity 
+    // - in the implementation objects are stored in self.vec from index = 1 to index = capacity
     //   so that index = 0 is always None object and:
     //     - each node k's parent is at position k/2
     //     - each node k's children are at positions 2k and 2k+1
-    // - in the max oriented binary heap (with kind = PriorityQueueKind::Max), 
-    //   parents are larger than their children (smaller for min oriented heap) 
+    // - in the max oriented binary heap (with kind = PriorityQueueKind::Max),
+    //   parents are larger than their children (smaller for min oriented heap)
 }
 
 impl<T> PriorityQueue<T> {
@@ -182,13 +174,13 @@ impl<T> PriorityQueue<T> {
     pub fn with_capacity(capacity: usize, k: PriorityQueueKind) -> Self {
         // running time complexity: O(N)
         if capacity > 0 {
-            let mut vector = Vec::with_capacity(capacity+1);
-            for _ in 0..capacity+1 {
+            let mut vector = Vec::with_capacity(capacity + 1);
+            for _ in 0..capacity + 1 {
                 vector.push(None);
             }
 
             Self {
-                vec: vector, 
+                vec: vector,
                 kind: k,
                 n: 1,
             }
@@ -225,7 +217,7 @@ impl<T> PriorityQueue<T> {
         self.n - 1
     }
 
-    /// Returns the extremal (smallest in min oriented heap 
+    /// Returns the extremal (smallest in min oriented heap
     /// and largest in max oriented heap) object in the priority queue, if any.
     /// Returns `None` otherwise.
     /// # Example
@@ -238,7 +230,7 @@ impl<T> PriorityQueue<T> {
     /// ```
     /// # Time complexity
     /// This is expected to run in O(1)
-    pub fn extremum(&self) -> Option<&T>{
+    pub fn extremum(&self) -> Option<&T> {
         // run time complexity O(1)
         self.vec[1].as_ref()
     }
@@ -253,33 +245,33 @@ impl<T> PriorityQueue<T> {
         self.vec.append(&mut vector);
     }
 
-    fn halve(&mut self){
+    fn halve(&mut self) {
         // run time complexity O(N)
         // halving the size of the priority queue
-        self.vec.truncate(self.vec.len()/2);
+        self.vec.truncate(self.vec.len() / 2);
     }
 }
 
-impl<T: Ord + Clone> PriorityQueue<T>{
-    fn swim(&mut self, mut k: usize){
+impl<T: Ord + Clone> PriorityQueue<T> {
+    fn swim(&mut self, mut k: usize) {
         // moves data at position k up in the "tree" following the
         // Peter principle: Nodes are promoted to their level of incompetence
         // run time complexity O(log(N))
         match self.kind {
             PriorityQueueKind::Max => {
-                while k > 1 && self.vec[k] > self.vec[k/2]{
+                while k > 1 && self.vec[k] > self.vec[k / 2] {
                     let val = self.vec[k].clone();
-                    self.vec[k] = replace(&mut self.vec[k/2], val);
-                    k = k/2;
+                    self.vec[k] = replace(&mut self.vec[k / 2], val);
+                    k /= 2;
                 }
-            },
-            PriorityQueueKind::Min => { 
-                while k > 1 && self.vec[k] < self.vec[k/2]{
+            }
+            PriorityQueueKind::Min => {
+                while k > 1 && self.vec[k] < self.vec[k / 2] {
                     let val = self.vec[k].clone();
-                    self.vec[k] = replace(&mut self.vec[k/2], val);
-                    k = k/2;
+                    self.vec[k] = replace(&mut self.vec[k / 2], val);
+                    k /= 2;
                 }
-            },
+            }
         }
     }
 
@@ -294,7 +286,7 @@ impl<T: Ord + Clone> PriorityQueue<T>{
     /// ```
     /// # Time complexity
     /// This is expected to run in O(log(N)) on average
-    pub fn insert(&mut self, key: T){
+    pub fn insert(&mut self, key: T) {
         // run time complexity O(log(N)) (without resizing)
         // and O(N) with resizing
         if self.n < self.vec.len() {
@@ -310,46 +302,54 @@ impl<T: Ord + Clone> PriorityQueue<T>{
         }
     }
 
-    fn sink(&mut self, mut k: usize, n: usize){
+    fn sink(&mut self, mut k: usize, n: usize) {
         // moves data at position k down in the "tree" following the
         // Power struggle principle: Better nodes are promoted
         // Nodes beyond node n are untouched.
         // run time complexity O(log(N))
-        if self.is_empty(){
+        if self.is_empty() {
             panic!("cannot sink data, queue is empty.")
         } else {
             match self.kind {
                 PriorityQueueKind::Max => {
-                    while 2*k < n {
-                        let mut j = 2*k;
+                    while 2 * k < n {
+                        let mut j = 2 * k;
                         // find the largest child of node k
-                        if j < n - 1 && self.vec[j] < self.vec[j+1]{ j += 1;}
+                        if j < n - 1 && self.vec[j] < self.vec[j + 1] {
+                            j += 1;
+                        }
                         // compare it to node k
-                        if self.vec[k] >= self.vec[j] {break;}
+                        if self.vec[k] >= self.vec[j] {
+                            break;
+                        }
                         // exchange them if it is larger than node k
                         let val = self.vec[k].clone();
                         self.vec[k] = replace(&mut self.vec[j], val);
                         k = j;
                     }
-                },
+                }
                 PriorityQueueKind::Min => {
-                    while 2*k < n {
-                        let mut j = 2*k;
+                    while 2 * k < n {
+                        let mut j = 2 * k;
                         // find the smallest child of node k
-                        if j < n - 1 && self.vec[j] > self.vec[j+1]{ j += 1;}
+                        if j < n - 1 && self.vec[j] > self.vec[j + 1] {
+                            j += 1;
+                        }
                         // compare it to node k
-                        if self.vec[k] <= self.vec[j] {break;}
+                        if self.vec[k] <= self.vec[j] {
+                            break;
+                        }
                         // exchange them if it is smaller than node k
                         let val = self.vec[k].clone();
                         self.vec[k] = replace(&mut self.vec[j], val);
                         k = j;
                     }
-                },
+                }
             }
         }
     }
-    
-    /// Deletes and returns the extremal (smallest in min oriented heap 
+
+    /// Deletes and returns the extremal (smallest in min oriented heap
     /// and largest in max oriented heap) object in the priority queue, if any.
     /// Returns `None` otherwise.
     /// # Example
@@ -362,7 +362,7 @@ impl<T: Ord + Clone> PriorityQueue<T>{
     /// ```
     /// # Time complexity
     /// This is expected to run in O(log(N)) on average
-    pub fn delete(&mut self) -> Option<T>{
+    pub fn delete(&mut self) -> Option<T> {
         // delete the extremal value and returns it
         // run time complexity O(log(N))
         if self.is_empty() {
@@ -370,31 +370,21 @@ impl<T: Ord + Clone> PriorityQueue<T>{
         } else {
             let res = self.vec[1].clone();
             // Put the last object at the beginning of the root of the tree
-            self.vec[1] = replace(&mut self.vec[self.n-1], None);
+            self.vec[1] = replace(&mut self.vec[self.n - 1], None);
             // sink the root object
             self.sink(1, self.n);
             self.n -= 1;
-            if self.n <= self.vec.len()/4{
+            if self.n <= self.vec.len() / 4 {
                 self.halve();
-            } 
+            }
             res
         }
     }
 }
 
-
-
-
-
-
-
-
-
-
-
 // Implementation of priority queue with unordered vec
 #[derive(Debug, Default)]
-struct UnorderedVecPriorityQueue<T>{
+struct UnorderedVecPriorityQueue<T> {
     // vector of objects
     vec: Vec<Option<T>>,
     // type of priority queue
@@ -402,7 +392,7 @@ struct UnorderedVecPriorityQueue<T>{
     // number of objects in the priority queue
     n: usize,
     // the maximum or minimum value object
-    extremum: Option<T>
+    extremum: Option<T>,
 }
 
 impl<T> UnorderedVecPriorityQueue<T> {
@@ -415,10 +405,10 @@ impl<T> UnorderedVecPriorityQueue<T> {
             }
 
             Self {
-                vec: vector, 
+                vec: vector,
                 kind: k,
                 n: 0,
-                extremum: None
+                extremum: None,
             }
         } else {
             panic!("capacity shoul be > 0");
@@ -432,7 +422,7 @@ impl<T> UnorderedVecPriorityQueue<T> {
     pub fn len(&self) -> usize {
         // number of objects in the queue
         // run time complexity O(1)
-        self.n 
+        self.n
     }
 
     fn resize(&mut self) {
@@ -446,10 +436,9 @@ impl<T> UnorderedVecPriorityQueue<T> {
     }
 }
 
-
-impl<T: Ord + Clone> UnorderedVecPriorityQueue<T>{ 
-        pub fn insert(&mut self, key: T){
-        // inserts a key 
+impl<T: Ord + Clone> UnorderedVecPriorityQueue<T> {
+    pub fn insert(&mut self, key: T) {
+        // inserts a key
         // run time complexity O(1) (without resizing)
         // with resizing O(N)
         if self.n < self.vec.len() {
@@ -464,7 +453,7 @@ impl<T: Ord + Clone> UnorderedVecPriorityQueue<T>{
         }
     }
 
-    pub fn delete(&mut self) -> Option<T>{
+    pub fn delete(&mut self) -> Option<T> {
         // deletes the max if kind = Max or the minimum if kind = min
         // run time complexity O(N)
         if self.is_empty() {
@@ -477,55 +466,64 @@ impl<T: Ord + Clone> UnorderedVecPriorityQueue<T>{
                 // will imply value modification (with the replace function). This is due to
                 // the comparisons <= or >=, they could be swapped with their strict counterparts
                 // < or > respectively, but this procedure makes easy to find the extrema in the
-                // self.extremum() function   
-                PriorityQueueKind::Max => for i in 1..self.n{
-                    if self.vec[i] >= self.vec[m]{
-                        prec_m = replace(&mut m, i);
+                // self.extremum() function
+                PriorityQueueKind::Max => {
+                    for i in 1..self.n {
+                        if self.vec[i] >= self.vec[m] {
+                            prec_m = replace(&mut m, i);
+                        } else if self.vec[i] >= self.vec[prec_m] {
+                            prec_m = i;
+                        }
                     }
-                    else if self.vec[i] >= self.vec[prec_m]{
-                        prec_m = i;
+                }
+                PriorityQueueKind::Min => {
+                    for i in 1..self.n {
+                        if self.vec[i] <= self.vec[m] {
+                            prec_m = replace(&mut m, i);
+                        } else if self.vec[i] <= self.vec[prec_m] {
+                            prec_m = i;
+                        }
                     }
-                },
-                PriorityQueueKind::Min => for i in 1..self.n{
-                    if self.vec[i] <= self.vec[m]{
-                        prec_m = replace(&mut m, i);
-                    }
-                    else if self.vec[i] <= self.vec[prec_m]{
-                        prec_m = i;
-                    }
-                },
+                }
             }
-            
+
             // helps speed up extremum finding
             self.extremum = self.vec[prec_m].clone();
 
-            let val = self.vec[m].clone(); 
-            if m < self.n - 1{
-                self.vec[m] = replace(&mut self.vec[self.n-1], None);
+            let val = self.vec[m].clone();
+            if m < self.n - 1 {
+                self.vec[m] = replace(&mut self.vec[self.n - 1], None);
             } else {
                 self.vec[m] = None;
             }
             self.n -= 1;
             val
-    }}
+        }
+    }
 
-    pub fn extremum(&mut self) -> Option<T>{
+    pub fn extremum(&mut self) -> Option<T> {
         // finds the maximum/minimum object
-        // run time complexity O(N) (in general), 
+        // run time complexity O(N) (in general),
         // when speed up (e.g. when self.delete() is called), its O(1)
-        if !self.extremum.is_none() {
+        if self.extremum.is_some() {
             self.extremum.clone()
-        } else if !self.is_empty(){
+        } else if !self.is_empty() {
             let mut m = 0;
-            match self.kind{
-                PriorityQueueKind::Max => for i in 1..self.n{
-                    if self.vec[i] > self.vec[m]{
-                        m = i;
-                }},
-                PriorityQueueKind::Min => for i in 1..self.n{
-                    if self.vec[i] < self.vec[m]{
-                        m = i;
-                }},
+            match self.kind {
+                PriorityQueueKind::Max => {
+                    for i in 1..self.n {
+                        if self.vec[i] > self.vec[m] {
+                            m = i;
+                        }
+                    }
+                }
+                PriorityQueueKind::Min => {
+                    for i in 1..self.n {
+                        if self.vec[i] < self.vec[m] {
+                            m = i;
+                        }
+                    }
+                }
             }
             self.extremum = self.vec[m].clone();
             self.extremum.clone()

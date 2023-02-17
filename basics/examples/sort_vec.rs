@@ -1,10 +1,7 @@
-use basics::{
-    sort_algorithm::InsertionSort, 
-    sort_algorithm::BinaryHeapSort, 
-    utils::Point};
+use basics::{sort_algorithm::{BinaryHeapSort, InsertionSort}, utils::Point};
 
-fn main(){
-    let mut vec: Vec<isize> = vec![-1, -10 , 15, 16, -18];
+fn main() {
+    let mut vec: Vec<isize> = vec![-1, -10, 15, 16, -18];
     let insertion = InsertionSort::<isize>::init(vec.clone());
 
     // sort using the insertion sort algorithm

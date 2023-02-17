@@ -4,9 +4,7 @@ mod unit_test;
 use std::collections::LinkedList;
 use std::mem::replace;
 
-
-
-/// Implementation of the First In First Out concept (namely a queue), 
+/// Implementation of the First In First Out concept (namely a queue),
 // with the standard library
 /// # Examples
 /// ```
@@ -103,16 +101,6 @@ impl<T> LinkedListQueue<T> {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
 // Implementing queues relatively "from scratch"
 #[derive(Debug, Clone)]
 struct Node<T> {
@@ -182,9 +170,8 @@ impl<T: Clone + Default> Queue<T> {
     //         let mut oldlast = replace(&mut self.last, node);
     //         if let Some(ref mut old) = oldlast {
     //             old.next = self.last.clone();
-    //         } 
+    //         }
     //     }
     //     self.len += 1;
     // }
-
 }

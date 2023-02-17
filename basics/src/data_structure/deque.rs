@@ -3,8 +3,7 @@ mod unit_test;
 
 use std::collections::LinkedList;
 
-
-/// Implementation of deques with the standard library 
+/// Implementation of deques with the standard library
 /// # Examples
 /// ```
 /// use basics::data_structure::deque::LinkedListDeque;

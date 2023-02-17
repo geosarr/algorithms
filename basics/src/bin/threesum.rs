@@ -1,5 +1,5 @@
-use clap::Parser;
 use basics::{utils::read_lines, utils::ThreeSum};
+use clap::Parser;
 
 #[derive(Parser)]
 #[command(
@@ -22,7 +22,7 @@ fn main() {
     let sep = cli.sep;
     let mut vec: Vec<isize> = Vec::new();
     if let Ok(lines) = read_lines(filename.as_str()) {
-        for line in lines.into_iter() {
+        for line in lines {
             if let Ok(row) = line {
                 let values: Vec<isize> = row
                     .split(sep)

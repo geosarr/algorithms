@@ -1,8 +1,5 @@
+use basics::{search_algorithm::UnionFindAlgorithm, utils::PercolationStats};
 use clap::Parser;
-use basics::{
-    utils::PercolationStats, 
-    search_algorithm::UnionFindAlgorithm
-};
 
 #[derive(Parser)]
 #[command(
@@ -27,7 +24,8 @@ fn main() {
     let cli = Cli::parse();
 
     println!("Running {}", cli.algorithm);
-    let mut percol_stats = PercolationStats::with_capacity(cli.grid_size, cli.algorithm, cli.n_trials);
+    let mut percol_stats =
+        PercolationStats::with_capacity(cli.grid_size, cli.algorithm, cli.n_trials);
     percol_stats.compute();
     println!("\nmean = {}", percol_stats.mean());
     println!("unbiased standard deviation : {}", percol_stats.stddev());
