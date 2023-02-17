@@ -13,14 +13,13 @@ pub struct MergeSort<T> {
     // items with equal keys are not exchanged ?
 }
 
-
 impl<T> MergeSort<T> {
     pub fn init(v: Vec<T>, algorithm: MergeSortAlgorithm) -> Self {
         Self {
             vec: v,
             algo: algorithm,
         }
-    }   
+    }
 }
 impl<T: Ord + Clone> MergeSort<T> {
     fn is_sorted(&mut self, low: usize, high: usize) -> bool {
@@ -68,7 +67,7 @@ impl<T: Ord + Clone> MergeSort<T> {
         }
         self.recursive_sort(aux_vec.clone(), low, mid);
         self.recursive_sort(aux_vec.clone(), mid + 1, high);
-        self.merge(aux_vec.clone(), low, high, mid);
+        self.merge(aux_vec, low, high, mid);
     }
 
     pub fn into_sorted_vec(mut self) -> Vec<T> {

@@ -3,7 +3,6 @@ mod tests {
     use super::super::*;
     use crate::utils::{gen_vec_rand_int, RandKind};
 
-
     #[test]
     fn test_binary_search() {
         let mut vec = gen_vec_rand_int(1000000, RandKind::Full);

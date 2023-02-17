@@ -1,11 +1,11 @@
 #[cfg(test)]
-mod tests{
-    use super::super::{OrderedVecSymbolTable, BinarySearchTree, BTreeSymbolTable};
+mod tests {
+    use super::super::{BTreeSymbolTable, BinarySearchTree, OrderedVecSymbolTable};
 
     #[test]
-    fn test_ordered_vec_symbol_table(){
+    fn test_ordered_vec_symbol_table() {
         assert!(OrderedVecSymbolTable::<usize, isize>::new().is_empty());
-        let mut st = OrderedVecSymbolTable::<usize, &str>::init(2,"test2");
+        let mut st = OrderedVecSymbolTable::<usize, &str>::init(2, "test2");
         assert_eq!(st.len(), 1);
         assert!(st.contains(&2));
         st.insert(0, "test0");
@@ -25,12 +25,11 @@ mod tests{
         let a = st.get(&2).unwrap();
         println!("{a}");
         st.delete(&2);
-        
     }
 
     #[test]
-    fn test_binary_search_tree(){
-        let mut st = BinarySearchTree::<usize, &str>::init(10,"test10");
+    fn test_binary_search_tree() {
+        let mut st = BinarySearchTree::<usize, &str>::init(10, "test10");
         assert_eq!(st.len(), 1);
         st.insert(1, "test1");
         st.insert(5, "test5");
@@ -51,9 +50,9 @@ mod tests{
     }
 
     #[test]
-    fn test_b_tree_symbol_table(){
+    fn test_b_tree_symbol_table() {
         assert!(BTreeSymbolTable::<usize, String>::new().is_empty());
-        let mut st = BTreeSymbolTable::<usize, &str>::init(5,"test5");
+        let mut st = BTreeSymbolTable::<usize, &str>::init(5, "test5");
         assert_eq!(st.len(), 1);
         assert!(!st.is_empty());
         assert_eq!(st.get(&5), Some(&"test5"));

@@ -3,8 +3,6 @@
 //! `basics` is a collection of some classic algorithms and data structures
 //! that can be used as basis for complex programs.
 
-
-
 /// Encompasses some basic structures
 pub mod data_structure;
 
@@ -16,4 +14,3 @@ pub mod sort_algorithm;
 
 /// Regroups a collection of useful objects
 pub mod utils;
-

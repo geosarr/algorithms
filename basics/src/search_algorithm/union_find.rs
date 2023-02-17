@@ -1,8 +1,8 @@
 mod algorithm;
 #[cfg(test)]
 mod unit_test;
-pub use algorithm::UnionFindAlgorithm;
 use crate::utils::read_lines;
+pub use algorithm::UnionFindAlgorithm;
 use std::path::Path;
 
 /// Implementation of union-find algorithms
@@ -83,8 +83,8 @@ impl UnionFind {
     /// let uf = UnionFind::with_capacity(2, UnionFindAlgorithm::QuickUnion);
     /// assert_eq!(uf.algo(), UnionFindAlgorithm::QuickUnion);
     /// ```
-    pub fn algo(&self) -> UnionFindAlgorithm{
-        self.algo.clone()
+    pub fn algo(&self) -> UnionFindAlgorithm {
+        self.algo
     }
 
     /// Gives the number of objects collected.
@@ -94,12 +94,22 @@ impl UnionFind {
     /// let uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickUnion);
     /// assert_eq!(uf.len(), 4);
     /// ```
-    pub fn len(&self) -> usize{
-        self.ids.len()
+    pub fn len(&self) -> usize {
+        self.nb_objects
     }
 
+    /// Indicates whether or not a union find istance is empty
+    /// # Example
+    /// ```
+    /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// let uf = UnionFind::with_capacity(0, UnionFindAlgorithm::QuickUnion);
+    /// assert_eq!(uf.len(), 0);
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 
-    /// Creates a union find instance from a file with objects ids 
+    /// Creates a union find instance from a file with objects ids
     /// separated by a separator like `,` or `;` or `|`, etc.
     /// # Panics
     /// It panics if the ids are not positive integers.
@@ -133,7 +143,7 @@ impl UnionFind {
                         );
                         if !uf.connected(p, q) {
                             uf.union(p, q);
-                            println!("{}", nb_iter);
+                            println!("{nb_iter}");
                             nb_iter += 1
                         }
                     }
@@ -163,20 +173,18 @@ impl UnionFind {
         // Finding the root of an object i
         if let UnionFindAlgorithm::QuickFind = self.algo {
             self.ids[i]
-        } else {
-            if let UnionFindAlgorithm::WeightedQuickUnionPathComp = self.algo {
-                while i != self.ids[i] {
-                    // one-pass path compression
-                    self.ids[i] = self.ids[self.ids[i]];
-                    i = self.ids[i];
-                }
-                i
-            } else {
-                while i != self.ids[i] {
-                    i = self.ids[i];
-                }
-                i
+        } else if let UnionFindAlgorithm::WeightedQuickUnionPathComp = self.algo {
+            while i != self.ids[i] {
+                // one-pass path compression
+                self.ids[i] = self.ids[self.ids[i]];
+                i = self.ids[i];
             }
+            i
+        } else {
+            while i != self.ids[i] {
+                i = self.ids[i];
+            }
+            i
         }
     }
 
@@ -198,12 +206,11 @@ impl UnionFind {
             // complexity: O(1)
             self.ids[p] == self.ids[q]
         } else {
-            // complexity: O(N) for QuickUnion, 
+            // complexity: O(N) for QuickUnion,
             // O(log(N)) for the algorithms WeightedQuickUnion*
             self.root(p) == self.root(q)
         }
     }
-
 
     /// Connects two objects of a union find algorithm.
     /// # Example

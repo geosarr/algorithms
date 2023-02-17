@@ -2,6 +2,7 @@
 mod unit_test;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use std::cmp::Ordering;
 use std::mem::replace;
 
 #[derive(Debug)]
@@ -13,7 +14,7 @@ pub struct QuickSort<T> {
 
 impl<T: Ord + Clone> QuickSort<T> {
     pub fn init(v: Vec<T>) -> Self {
-        Self {vec: v}
+        Self { vec: v }
     }
 
     fn partition(&mut self, low: usize, high: usize) -> usize {
@@ -21,7 +22,7 @@ impl<T: Ord + Clone> QuickSort<T> {
         // are no greater than element j and elements at the right of index j are no larger
         // than element j.
         // run time complexity O(N)
-        let mut i = low+1;
+        let mut i = low + 1;
         let mut j = high;
         loop {
             // find item on left to swap
@@ -42,14 +43,14 @@ impl<T: Ord + Clone> QuickSort<T> {
             if i >= j {
                 break;
             }
-            // exchange i^th and j^th object to respect partitioning 
+            // exchange i^th and j^th object to respect partitioning
             let n = self.vec[j].clone();
             self.vec[j] = replace(&mut self.vec[i], n);
         }
         // swap with partitioning item
         let n = self.vec[j].clone();
         self.vec[j] = replace(&mut self.vec[low], n);
-        return j;
+        j
     }
 
     fn sort(&mut self) {
@@ -64,16 +65,16 @@ impl<T: Ord + Clone> QuickSort<T> {
             return;
         }
         let j: usize = self.partition(low, high);
-        if j >= 1 && j < self.vec.len() - 1{
+        if j >= 1 && j < self.vec.len() - 1 {
             self.recursive_sort(low, j - 1);
             self.recursive_sort(j + 1, high);
         } else if j == 0 {
-            self.recursive_sort(j+1, high);
+            self.recursive_sort(j + 1, high);
         } else {
-            self.recursive_sort(low, j-1);
+            self.recursive_sort(low, j - 1);
         }
     }
-    
+
     pub fn into_sorted_vec(mut self) -> Vec<T> {
         self.sort();
         self.vec
@@ -88,17 +89,15 @@ impl<T: Ord + Clone> QuickSort<T> {
         let mut high = self.vec.len() - 1;
         while high > low {
             let j = self.partition(low, high);
-            if j < k {
+            match j.cmp(&k) {
                 // the k^th largest is on the right of element j
-                low = j + 1;
-            } else if j > k {
+                Ordering::Less => low = j + 1,
                 // the k^th largest is on the left of element j
-                high = j - 1;
-            } else {
+                Ordering::Greater => high = j - 1,
                 // j = k, we are done
-                return self.vec[k].clone();
+                Ordering::Equal => return self.vec[k].clone(),
             }
         }
-        return self.vec[k].clone();
+        self.vec[k].clone()
     }
 }

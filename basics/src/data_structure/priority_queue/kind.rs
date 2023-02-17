@@ -2,14 +2,13 @@
 #[derive(Debug, Clone)]
 pub enum PriorityQueueKind {
     /// Max-oriented priority queue
-    Max, 
+    Max,
     /// Min-oriented priority queue
     Min,
 }
 
-
-impl Default for PriorityQueueKind{
-    fn default() -> Self{
+impl Default for PriorityQueueKind {
+    fn default() -> Self {
         Self::Max
     }
 }

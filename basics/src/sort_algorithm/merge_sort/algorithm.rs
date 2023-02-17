@@ -48,7 +48,7 @@ pub struct ParseMergeSortAlgorithmError;
 impl fmt::Display for ParseMergeSortAlgorithmError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let desc_init0: &str = "algorithm spelling incorrect, only available are";
-        let desc_init1 = format!("{} {}", desc_init0, ALGORITHMS);
+        let desc_init1 = format!("{desc_init0} {ALGORITHMS}");
         let description = desc_init1.as_str();
         f.write_str(description)
     }

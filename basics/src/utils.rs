@@ -1,15 +1,15 @@
-mod point;
-mod percolation;
+mod calculator;
 mod collinearity;
 mod input_output;
-mod threesum;
+mod percolation;
+mod point;
 mod rand_vec_gen;
-mod calculator;
+mod threesum;
 
-pub use point::{Point, LineSegment, Segment};
-pub use percolation::PercolationStats;
-pub use collinearity::{FastCollinearPoints, BruteCollinearPoints};
-pub use input_output::{read_lines, Reader};
-pub use threesum::ThreeSum;
-pub use rand_vec_gen::{gen_vec_rand_int, RandKind};
 pub use calculator::Calculator;
+pub use collinearity::{BruteCollinearPoints, FastCollinearPoints};
+pub use input_output::{read_lines, Reader};
+pub use percolation::PercolationStats;
+pub use point::{LineSegment, Point, Segment};
+pub use rand_vec_gen::{gen_vec_rand_int, RandKind};
+pub use threesum::ThreeSum;

@@ -1,10 +1,9 @@
 #[cfg(test)]
 mod tests {
     use super::super::ThreeSum;
+    use crate::utils::{gen_vec_rand_int, RandKind};
     use std::thread;
     use std::thread::JoinHandle;
-    use crate::utils::{gen_vec_rand_int, RandKind};
-
 
     #[test]
     fn test_threesum() {

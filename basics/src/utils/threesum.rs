@@ -17,24 +17,18 @@ impl ThreeSum {
     pub fn run(&mut self) -> usize {
         // run time complexity O(N^2 log(N))
         let mut res = 0;
-        // the binary search algo needs the values to be sorted first in ascending order
+        // the binary search algo needs the values to be
+        // sorted first in ascending order
         self.vec.sort_unstable();
         let n = self.vec.len();
         for i in 0..n {
             for j in (i + 1)..n {
                 // binary search target-vec[i]-vec[j] in vec[(j+1)..]
-                let a = self.vec[i];
-                let b = self.vec[j];
-                let key = self.target - a - b;
-                let mut ind = binary_search(key, &self.vec[(j + 1)..]);
-                if ind.is_ok(){
-                    let mut ind = ind.unwrap();
-                    ind = j + 1 + ind;
-                    if ind >= j + 1 {
-                        // a solution is found
-                        res += 1;
-                        // println!("({}) + ({}) + ({})", a, b, self.vec[ind as usize]);
-                    }
+                let key = self.target - self.vec[i] - self.vec[j];
+                let index = binary_search(key, &self.vec[(j + 1)..]);
+                if index.is_ok() {
+                    // a solution is found
+                    res += 1;
                 }
             }
         }

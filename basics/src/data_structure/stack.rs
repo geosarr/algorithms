@@ -11,30 +11,20 @@ pub struct Node<T> {
     // in a recursive definition of a struct
     next: Option<Box<Node<T>>>,
 }
-impl<T> Node<T>{
-    pub fn get_item<'a>(&'a self) -> &'a T{
+impl<T> Node<T> {
+    pub fn get_item(&self) -> &T {
         &self.item
     }
-    pub fn get_mut_item<'a>(&'a mut self) -> &'a mut T{
+    pub fn get_mut_item(&mut self) -> &mut T {
         &mut self.item
     }
-    pub fn get_next<'a>(&'a self) -> &'a Option<Box<Node<T>>>{
+    pub fn get_next(&self) -> &Option<Box<Node<T>>> {
         &self.next
     }
-    pub fn get_mut_next<'a>(&'a mut self) -> &'a mut Option<Box<Node<T>>>{
+    pub fn get_mut_next(&mut self) -> &mut Option<Box<Node<T>>> {
         &mut self.next
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 /// Implementation of the First In Last Out concept, relatively from scratch
 /// # Examples
@@ -50,12 +40,12 @@ impl<T> Node<T>{
 /// assert_eq!(stack.len(), 2);
 /// ```
 #[derive(Debug, Default, Clone)]
-pub struct Stack<T> { 
+pub struct Stack<T> {
     first: Option<Box<Node<T>>>,
     len: usize,
 }
 
-impl<T> Stack<T> { 
+impl<T> Stack<T> {
     /// Creates an empty stack instance.
     /// # Example
     /// ```
@@ -67,7 +57,7 @@ impl<T> Stack<T> {
         // run time complexity O(1)
         Self {
             first: None,
-            len: 0
+            len: 0,
         }
     }
 
@@ -90,7 +80,7 @@ impl<T> Stack<T> {
         }
     }
 
-    /// Gives an immutable reference to the first object to come out of the stack, 
+    /// Gives an immutable reference to the first object to come out of the stack,
     /// i.e the last element inserted in the stack.
     /// # Example
     /// ```
@@ -98,7 +88,7 @@ impl<T> Stack<T> {
     /// let stack = Stack::init(&"0");
     /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"0");
     /// ```
-    pub fn get_first<'a>(&'a self) -> &'a Option<Box<Node<T>>>{
+    pub fn get_first(&self) -> &Option<Box<Node<T>>> {
         &self.first
     }
 
@@ -110,10 +100,10 @@ impl<T> Stack<T> {
     /// let mut mut_ref_first = stack.get_mut_first();
     /// if let Some(ref mut node) = mut_ref_first{
     ///     *(node.get_mut_item()) = &"1";     
-    ///  } 
+    ///  }
     /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"1");
     /// ```
-    pub fn get_mut_first<'a>(&'a mut self) -> &'a mut Option<Box<Node<T>>>{
+    pub fn get_mut_first(&mut self) -> &mut Option<Box<Node<T>>> {
         &mut self.first
     }
 
@@ -128,7 +118,7 @@ impl<T> Stack<T> {
         // run time complexity O(1)
         self.first.is_none()
     }
-    
+
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
@@ -187,17 +177,6 @@ impl<T: Clone> Stack<T> {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /// Implementation of stacks using the standard library
 /// # Examples
 /// ```
@@ -215,7 +194,11 @@ impl<T: Clone> Stack<T> {
 pub struct LinkedListStack<T> {
     list: LinkedList<T>,
 }
-
+impl<T> Default for LinkedListStack<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl<T> LinkedListStack<T> {
     /// Creates an empty stack instance.
     /// # Example
@@ -229,7 +212,7 @@ impl<T> LinkedListStack<T> {
             list: LinkedList::new(),
         }
     }
-    
+
     /// Creates a new stack with an initial object.
     /// # Example
     /// ```
@@ -244,7 +227,7 @@ impl<T> LinkedListStack<T> {
         res.push(s);
         res
     }
-    
+
     /// Tests whether or not the stack is empty.
     /// # Example
     /// ```
@@ -255,7 +238,7 @@ impl<T> LinkedListStack<T> {
     pub fn is_empty(&self) -> bool {
         self.list.is_empty()
     }
-    
+
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
@@ -293,17 +276,7 @@ impl<T> LinkedListStack<T> {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-/// Implementation of stacks using a fixed size `Vec` with 
+/// Implementation of stacks using a fixed size `Vec` with
 /// capacity doubling when full and size halving when 25% full
 /// # Examples
 /// ```
@@ -324,7 +297,11 @@ pub struct VecStack<T> {
     // Contains the objects
     vec: Vec<Option<T>>,
 }
-
+impl<T> Default for VecStack<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl<T> VecStack<T> {
     /// Creates an empty stack instance.
     /// # Example
@@ -342,7 +319,7 @@ impl<T> VecStack<T> {
 
     /// Creates a stack with an initial capacity.
     /// # Panics
-    /// If `capacity = 0`, then it panics. 
+    /// If `capacity = 0`, then it panics.
     /// # Example
     /// ```
     /// use basics::data_structure::stack::VecStack;
@@ -374,7 +351,7 @@ impl<T> VecStack<T> {
         // run time complexity O(1)
         self.n == 0
     }
-    
+
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
@@ -385,7 +362,7 @@ impl<T> VecStack<T> {
     pub fn len(&self) -> usize {
         self.n
     }
-    
+
     /// Inserts an object into the stack.
     /// # Example
     /// ```
@@ -428,10 +405,10 @@ impl<T> VecStack<T> {
         if self.n > 0 && self.n <= self.vec.len() {
             let elt = replace(&mut self.vec[self.n - 1], None);
             self.n -= 1;
-            if self.n <= self.vec.len()/4{
+            if self.n <= self.vec.len() / 4 {
                 self.halve();
-            } 
-            return elt;
+            }
+            elt
         } else {
             panic!("cannot pop, stack is empty");
         }
@@ -447,9 +424,9 @@ impl<T> VecStack<T> {
         self.vec.append(&mut vector);
     }
 
-    fn halve(&mut self){
+    fn halve(&mut self) {
         // run time complexity O(N)
         // halving the size of the stack
-        self.vec.truncate(self.vec.len()/2);
+        self.vec.truncate(self.vec.len() / 2);
     }
 }

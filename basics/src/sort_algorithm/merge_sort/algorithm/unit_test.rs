@@ -1,10 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use super::super::{
-        FromStr,
-        MergeSortAlgorithm, 
-        ParseMergeSortAlgorithmError,
-    };
+    use super::super::{FromStr, MergeSortAlgorithm, ParseMergeSortAlgorithmError};
 
     #[test]
     fn test_algo_format() {

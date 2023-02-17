@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use super::super::{SeparateChainingSymbolTable};
+    use super::super::SeparateChainingSymbolTable;
 
     #[test]
-    fn test_separate_chaining_symbol_table(){
+    fn test_separate_chaining_symbol_table() {
         let mut st = SeparateChainingSymbolTable::<&str, isize>::init(31, "0", 0);
         assert_eq!(st.get(&"0"), Some(&0));
         assert!(!st.contains(&"1"));

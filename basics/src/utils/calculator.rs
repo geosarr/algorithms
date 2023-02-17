@@ -9,7 +9,11 @@ pub struct Calculator {
     ops: LinkedListStack<String>,
     vals: LinkedListStack<usize>,
 }
-
+impl Default for Calculator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl Calculator {
     pub fn new() -> Self {
         Self {
@@ -39,7 +43,7 @@ impl Calculator {
                 } else if op == "*" {
                     // println!("{}", a * b);
                     self.vals.push(a * b);
-                } else if op == ":" || op == "/"{
+                } else if op == ":" || op == "/" {
                     self.vals.push(b / a);
                 }
             } else if c == "(" {
@@ -50,7 +54,7 @@ impl Calculator {
         }
 
         let res = self.vals.pop().expect("Failed poping result");
-        println!("{}", res);
+        println!("{res}");
         res
     }
 }

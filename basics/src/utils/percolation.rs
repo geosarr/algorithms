@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod unit_test;
+pub use crate::search_algorithm::{UnionFind, UnionFindAlgorithm};
 use rand::prelude::*;
 use std::collections::HashMap;
 use std::thread;
 use std::thread::JoinHandle;
-pub use crate::search_algorithm::{UnionFind, UnionFindAlgorithm};
 
 #[derive(Debug, Default)]
 struct Percolation {
@@ -134,7 +134,11 @@ pub struct PercolationStats {
     // the thresholds of the Percolation system simulated n_trials times
     results: Option<Vec<f32>>,
 }
-
+impl Default for PercolationStats {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl PercolationStats {
     pub fn new() -> Self {
         Self {
@@ -188,7 +192,7 @@ impl PercolationStats {
         if let Some(results) = &self.results {
             let trials = self.n_trials as f32;
             let avg = self.mean();
-            let mut sum_sq_avg_dist = results.iter().map(|&i| (i - avg).powf(2.0)).sum::<f32>();
+            let sum_sq_avg_dist = results.iter().map(|&i| (i - avg).powf(2.0)).sum::<f32>();
             if self.n_trials > 1 {
                 (sum_sq_avg_dist / (trials - 1.0)).sqrt()
             } else {
