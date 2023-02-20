@@ -2,7 +2,7 @@
 mod unit_test;
 use crate::graph::{HashSet, VertexInfo};
 
-pub struct UndirectedGraph{
+pub struct UndirectedGraph {
     // implements an adjacency-list graph
     // where vertices have indices 0, ..., nb_objects
     // and each vertex is associated to its adjacent vertices
@@ -10,7 +10,7 @@ pub struct UndirectedGraph{
     nb_edges: usize,
     nb_vertices: usize,
 }
-impl UndirectedGraph{
+impl UndirectedGraph {
     pub fn new() -> Self {
         Self {
             data: Vec::new(),
@@ -23,46 +23,46 @@ impl UndirectedGraph{
         let mut graph = Self::new();
         graph.nb_vertices = nb_objects;
         graph.data = Vec::new();
-        for _ in 0..nb_objects{
+        for _ in 0..nb_objects {
             graph.data.push(HashSet::<usize>::new());
         }
         graph
     }
 
-    pub fn nb_edges(&self) -> usize{
+    pub fn nb_edges(&self) -> usize {
         // run time complexity O(1)
         self.nb_edges
     }
 
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize>{
-        // gets all the vertices linked to a given vertex v, 
-        // that is the adjacent vertices of v 
+    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v
         // run time complexity O(1)
         &self.data[*v]
     }
-    fn nb_vertices(&self) -> usize{
+    fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices
     }
-    pub fn add_edge(&mut self, v: usize, w: usize){
+    pub fn add_edge(&mut self, v: usize, w: usize) {
         // adds an edge to the graph
         // run time complexity O(1)
         self.data[v].insert(w);
         self.data[w].insert(v);
         self.nb_edges += 1;
     }
-    pub fn add_vertex(&mut self){
+    pub fn add_vertex(&mut self) {
         self.data.push(HashSet::<usize>::new());
         self.nb_vertices += 1;
     }
 
-    pub fn degree(&self, v: &usize) -> usize{
+    pub fn degree(&self, v: &usize) -> usize {
         self.vertex_edges(v).len()
     }
 
-    pub fn average_degree(&self) -> f32{
+    pub fn average_degree(&self) -> f32 {
         // gets the average number of degree of the graph
-        // each edge is counted only once (by the self.add_edge() method) 
+        // each edge is counted only once (by the self.add_edge() method)
         if self.nb_vertices > 0 {
             (self.nb_edges as f32) / (self.nb_vertices as f32)
         } else {
@@ -70,20 +70,23 @@ impl UndirectedGraph{
         }
     }
 
-    pub fn self_loop_number(&self) -> usize{
-        self.data.iter().enumerate().map(|(v,e)| if e.contains(&v){1} else{0}).sum()
+    pub fn self_loop_number(&self) -> usize {
+        self.data
+            .iter()
+            .enumerate()
+            .map(|(v, e)| if e.contains(&v) { 1 } else { 0 })
+            .sum()
     }
 }
-impl VertexInfo for UndirectedGraph{  
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize>{
-        // gets all the vertices linked to a given vertex v, 
-        // that is the adjacent vertices of v 
+impl VertexInfo for UndirectedGraph {
+    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v
         // run time complexity O(1)
         &self.data[*v]
     }
-    fn nb_vertices(&self) -> usize{
+    fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices
     }
 }
-

@@ -1,19 +1,16 @@
-mod undirected_graph;
 mod directed_graph;
 mod processing;
+mod undirected_graph;
 
-pub use undirected_graph::UndirectedGraph;
 pub use directed_graph::DirectedGraph;
 pub use processing::{
-    DepthFirstSearch,
-    BreadthFirstSearch,
-    ConnectedComponent,
+    BreadthFirstSearch, ConnectedComponent, DepthFirstSearch, StrongConnectedComponent,
     TopologicalSort,
-    StrongConnectedComponent
 };
-pub use std::collections::{LinkedList, HashSet};
+pub use std::collections::{HashSet, LinkedList};
+pub use undirected_graph::UndirectedGraph;
 
-pub trait VertexInfo{
+pub trait VertexInfo {
     fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize>;
     fn nb_vertices(&self) -> usize;
 }

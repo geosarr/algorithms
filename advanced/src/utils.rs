@@ -1,5 +1,5 @@
-mod wordnet;
 mod input_output;
+mod wordnet;
 
-pub use wordnet::Wordnet;
 pub use input_output::{read_lines, Reader};
+pub use wordnet::Wordnet;
