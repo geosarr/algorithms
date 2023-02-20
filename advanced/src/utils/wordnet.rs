@@ -3,7 +3,6 @@ mod unit_test;
 use crate::Reader;
 use crate::{BreadthFirstSearch, DirectedGraph};
 use std::collections::{HashMap, HashSet};
-use std::path::Path;
 
 pub struct Wordnet {
     hypernym_graph: DirectedGraph,
