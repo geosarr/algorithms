@@ -80,7 +80,7 @@ mod tests {
     #[test]
     fn test_vec_stack_with_capacity() {
         let n = 50;
-        let stack = VecStack::<String>::with_capacity(50);
+        let stack = VecStack::<String>::with_capacity(n);
         let none: Option<String> = None;
         assert_eq!(stack.len(), 0);
         assert_eq!(false, stack.vec.iter().any(|e| *e != none));

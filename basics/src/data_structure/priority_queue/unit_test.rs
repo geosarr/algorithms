@@ -9,7 +9,7 @@ mod tests {
         let mut rng = rand::thread_rng();
         let mut queue = BinaryHeapPriorityQueue::<isize>::with_capacity(len);
         assert!(queue.is_empty());
-        for k in 0..len {
+        for _ in 0..len {
             queue.insert(rng.gen::<isize>());
         }
         assert_eq!(queue.len(), len);
@@ -35,7 +35,7 @@ mod tests {
         assert_eq!(queue.len(), 1);
         queue.insert(rng.gen::<isize>());
         assert_eq!(queue.vec.len(), 6);
-        for k in 0..len - 2 {
+        for _ in 0..len - 2 {
             queue.insert(rng.gen::<isize>());
         }
         queue.delete();
@@ -56,7 +56,7 @@ mod tests {
         assert_eq!(queue.len(), 1);
         queue.insert(rng.gen::<isize>());
         assert_eq!(queue.vec.len(), 6);
-        for k in 0..len - 2 {
+        for _ in 0..len - 2 {
             queue.insert(rng.gen::<isize>());
         }
         queue.delete();
