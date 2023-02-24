@@ -40,7 +40,7 @@ where
         let mut hashmap = HashMap::<K, V>::new();
         match read_lines(self.filename.as_str()) {
             Ok(lines) => {
-                for (pos, line) in lines.enumerate() {
+                for (_, line) in lines.enumerate() {
                     if let Ok(row) = line {
                         let values = row.split(self.sep).collect::<Vec<&str>>();
                         if values.len() >= 2 {
