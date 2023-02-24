@@ -27,14 +27,13 @@ where
             // mid = 0 <=> high=0=low or (high=1 and low=0)
             // when mid=0 (mid-1 not working since mid is usize)
             // hence the following conditions
-            else if vec[mid] > key && mid == 0 && vec[high] != key {
+            else if vec[mid] > key && mid == 0 {
                 return Err(mid);
             } else {
                 return Ok(mid);
             }
-            println!("{mid}");
         }
-        Err(high)
+        Err(low)
     } else {
         Err(0)
     }

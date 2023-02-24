@@ -11,6 +11,10 @@ mod tests {
             let ind = binary_search(vec[i], &vec);
             assert_eq!(ind.unwrap(), i);
         }
-        assert!(binary_search(vec[0] - 1, &vec).is_err());
+        let fail_find = binary_search(vec[0] - 1, &vec);
+        assert!(fail_find.is_err());
+        if let Err(index) = fail_find{
+            assert_eq!(index, 0);
+        }
     }
 }
