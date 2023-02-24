@@ -2,10 +2,10 @@
 mod unit_test;
 
 use std::collections::LinkedList;
-use std::mem::replace;
+// use std::mem::replace;
 
 /// Implementation of the First In First Out concept (namely a queue),
-// with the standard library
+/// with the standard library
 /// # Examples
 /// ```
 /// use basics::data_structure::queue::LinkedListQueue;
@@ -102,76 +102,76 @@ impl<T> LinkedListQueue<T> {
 }
 
 // Implementing queues relatively "from scratch"
-#[derive(Debug, Clone)]
-struct Node<T> {
-    item: T,
-    // Box helps avoid infinity memory allocation
-    // in a recursive definition of a struct
-    next: Option<Box<Node<T>>>,
-}
+// #[derive(Debug, Clone)]
+// struct Node<T> {
+//     item: T,
+//     // Box helps avoid infinity memory allocation
+//     // in a recursive definition of a struct
+//     next: Option<Box<Node<T>>>,
+// }
 
-#[derive(Default, Debug, Clone)]
-struct Queue<T> {
-    first: Option<Box<Node<T>>>,
-    last: Option<Box<Node<T>>>,
-    len: usize,
-}
+// #[derive(Default, Debug, Clone)]
+// struct Queue<T> {
+//     first: Option<Box<Node<T>>>,
+//     last: Option<Box<Node<T>>>,
+//     len: usize,
+// }
 
-impl<T: Clone + Default> Queue<T> {
-    pub fn new() -> Self {
-        // run time complexity O(1)
-        Default::default()
-    }
+// impl<T: Clone + Default> Queue<T> {
+//     pub fn new() -> Self {
+//         // run time complexity O(1)
+//         Default::default()
+//     }
 
-    pub fn init(s: T) -> Self {
-        // run time complexity O(1)
-        let node = Node {
-            item: s,
-            next: None,
-        };
-        Self {
-            first: Some(Box::new(node)),
-            last: None,
-            len: 1,
-        }
-    }
+//     pub fn init(s: T) -> Self {
+//         // run time complexity O(1)
+//         let node = Node {
+//             item: s,
+//             next: None,
+//         };
+//         Self {
+//             first: Some(Box::new(node)),
+//             last: None,
+//             len: 1,
+//         }
+//     }
 
-    pub fn is_empty(&self) -> bool {
-        // run time complexity O(1)
-        self.first.is_none()
-    }
+//     pub fn is_empty(&self) -> bool {
+//         // run time complexity O(1)
+//         self.first.is_none()
+//     }
 
-    pub fn len(&self) -> usize {
-        self.len
-    }
+//     pub fn len(&self) -> usize {
+//         self.len
+//     }
 
-    pub fn dequeue(&mut self) -> Option<T> {
-        // run time complexity O(N) (due to cloning) ?
-        // space complexity O(N) (due to cloning) ?
-        match self.first {
-            Some(ref node) => {
-                let item = node.item.clone();
-                self.first = node.next.clone();
-                self.len -= 1;
-                Some(item)
-            }
-            None => panic!("cannot pop, queue is empty"),
-        }
-    }
+//     pub fn dequeue(&mut self) -> Option<T> {
+//         // run time complexity O(N) (due to cloning) ?
+//         // space complexity O(N) (due to cloning) ?
+//         match self.first {
+//             Some(ref node) => {
+//                 let item = node.item.clone();
+//                 self.first = node.next.clone();
+//                 self.len -= 1;
+//                 Some(item)
+//             }
+//             None => panic!("cannot pop, queue is empty"),
+//         }
+//     }
 
-    // Does not work yet !!!!
-    // pub fn enqueue(&mut self, element: T){
+//    // Does not work yet !!!!
+//     pub fn enqueue(&mut self, element: T){
 
-    //     let node = Node{item: element, next: None};
-    //     let node = Some(Box::new(node));
-    //     if self.is_empty(){
-    //         self.first = node;
-    //     } else {
-    //         let mut oldlast = replace(&mut self.last, node);
-    //         if let Some(ref mut old) = oldlast {
-    //             old.next = self.last.clone();
-    //         }
-    //     }
-    //     self.len += 1;
-    // }
-}
+//         let node = Node{item: element, next: None};
+//         let node = Some(Box::new(node));
+//         if self.is_empty(){
+//             self.first = node;
+//         } else {
+//             let mut oldlast = replace(&mut self.last, node);
+//             if let Some(ref mut old) = oldlast {
+//                 old.next = self.last.clone();
+//             }
+//         }
+//         self.len += 1;
+//     }
+// }
