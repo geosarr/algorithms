@@ -4,6 +4,7 @@ mod unit_test;
 use std::collections::LinkedList;
 use std::mem::replace;
 
+/// Implementation of an elementary node
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Node<T> {
     item: T,
@@ -85,8 +86,8 @@ impl<T> Stack<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::stack::Stack;
-    /// let stack = Stack::init(&"0");
-    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"0");
+    /// let stack = Stack::init("0");
+    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), "0");
     /// ```
     pub fn get_first(&self) -> &Option<Box<Node<T>>> {
         &self.first
@@ -96,12 +97,12 @@ impl<T> Stack<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::stack::Stack;
-    /// let mut stack = Stack::init(&"0");
+    /// let mut stack = Stack::init("0");
     /// let mut mut_ref_first = stack.get_mut_first();
     /// if let Some(ref mut node) = mut_ref_first{
-    ///     *(node.get_mut_item()) = &"1";     
+    ///     *(node.get_mut_item()) = "1";     
     ///  }
-    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), &"1");
+    /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), "1");
     /// ```
     pub fn get_mut_first(&mut self) -> &mut Option<Box<Node<T>>> {
         &mut self.first
@@ -217,7 +218,7 @@ impl<T> LinkedListStack<T> {
     /// # Example
     /// ```
     /// use basics::data_structure::stack::LinkedListStack;
-    /// let stack = LinkedListStack::init(&"stack");
+    /// let stack = LinkedListStack::init("stack");
     /// assert_eq!(stack.len(), 1);
     /// ```
     pub fn init(s: T) -> Self {
