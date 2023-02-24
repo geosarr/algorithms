@@ -50,7 +50,7 @@ where
                             );
                         }
                         // println!("{:?}", dg.vertex_edges(&values[0].parse::<usize>().unwrap()));
-                        println!("{}", nb_iter);
+                        println!("{nb_iter}");
                         nb_iter += 1
                     }
                 }
