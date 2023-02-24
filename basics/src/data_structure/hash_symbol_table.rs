@@ -32,6 +32,7 @@ impl<T, U> SeparateChainingSymbolTable<T, U> {
     fn halve(&mut self) {
         // reduce the size of the chain to free space
         self.vec.truncate(self.vec.len() / 2);
+        self.chains /= 2;
     }
     /// Gives the number of (key, value) pairs in the symbol table.
     /// # Example
@@ -45,6 +46,14 @@ impl<T, U> SeparateChainingSymbolTable<T, U> {
         self.len
     }
 
+    /// Indicates whether or not the symbol table is empty
+    /// # Example
+    /// ```
+    /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// let mut st = SeparateChainingSymbolTable::<isize, usize>::new();
+    /// st.insert(-1, 10);
+    /// assert!(!st.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
@@ -111,7 +120,7 @@ impl<T: Hash + Clone, U: Clone> SeparateChainingSymbolTable<T, U> {
     }
 }
 impl<T: Hash + Clone + Eq, U: Clone + Eq> SeparateChainingSymbolTable<T, U> {
-    /// Inserts a (key, value) pair into the stack.
+    /// Inserts a (key, value) pair into the symbol table.
     /// # Example
     /// ```
     /// use basics::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
@@ -167,6 +176,7 @@ impl<T: Eq + Hash, U: Eq> SeparateChainingSymbolTable<T, U> {
     /// assert_eq!(st.get(&1), Some(&"1"));
     /// st.insert(1, "0");
     /// assert_eq!(st.get(&1), Some(&"0"));
+    /// assert_eq!(st.get(&2), None);
     /// ```
     pub fn get(&self, key: &T) -> Option<&U> {
         // run time complexity on average O(N/chains)
