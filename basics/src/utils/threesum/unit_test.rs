@@ -7,7 +7,7 @@ mod tests {
 
     #[test]
     fn test_threesum() {
-        let mut vec = gen_vec_rand_int(20, RandKind::Range);
+        let vec = gen_vec_rand_int(20, RandKind::Range);
         let n = vec.len();
         let mut threesum = ThreeSum {
             target: 0,

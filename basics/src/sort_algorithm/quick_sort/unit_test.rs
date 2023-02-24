@@ -6,7 +6,7 @@ mod tests {
     #[test]
     fn test_quick_sort() {
         let mut v = gen_vec_rand_int(10000, RandKind::Full);
-        let mut quick = QuickSort { vec: v.clone() };
+        let quick = QuickSort { vec: v.clone() };
         let vec = quick.into_sorted_vec();
         v.sort(); // std sort of a vec
         assert_eq!(vec, v);

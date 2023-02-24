@@ -263,7 +263,7 @@ impl<T: Clone + ToString> Segment<T> {
                 / (self.slope() - other.slope());
             let intersect_ordinate =
                 self.slope() * (intersect_abscissa - self_point.get_x()) + self_point.get_y();
-            let intersection_point = Point::init(intersect_abscissa, intersect_ordinate);
+            // let intersection_point = Point::init(intersect_abscissa, intersect_ordinate);
             // check if the intersection point belongs to both segments self and other (horrible!!)
             let self_max_x = if self.get_p().get_x() < self.get_q().get_x() {
                 self.get_q().get_x()

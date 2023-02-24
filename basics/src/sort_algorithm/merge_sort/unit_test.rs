@@ -6,11 +6,11 @@ mod tests {
     #[test]
     fn test_merge_sort() {
         let mut v = gen_vec_rand_int(10000, RandKind::Full);
-        let mut mbup = MergeSort {
+        let mbup = MergeSort {
             vec: v.clone(),
             algo: MergeSortAlgorithm::BottomUp,
         };
-        let mut mrec = MergeSort {
+        let mrec = MergeSort {
             vec: v.clone(),
             algo: MergeSortAlgorithm::Recursive,
         };
