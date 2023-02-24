@@ -1,4 +1,7 @@
-use basics::{sort_algorithm::{BinaryHeapSort, InsertionSort}, utils::Point};
+use basics::{
+    sort_algorithm::{BinaryHeapSort, InsertionSort},
+    utils::Point,
+};
 
 fn main() {
     let mut vec: Vec<isize> = vec![-1, -10, 15, 16, -18];
