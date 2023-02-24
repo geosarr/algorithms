@@ -98,7 +98,7 @@ impl UnionFind {
         self.nb_objects
     }
 
-    /// Indicates whether or not a union find istance is empty
+    /// Indicates whether or not a union find instance is empty
     /// # Example
     /// ```
     /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
@@ -156,7 +156,7 @@ impl UnionFind {
     /// Gets the id of the root of an object in a union find instance.
     /// Depending on the algorithm the root is computed differently and the complexity differs also.
     /// For `QuickFInd`, the value returned is the parent of the object, in a tree representation.
-    /// For the others, the value returned is the maybe the parent or the great parent or a great great .. parent.
+    /// For the others, the value returned is the parent or the great parent or a great great .. parent.
     /// # Example
     /// ```
     /// use basics::search_algorithm::{UnionFind, UnionFindAlgorithm};
