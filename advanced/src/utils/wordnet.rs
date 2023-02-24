@@ -70,9 +70,8 @@ impl Wordnet {
         let mut distance: Option<usize> = None;
         let mut path: Option<Vec<&String>> = None;
         let sap = ShortestAncestralPath::new();
-        // Some(1)
-        if !(synset_a.len() == 1 && synset_a.contains(&None))
-            && !(synset_b.len() == 1 && synset_b.contains(&None))
+        if !(synset_a.len() == 1 && synset_a.contains(&None)
+            || synset_b.len() == 1 && synset_b.contains(&None))
         {
             // both words are in Wordnet
             for a in &synset_a {
