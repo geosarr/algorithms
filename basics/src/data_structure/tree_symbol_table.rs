@@ -143,13 +143,6 @@ impl<T: Ord, U> BinarySearchTree<T, U> {
                     Ordering::Greater => Self::put(&mut nod.right, key, value),
                     Ordering::Equal => nod.value = value,
                 }
-                // if key < nod.key {
-                //     Self::put(&mut nod.left, key, value);
-                // } else if key > nod.key {
-                //     Self::put(&mut nod.right, key, value);
-                // } else {
-                //     nod.value = value;
-                // }
             }
         }
     }
