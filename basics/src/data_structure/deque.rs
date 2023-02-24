@@ -73,7 +73,7 @@ impl<T> LinkedListDeque<T> {
         self.list.len()
     }
 
-    /// Inserts an object into the deque.
+    /// Inserts an object at the beginning of the deque.
     /// # Example
     /// ```
     /// use basics::data_structure::deque::LinkedListDeque;
@@ -86,7 +86,7 @@ impl<T> LinkedListDeque<T> {
         self.list.push_front(elt)
     }
 
-    /// Inserts an object into the deque.
+    /// Inserts an object at the end of the deque.
     /// # Example
     /// ```
     /// use basics::data_structure::deque::LinkedListDeque;
