@@ -4,10 +4,12 @@ use std::error::Error;
 use std::fmt;
 use std::str::FromStr;
 
-// Enumerating the different types of algorithms
+/// Enumerating the different types of merge sort algorithm
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum MergeSortAlgorithm {
+    /// The recursive algorithm
     Recursive,
+    /// The iterative algorithm
     BottomUp,
 }
 

@@ -3,31 +3,49 @@ mod unit_test;
 use std::collections::BinaryHeap;
 use std::mem::replace;
 
-// Implementation with std BinaryHeap
+/// Implementation of binary heap sort with the standard library
 #[derive(Debug)]
 pub struct BinaryHeapSort<T> {
     heap: BinaryHeap<T>,
 }
 
 impl<T: Ord> BinaryHeapSort<T> {
+    /// Creates a new binary heap instance from a `Vec`
+    /// ```
+    /// use basics::sort_algorithm::BinaryHeapSort;
+    /// let bhs = BinaryHeapSort::init(vec![10, 20, 9, 17]);
+    /// ```
     pub fn init(v: Vec<T>) -> Self {
         Self {
             heap: BinaryHeap::from(v),
         }
     }
 
+    /// Sorts a `Vec` using heap sort algorithm. It moves the BinaryHeapSort.
+    /// ```
+    /// use basics::sort_algorithm::BinaryHeapSort;
+    /// let mut v = vec![10, 20, 9, 17]; 
+    /// let bhs = BinaryHeapSort::init(v.clone());
+    /// v.sort_unstable();
+    /// assert_eq!(bhs.into_sorted_vec(), v);
+    /// ```
     pub fn into_sorted_vec(self) -> Vec<T> {
         self.heap.into_sorted_vec()
     }
 }
 
-// Implementation "from scratch" using a max oriented binary heap
+/// Implementation of heap sort relatively from scratch using a max oriented binary heap
 #[derive(Debug)]
 pub struct HeapSort<T> {
     vec: Vec<T>,
 }
 
 impl<T: Default + Clone> HeapSort<T> {
+    /// Creates a new binary heap instance from a `Vec`
+    /// ```
+    /// use basics::sort_algorithm::HeapSort;
+    /// let bhs = HeapSort::init(vec![10, 20, 9, 17]);
+    /// ```
     pub fn init(mut v: Vec<T>) -> Self {
         let mut new_vec = vec![T::default()]; // index 0 is not used
         new_vec.append(&mut v);
@@ -80,9 +98,17 @@ impl<T: Ord + Clone> HeapSort<T> {
         self.vec[1..].into()
     }
 
+    /// Sorts a `Vec` using heap sort algorithm. It moves the HeapSort.
+    /// ```
+    /// use basics::sort_algorithm::HeapSort;
+    /// let mut v = vec![10, 20, 9, 17]; 
+    /// let bhs = HeapSort::init(v.clone());
+    /// v.sort_unstable();
+    /// assert_eq!(bhs.into_sorted_vec(), v);
+    /// ```   
     pub fn into_sorted_vec(mut self) -> Vec<T> {
         // run time complexity O(N log(N))
         self.sink_all(); // creates a binary heap
-        self.sort_down() // sort the objects in the binary heap
+        self.sort_down() // sorts the objects in the binary heap
     }
 }

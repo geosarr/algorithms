@@ -5,6 +5,7 @@ use rand::thread_rng;
 use std::cmp::Ordering;
 use std::mem::replace;
 
+/// Implementation of quick sort algorithm
 #[derive(Debug)]
 pub struct QuickSort<T> {
     vec: Vec<T>,
@@ -13,6 +14,11 @@ pub struct QuickSort<T> {
 }
 
 impl<T: Ord + Clone> QuickSort<T> {
+    /// Creates a new quick sort instance from a `Vec`.
+    /// ```
+    /// use basics::sort_algorithm::QuickSort;
+    /// let ms = QuickSort::init(vec![100, 20, 9, 17]);
+    /// ```
     pub fn init(v: Vec<T>) -> Self {
         Self { vec: v }
     }
@@ -75,11 +81,26 @@ impl<T: Ord + Clone> QuickSort<T> {
         }
     }
 
+    /// Sorts a `Vec` using quick sort algorithm. It moves the QuickSort.
+    /// ```
+    /// use basics::sort_algorithm::QuickSort;
+    /// let mut v = vec![100, 20, 9, 17]; 
+    /// let qs = QuickSort::init(v.clone());
+    /// v.sort_unstable();
+    /// assert_eq!(qs.into_sorted_vec(), v);
+    /// ```   
     pub fn into_sorted_vec(mut self) -> Vec<T> {
         self.sort();
         self.vec
     }
 
+    /// Selects the kth largest element in the `Vec` instantiating the QuickSort using the 
+    /// quick select algorithm
+    /// ```
+    /// use basics::sort_algorithm::QuickSort;
+    /// let mut qs = QuickSort::init(vec![30, 13, 90, 50, 47, 100]);
+    /// assert_eq!(qs.select(3), 50);
+    /// ```
     pub fn select(&mut self, k: usize) -> T {
         // Selects the k^th largest element in self.vec (quick select algorithm)
         // in linear time on average for median (k = N/2)

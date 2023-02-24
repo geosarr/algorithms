@@ -5,6 +5,8 @@ pub use algorithm::MergeSortAlgorithm;
 use std::cmp::min;
 use std::mem::replace;
 
+
+/// Implementation of merge sort algorithm.
 #[derive(Debug)]
 pub struct MergeSort<T> {
     vec: Vec<T>,
@@ -14,6 +16,12 @@ pub struct MergeSort<T> {
 }
 
 impl<T> MergeSort<T> {
+    /// Creates a new merge sort instance from a `Vec` and a merge sort algorithm 
+    /// (recursive or iterative (i.e bottom-up))
+    /// ```
+    /// use basics::sort_algorithm::{MergeSort, MergeSortAlgorithm};
+    /// let ms = MergeSort::init(vec![100, 20, 9, 17], MergeSortAlgorithm::BottomUp);
+    /// ```
     pub fn init(v: Vec<T>, algorithm: MergeSortAlgorithm) -> Self {
         Self {
             vec: v,
@@ -70,6 +78,14 @@ impl<T: Ord + Clone> MergeSort<T> {
         self.merge(aux_vec, low, high, mid);
     }
 
+    /// Sorts a `Vec` using merge sort algorithm. It moves the MergeSort.
+    /// ```
+    /// use basics::sort_algorithm::{MergeSort, MergeSortAlgorithm};
+    /// let mut v = vec![10, 20, 9, 17]; 
+    /// let ms = MergeSort::init(v.clone(), MergeSortAlgorithm::Recursive);
+    /// v.sort_unstable();
+    /// assert_eq!(ms.into_sorted_vec(), v);
+    /// ```
     pub fn into_sorted_vec(mut self) -> Vec<T> {
         let aux_vec = Vec::<T>::new();
         let n = self.vec.len();
