@@ -1,8 +1,6 @@
-mod graph;
-mod utils;
+/// This module regroups implementations of classical graph structures
+/// and some classical processing algorithms
+pub mod graph;
 
-pub use crate::graph::{
-    BreadthFirstSearch, ConnectedComponent, DepthFirstSearch, DirectedGraph,
-    StrongConnectedComponent, TopologicalSort, UndirectedGraph,
-};
-pub use crate::utils::{read_lines, Reader};
+///
+pub mod utils;

@@ -1,15 +1,12 @@
 mod directed_graph;
-mod processing;
+pub mod processing;
 mod undirected_graph;
 
 pub use directed_graph::DirectedGraph;
-pub use processing::{
-    BreadthFirstSearch, ConnectedComponent, DepthFirstSearch, StrongConnectedComponent,
-    TopologicalSort,
-};
-pub use std::collections::{HashSet, LinkedList};
+use std::collections::HashSet;
 pub use undirected_graph::UndirectedGraph;
 
+/// This trait gives some basic information on vertices
 pub trait VertexInfo {
     fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize>;
     fn nb_vertices(&self) -> usize;
