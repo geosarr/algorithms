@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod unit_test;
-use crate::Reader;
-use crate::{BreadthFirstSearch, DirectedGraph};
+use crate::graph::{processing::BreadthFirstSearch, DirectedGraph};
+use crate::utils::Reader;
 use std::collections::{HashMap, HashSet};
 
 pub struct Wordnet {
@@ -29,13 +29,26 @@ impl Wordnet {
     }
     pub fn nouns(&self) -> Vec<&String> {
         // returns all Wordnet nouns
-        self.synset.iter().map(|(k, v)| v).collect::<Vec<&String>>()
+        self.synset.values().collect::<Vec<&String>>()
     }
     pub fn is_noun(&self, word: &str) -> bool {
         // indicates whether or not word is a Wordnet noun
         self.synset
             .iter()
-            .any(|(k, v)| v.split(" ").collect::<Vec<&str>>().contains(&word))
+            .any(|(_, v)| v.split(' ').collect::<Vec<&str>>().contains(&word))
+    }
+    fn synsets_of_noun<'a>(&'a self, noun: &&str) -> HashSet<Option<&'a usize>> {
+        return self
+            .synset
+            .iter()
+            .map(|(k, v)| {
+                if v.split(' ').collect::<Vec<&str>>().contains(noun) {
+                    Some(k)
+                } else {
+                    None
+                }
+            })
+            .collect::<HashSet<_>>();
     }
     pub fn sap_distance(
         &self,
@@ -44,28 +57,8 @@ impl Wordnet {
     ) -> (Option<usize>, Option<Vec<&String>>) {
         // shortest ancestor path distance along wiith the path
 
-        let synset_a = self
-            .synset
-            .iter()
-            .map(|(k, v)| {
-                if v.split(" ").collect::<Vec<&str>>().contains(&noun_a) {
-                    Some(k)
-                } else {
-                    None
-                }
-            })
-            .collect::<HashSet<_>>();
-        let synset_b = self
-            .synset
-            .iter()
-            .map(|(k, v)| {
-                if v.split(" ").collect::<Vec<&str>>().contains(&noun_b) {
-                    Some(k)
-                } else {
-                    None
-                }
-            })
-            .collect::<HashSet<_>>();
+        let synset_a = self.synsets_of_noun(&noun_a);
+        let synset_b = self.synsets_of_noun(&noun_b);
         let mut min_distance = 2 * self.hypernym_graph.nb_vertices();
         let mut distance: Option<usize> = None;
         let mut path: Option<Vec<&String>> = None;
@@ -74,29 +67,25 @@ impl Wordnet {
             || synset_b.len() == 1 && synset_b.contains(&None))
         {
             // both words are in Wordnet
-            for a in &synset_a {
-                if let Some(v) = a {
-                    for b in &synset_b {
-                        if let Some(w) = b {
-                            if let Some(ancestor) = sap.ancestor(&self.hypernym_graph, **v, **w) {
-                                if ancestor.1 + ancestor.2 < min_distance {
-                                    min_distance = ancestor.1 + ancestor.2;
-                                    // computing the sap distance
-                                    distance = Some(ancestor.1 + ancestor.2);
-                                    // building the path
-                                    let mut half_path_one = ancestor.3;
-                                    half_path_one.reverse();
-                                    half_path_one.pop();
-                                    let mut half_path_two = ancestor.4;
-                                    half_path_one.append(&mut half_path_two);
-                                    path = Some(
-                                        half_path_one
-                                            .iter()
-                                            .map(|e| &self.synset[e])
-                                            .collect::<Vec<&String>>(),
-                                    );
-                                }
-                            }
+            for a in synset_a.iter().flatten() {
+                for b in synset_b.iter().flatten() {
+                    if let Some(ancestor) = sap.ancestor(&self.hypernym_graph, **a, **b) {
+                        if ancestor.1 + ancestor.2 < min_distance {
+                            min_distance = ancestor.1 + ancestor.2;
+                            // computing the sap distance
+                            distance = Some(ancestor.1 + ancestor.2);
+                            // building the path
+                            let mut half_path_one = ancestor.3;
+                            half_path_one.reverse();
+                            half_path_one.pop();
+                            let mut half_path_two = ancestor.4;
+                            half_path_one.append(&mut half_path_two);
+                            path = Some(
+                                half_path_one
+                                    .iter()
+                                    .map(|e| &self.synset[e])
+                                    .collect::<Vec<&String>>(),
+                            );
                         }
                     }
                 }
