@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use super::super::UndirectedGraph;
-    use crate::graph::{BreadthFirstSearch, ConnectedComponent, DepthFirstSearch};
+    use crate::graph::processing::{BreadthFirstSearch, ConnectedComponent, DepthFirstSearch};
 
     #[test]
     fn test_undirected_graph() {

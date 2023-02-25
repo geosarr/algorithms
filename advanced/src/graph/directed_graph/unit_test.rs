@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use super::super::DirectedGraph;
-    use crate::graph::{
+    use crate::graph::processing::{
         BreadthFirstSearch, DepthFirstSearch, StrongConnectedComponent, TopologicalSort,
     };
 

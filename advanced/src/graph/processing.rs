@@ -1,4 +1,5 @@
-use crate::graph::{DirectedGraph, HashSet, LinkedList, UndirectedGraph, VertexInfo};
+use crate::graph::{DirectedGraph, UndirectedGraph, VertexInfo};
+use std::collections::LinkedList;
 use std::marker::PhantomData;
 
 pub struct DepthFirstSearch<G> {
@@ -218,7 +219,7 @@ impl TopologicalSort {
             marked: vec![false; nb_vertices],
         }
     }
-    pub fn reverse_postorder<'a>(&'a self) -> &'a Vec<usize> {
+    pub fn reverse_postorder(&self) -> &Vec<usize> {
         &self.reverse_postorder
     }
     pub fn depth_first_order(&mut self, graph: &DirectedGraph) {
@@ -278,7 +279,7 @@ impl StrongConnectedComponent {
         let nb = graph.nb_vertices();
         let mut topo = TopologicalSort::init(nb);
         topo.depth_first_order(&graph.reverse());
-        let mut order_second_dfs = topo.reverse_postorder();
+        let order_second_dfs = topo.reverse_postorder();
         // order_second_dfs.reverse();
         for v in 0..nb {
             let v = order_second_dfs[nb - 1 - v];
