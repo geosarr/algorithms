@@ -10,6 +10,11 @@ pub struct UndirectedGraph {
     nb_edges: usize,
     nb_vertices: usize,
 }
+impl Default for UndirectedGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl UndirectedGraph {
     pub fn new() -> Self {
         Self {
@@ -33,16 +38,15 @@ impl UndirectedGraph {
         // run time complexity O(1)
         self.nb_edges
     }
-
+    pub fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
     fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
         // run time complexity O(1)
         &self.data[*v]
-    }
-    fn nb_vertices(&self) -> usize {
-        // run time complexity O(1)
-        self.nb_vertices
     }
     pub fn add_edge(&mut self, v: usize, w: usize) {
         // adds an edge to the graph

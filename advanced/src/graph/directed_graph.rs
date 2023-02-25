@@ -12,6 +12,11 @@ pub struct DirectedGraph {
     nb_edges: usize,
     nb_vertices: usize,
 }
+impl Default for DirectedGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl DirectedGraph {
     pub fn new() -> Self {
         Self {
@@ -55,7 +60,7 @@ impl DirectedGraph {
         let mut dg = DirectedGraph::init(nb_vertices);
         match read_lines(filename) {
             Ok(lines) => {
-                for (pos, line) in lines.enumerate() {
+                for (_, line) in lines.enumerate() {
                     if let Ok(row) = line {
                         let values = row.split(sep).collect::<Vec<&str>>();
                         for i in 1..values.len() {
@@ -65,7 +70,7 @@ impl DirectedGraph {
                             );
                         }
                         // println!("{:?}", dg.vertex_edges(&values[0].parse::<usize>().unwrap()));
-                        println!("{}", nb_iter);
+                        println!("{nb_iter}");
                         nb_iter += 1
                     }
                 }
