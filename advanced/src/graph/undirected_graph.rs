@@ -64,11 +64,11 @@ impl UndirectedGraph {
         self.vertex_edges(v).len()
     }
 
-    pub fn average_degree(&self) -> f32 {
+    pub fn average_degree(&self) -> usize {
         // gets the average number of degree of the graph
         // each edge is counted only once (by the self.add_edge() method)
         if self.nb_vertices > 0 {
-            (self.nb_edges as f32) / (self.nb_vertices as f32)
+            self.nb_edges / self.nb_vertices
         } else {
             panic!("No vertex in the graph");
         }
