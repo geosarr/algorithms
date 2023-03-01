@@ -4,6 +4,17 @@ use crate::graph::{HashSet, VertexInfo};
 use crate::utils::read_lines;
 use std::path::Path;
 
+/// Implementation of directed graph
+/// ```
+/// use advanced::graph::DirectedGraph;
+/// let mut graph = DirectedGraph::init(3);
+/// graph.add_edge(0,1);
+/// graph.add_edge(1,2);
+/// assert_eq!(graph.nb_vertices(), 3);
+/// assert_eq!(graph.nb_edges(), 2);
+/// graph.add_vertex();
+/// assert_eq!(graph.nb_vertices(), 4);
+/// ```
 pub struct DirectedGraph {
     // implements an adjacency-list graph
     // where vertices have indices 0, ..., nb_objects
@@ -93,6 +104,7 @@ impl DirectedGraph {
     pub fn add_edge(&mut self, v: usize, w: usize) {
         // adds an edge from v to w to the graph
         // run time complexity O(1)
+        assert!(self.nb_vertices >= std::cmp::min(v,w));
         self.data[v].insert(w);
         self.nb_edges += 1;
     }
@@ -112,10 +124,10 @@ impl DirectedGraph {
         self.vertex_edges(v).len()
     }
 
-    pub fn average_degree(&self) -> f32 {
+    pub fn average_degree(&self) -> usize {
         // gets the average number of degree of the graph
         if self.nb_vertices > 0 {
-            (self.nb_edges as f32) / (self.nb_vertices as f32)
+            self.nb_edges / self.nb_vertices
         } else {
             panic!("No vertex in the graph");
         }
