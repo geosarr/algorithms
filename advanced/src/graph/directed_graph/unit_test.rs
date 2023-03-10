@@ -94,12 +94,34 @@ mod tests {
 
         let mut topo = TopologicalSort::init(graph.nb_vertices);
         topo.depth_first_order(&graph);
-        // println!("{:?}", topo.reverse_postorder());
         assert!(
             topo.reverse_postorder() == &vec![4, 1, 2, 5, 0, 6, 3]
                 || topo.reverse_postorder() == &vec![2, 5, 4, 1, 0, 6, 3]
                 || topo.reverse_postorder() == &vec![2, 4, 1, 5, 0, 6, 3]
         );
+        for (pos, a) in topo.order().enumerate() {
+            if pos == 0 {
+                assert_eq!(a, &3);
+            }
+            if pos == 1 {
+                assert_eq!(a, &6);
+            }
+            if pos == 2 {
+                assert_eq!(a, &0);
+            }
+            if pos == 3 {
+                assert!(a == &5 || a == &1);
+            }
+            if pos == 4 {
+                assert!(a == &1 || a == &2 || a == &4);
+            }
+            if pos == 5 {
+                assert!(a == &1 || a == &5 || a == &4);
+            }
+            if pos == 6 {
+                assert!(a == &2 || a == &4);
+            }
+        }
     }
 
     #[test]

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{HashSet, VertexInfo};
-
+use crate::graph::{VertexInfo, VertexNumber};
+use std::collections::HashSet;
 pub struct UndirectedGraph {
     // implements an adjacency-list graph
     // where vertices have indices 0, ..., nb_objects
@@ -27,7 +27,7 @@ impl UndirectedGraph {
     pub fn init(nb_objects: usize) -> Self {
         let mut graph = Self::new();
         graph.nb_vertices = nb_objects;
-        graph.data = Vec::new();
+        graph.data = Vec::with_capacity(nb_objects);
         for _ in 0..nb_objects {
             graph.data.push(HashSet::<usize>::new());
         }
@@ -42,7 +42,7 @@ impl UndirectedGraph {
         // run time complexity O(1)
         self.nb_vertices
     }
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+    fn vertex_edges(&self, v: &usize) -> &HashSet<usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
         // run time complexity O(1)
@@ -51,9 +51,13 @@ impl UndirectedGraph {
     pub fn add_edge(&mut self, v: usize, w: usize) {
         // adds an edge to the graph
         // run time complexity O(1)
-        self.data[v].insert(w);
-        self.data[w].insert(v);
-        self.nb_edges += 1;
+        assert!(self.nb_vertices >= std::cmp::max(v, w));
+        let w_is_in: bool = self.data[v].insert(w);
+        let v_is_in: bool = self.data[w].insert(v);
+        if v_is_in && w_is_in {
+            // v <--> w is a new undirected edge
+            self.nb_edges += 1;
+        }
     }
     pub fn add_vertex(&mut self) {
         self.data.push(HashSet::<usize>::new());
@@ -83,12 +87,18 @@ impl UndirectedGraph {
     }
 }
 impl VertexInfo for UndirectedGraph {
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+    fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
         // run time complexity O(1)
-        &self.data[*v]
+        self.data[*v].iter().collect::<Vec<&usize>>()
     }
+    fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
+}
+impl VertexNumber for UndirectedGraph {
     fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices

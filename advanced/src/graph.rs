@@ -2,12 +2,16 @@ mod directed_graph;
 pub mod processing;
 mod undirected_graph;
 
-pub use directed_graph::DirectedGraph;
-use std::collections::HashSet;
+pub use directed_graph::{DirectedGraph, EdgeWeightedDigraph};
 pub use undirected_graph::UndirectedGraph;
 
 /// This trait gives some basic information on vertices
-pub trait VertexInfo {
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize>;
+pub trait VertexInfo: VertexNumber {
+    // fn vertex_edges(&self, v: &usize) -> &HashSet<usize>;
+    fn vertex_edges(&self, v: &usize) -> Vec<&usize>;
+    fn nb_vertices(&self) -> usize;
+}
+
+pub trait VertexNumber {
     fn nb_vertices(&self) -> usize;
 }

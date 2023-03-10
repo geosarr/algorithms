@@ -1,7 +1,8 @@
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{HashSet, VertexInfo};
+use crate::graph::{VertexInfo, VertexNumber};
 use crate::utils::read_lines;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
 /// Implementation of directed graph
@@ -29,6 +30,7 @@ impl Default for DirectedGraph {
     }
 }
 impl DirectedGraph {
+    //
     pub fn new() -> Self {
         Self {
             data: Vec::new(),
@@ -39,7 +41,7 @@ impl DirectedGraph {
     pub fn init(nb_objects: usize) -> Self {
         let mut graph = Self::new();
         graph.nb_vertices = nb_objects;
-        graph.data = Vec::new();
+        graph.data = Vec::with_capacity(nb_objects);
         for _ in 0..nb_objects {
             graph.data.push(HashSet::<usize>::new());
         }
@@ -104,15 +106,18 @@ impl DirectedGraph {
     pub fn add_edge(&mut self, v: usize, w: usize) {
         // adds an edge from v to w to the graph
         // run time complexity O(1)
-        assert!(self.nb_vertices >= std::cmp::min(v,w));
-        self.data[v].insert(w);
-        self.nb_edges += 1;
+        assert!(self.nb_vertices >= std::cmp::max(v, w));
+        let w_is_in = self.data[v].insert(w);
+        if w_is_in {
+            // v --> w is a new undirected edge
+            self.nb_edges += 1;
+        }
     }
     pub fn add_vertex(&mut self) {
         self.data.push(HashSet::<usize>::new());
         self.nb_vertices += 1;
     }
-    pub fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+    pub fn vertex_edges(&self, v: &usize) -> &HashSet<usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
         // run time complexity O(1)
@@ -142,12 +147,91 @@ impl DirectedGraph {
     }
 }
 impl VertexInfo for DirectedGraph {
-    fn vertex_edges<'a>(&'a self, v: &usize) -> &'a HashSet<usize> {
+    fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
         // run time complexity O(1)
+        self.data[*v].iter().collect::<Vec<&usize>>()
+    }
+    fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
+}
+impl VertexNumber for DirectedGraph {
+    fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
+}
+
+pub struct EdgeWeightedDigraph {
+    data: Vec<HashMap<usize, usize>>,
+    nb_edges: usize,
+    nb_vertices: usize,
+}
+impl EdgeWeightedDigraph {
+    pub fn new() -> Self {
+        Self {
+            data: Vec::new(),
+            nb_edges: 0,
+            nb_vertices: 0,
+        }
+    }
+    pub fn init(nb_objects: usize) -> Self {
+        let mut graph = Self::new();
+        graph.nb_vertices = nb_objects;
+        graph.data = Vec::with_capacity(nb_objects);
+        for _ in 0..nb_objects {
+            graph.data.push(HashMap::new());
+        }
+        graph
+    }
+    pub fn nb_edges(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_edges
+    }
+
+    pub fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
+
+    pub fn add_edge(&mut self, u: usize, v: usize, w: usize) {
+        // run time complexity O(1)
+        assert!(self.nb_vertices >= std::cmp::max(u, v));
+        let v_is_in = self.data[u].insert(v, w);
+        if v_is_in.is_none() {
+            // u <-> v is a new weigthed edge
+            self.nb_edges += 1;
+        }
+    }
+    pub fn add_vertex(&mut self) {
+        self.data.push(HashMap::new());
+        self.nb_vertices += 1;
+    }
+    pub fn vertex_edges(&self, v: &usize) -> &HashMap<usize, usize> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v and the edge weights
+        // run time complexity O(1)
         &self.data[*v]
     }
+}
+impl VertexInfo for EdgeWeightedDigraph {
+    fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v
+        self.data[*v]
+            .iter()
+            .map(|(k, _)| k)
+            .collect::<Vec<&usize>>()
+    }
+    fn nb_vertices(&self) -> usize {
+        // run time complexity O(1)
+        self.nb_vertices
+    }
+}
+impl VertexNumber for EdgeWeightedDigraph {
     fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices
