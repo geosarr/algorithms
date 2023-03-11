@@ -1,5 +1,5 @@
 use crate::graph::processing::dfs;
-use crate::graph::{VertexInfo, VertexNumber};
+use crate::graph::VertexInfo;
 use std::iter::Rev;
 use std::marker::PhantomData;
 
@@ -12,7 +12,7 @@ pub struct TopologicalSort<G> {
     // Type of the graph
     graph_type: PhantomData<G>,
 }
-impl<G: VertexNumber + VertexInfo> TopologicalSort<G> {
+impl<G: VertexInfo> TopologicalSort<G> {
     pub fn init(nb_vertices: usize) -> Self {
         Self {
             reverse_postorder: Vec::new(),
@@ -27,7 +27,7 @@ impl<G: VertexNumber + VertexInfo> TopologicalSort<G> {
         self.reverse_postorder.iter().rev()
     }
     pub fn depth_first_order(&mut self, graph: &G) {
-        let nb = VertexNumber::nb_vertices(graph);
+        let nb = VertexInfo::nb_vertices(graph);
         for v in 0..nb {
             if !self.marked[v] {
                 // run DFS for each vertex in each component
