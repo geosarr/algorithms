@@ -91,11 +91,16 @@ pub fn shortest_path_ewdag(
     let mut topo = TopologicalSort::init(nb);
     topo.depth_first_order(graph);
     dist_to[source] = 0;
-    
+
+    // tells whether or not the source
+    // vertex is processed in the topological
+    // order
     let mut flag_source = false;
     for vertex in topo.order() {
-        if *vertex == source{ flag_source = true;}
-        if flag_source{
+        if *vertex == source {
+            flag_source = true;
+        }
+        if flag_source {
             let neighbors = graph.vertex_edges(vertex);
             for (neighbor, dist) in neighbors {
                 if dist_to[*neighbor] > dist_to[*vertex] + *dist {

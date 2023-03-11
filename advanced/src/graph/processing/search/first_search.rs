@@ -9,7 +9,7 @@ pub fn dfs<G>(
     component: usize,
     mut_edge_to: bool, // indicates whether or not not mutate edge_to
     is_component: bool, // indicates whether or not to dfs is launched
-                       // for connected component like algorithms
+                       // for connected component-like algorithms
 ) where
     G: VertexInfo,
 {

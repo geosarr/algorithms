@@ -1,5 +1,2 @@
-- add tests graph, dfs, bfs
 - add application to smart contracts ?
 - SAP wordnet ancestor add threading ?
-- Add Option to path_to method output signature for BFS, DFS and shortest paths search algorithms
-- Test EdgeWeightedDigraph
