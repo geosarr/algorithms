@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{VertexInfo, VertexNumber};
+use crate::graph::VertexInfo;
 use crate::utils::read_lines;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
@@ -128,6 +128,13 @@ impl DirectedGraph {
         // the number of vertices the vertex v points to
         self.vertex_edges(v).len()
     }
+    pub fn in_degree(&self, v: &usize) -> usize {
+        // gives the number of vertices pointing to vertex v
+        self.data
+            .iter()
+            .map(|w| if w.contains(&v) { 1 } else { 0 })
+            .sum()
+    }
 
     pub fn average_degree(&self) -> usize {
         // gets the average number of degree of the graph
@@ -153,12 +160,6 @@ impl VertexInfo for DirectedGraph {
         // run time complexity O(1)
         self.data[*v].iter().collect::<Vec<&usize>>()
     }
-    fn nb_vertices(&self) -> usize {
-        // run time complexity O(1)
-        self.nb_vertices
-    }
-}
-impl VertexNumber for DirectedGraph {
     fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices
@@ -216,6 +217,34 @@ impl EdgeWeightedDigraph {
         // run time complexity O(1)
         &self.data[*v]
     }
+    pub fn out_degree(&self, v: &usize) -> usize {
+        // the number of vertices the vertex v points to
+        self.vertex_edges(v).len()
+    }
+    pub fn in_degree(&self, v: &usize) -> usize {
+        // gives the number of vertices pointing to vertex v
+        self.data
+            .iter()
+            .map(|w| if w.contains_key(&v) { 1 } else { 0 })
+            .sum()
+    }
+
+    pub fn average_degree(&self) -> usize {
+        // gets the average number of degree of the graph
+        if self.nb_vertices > 0 {
+            self.nb_edges / self.nb_vertices
+        } else {
+            panic!("No vertex in the graph");
+        }
+    }
+
+    pub fn self_loop_number(&self) -> usize {
+        self.data
+            .iter()
+            .enumerate()
+            .map(|(v, e)| if e.contains_key(&v) { 1 } else { 0 })
+            .sum()
+    }
 }
 impl VertexInfo for EdgeWeightedDigraph {
     fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
@@ -226,12 +255,6 @@ impl VertexInfo for EdgeWeightedDigraph {
             .map(|(k, _)| k)
             .collect::<Vec<&usize>>()
     }
-    fn nb_vertices(&self) -> usize {
-        // run time complexity O(1)
-        self.nb_vertices
-    }
-}
-impl VertexNumber for EdgeWeightedDigraph {
     fn nb_vertices(&self) -> usize {
         // run time complexity O(1)
         self.nb_vertices
