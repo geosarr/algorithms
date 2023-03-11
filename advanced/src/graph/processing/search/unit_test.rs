@@ -143,7 +143,6 @@ mod tests {
         assert_eq!(sp_dag.path_to(6), Some(vec![6, 2, 5, 4, 0]));
         assert_eq!(sp_dag.path_to(7), Some(vec![7, 0]));
 
-
         let mut sp_dag = ShortestPath::init(7, ShortestPathAlgo::SpDag, graph.nb_vertices());
         sp_dag.find_paths(&graph);
         assert_eq!(sp_dag.path_to(0), None);
@@ -154,6 +153,5 @@ mod tests {
         assert_eq!(sp_dag.path_to(5), Some(vec![5, 7]));
         assert_eq!(sp_dag.path_to(6), Some(vec![6, 2, 7]));
         assert_eq!(sp_dag.path_to(7), Some(vec![7]));
-
     }
 }
