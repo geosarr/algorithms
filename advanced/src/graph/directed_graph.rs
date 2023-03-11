@@ -166,12 +166,12 @@ impl VertexInfo for DirectedGraph {
     }
 }
 
-pub struct EdgeWeightedDigraph {
-    data: Vec<HashMap<usize, usize>>,
+pub struct EdgeWeightedDigraph<T> {
+    data: Vec<HashMap<usize, T>>,
     nb_edges: usize,
     nb_vertices: usize,
 }
-impl EdgeWeightedDigraph {
+impl<T> EdgeWeightedDigraph<T> {
     pub fn new() -> Self {
         Self {
             data: Vec::new(),
@@ -198,12 +198,12 @@ impl EdgeWeightedDigraph {
         self.nb_vertices
     }
 
-    pub fn add_edge(&mut self, u: usize, v: usize, w: usize) {
+    pub fn add_edge(&mut self, u: usize, v: usize, w: T) {
         // run time complexity O(1)
         assert!(self.nb_vertices >= std::cmp::max(u, v));
         let v_is_in = self.data[u].insert(v, w);
         if v_is_in.is_none() {
-            // u <-> v is a new weigthed edge
+            // u -> v is a new weigthed edge
             self.nb_edges += 1;
         }
     }
@@ -211,7 +211,7 @@ impl EdgeWeightedDigraph {
         self.data.push(HashMap::new());
         self.nb_vertices += 1;
     }
-    pub fn vertex_edges(&self, v: &usize) -> &HashMap<usize, usize> {
+    pub fn vertex_edges(&self, v: &usize) -> &HashMap<usize, T> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v and the edge weights
         // run time complexity O(1)
@@ -246,7 +246,7 @@ impl EdgeWeightedDigraph {
             .sum()
     }
 }
-impl VertexInfo for EdgeWeightedDigraph {
+impl<T> VertexInfo for EdgeWeightedDigraph<T> {
     fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v

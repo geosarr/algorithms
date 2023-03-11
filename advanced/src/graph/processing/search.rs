@@ -2,7 +2,7 @@ mod first_search;
 mod shortest_path;
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{EdgeWeightedDigraph, VertexInfo};
+use crate::graph::{EdgeWeightedDigraph, VertexInfo, Weight};
 pub use first_search::{bfs, dfs};
 pub use shortest_path::{dijkstra, shortest_path_ewdag};
 use std::marker::PhantomData;
@@ -113,7 +113,7 @@ impl Default for ShortestPathAlgo {
         Self::Dijkstra
     }
 }
-pub struct ShortestPath {
+pub struct ShortestPath<T> {
     // the source vertex from where the shortest
     // paths are computed
     source: usize,
@@ -121,26 +121,30 @@ pub struct ShortestPath {
     algo: ShortestPathAlgo,
     // stores the length of the shortest path from
     // the source to an edge
-    dist_to: Vec<usize>,
+    dist_to: Vec<T>,
     // stores the vertex that is the closest
     // to an edge in the shortest path
     edge_to: Vec<usize>,
 }
-impl ShortestPath {
+impl<T: Weight + Clone> ShortestPath<T> {
     pub fn init(from: usize, algorithm: ShortestPathAlgo, nb_vertices: usize) -> Self {
         Self {
             source: from,
             algo: algorithm,
-            dist_to: vec![usize::MAX; nb_vertices],
+            dist_to: vec![Weight::max(); nb_vertices],
             edge_to: vec![usize::MAX; nb_vertices],
         }
     }
+}
 
-    pub fn dist_to(&self, v: usize) -> usize {
-        self.dist_to[v]
+impl<T> ShortestPath<T>{
+    pub fn dist_to(&self, v: usize) -> &T {
+        &self.dist_to[v]
     }
+}
+impl<T: Eq + Weight> ShortestPath<T>{
     pub fn path_to(&self, v: usize) -> Option<Vec<usize>> {
-        if self.dist_to[v] == usize::MAX {
+        if self.dist_to[v] == Weight::max() {
             return None;
         }
         let mut path = Vec::new();
@@ -152,11 +156,14 @@ impl ShortestPath {
         path.push(self.source);
         Some(path)
     }
-    pub fn find_paths(&mut self, graph: &EdgeWeightedDigraph) {
+}
+
+impl<T: Ord + Weight + std::ops::Add<Output = T>> ShortestPath<T>{
+    pub fn find_paths(&mut self, graph: &EdgeWeightedDigraph<T>) {
         match self.algo {
             ShortestPathAlgo::Dijkstra => {
                 dijkstra(graph, self.source, &mut self.edge_to, &mut self.dist_to);
-            }
+            },
             ShortestPathAlgo::SpDag => {
                 shortest_path_ewdag(graph, self.source, &mut self.edge_to, &mut self.dist_to);
             }

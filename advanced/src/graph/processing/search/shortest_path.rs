@@ -1,16 +1,16 @@
-use crate::graph::{processing::TopologicalSort, EdgeWeightedDigraph};
+use crate::graph::{processing::TopologicalSort, EdgeWeightedDigraph, Weight};
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 
 #[derive(Clone, Eq, PartialEq)]
-struct CurrentNode {
+struct CurrentNode<T> {
     vertex: usize,
-    distance: usize,
+    distance: T,
 }
 
 // Taken and adapted from the standard library documentation
 // for binary heap
-impl Ord for CurrentNode {
+impl<T: Ord> Ord for CurrentNode<T> {
     fn cmp(&self, other: &Self) -> Ordering {
         // Notice that the we flip the ordering on distances.
         // In case of a tie we compare positions - this step is necessary
@@ -21,27 +21,27 @@ impl Ord for CurrentNode {
             .then_with(|| self.vertex.cmp(&other.vertex))
     }
 }
-impl PartialOrd for CurrentNode {
+impl<T: Ord> PartialOrd for CurrentNode<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-pub fn dijkstra(
-    graph: &EdgeWeightedDigraph,
+pub fn dijkstra<T: Weight>(
+    graph: &EdgeWeightedDigraph<T>,
     source: usize,
     edge_to: &mut Vec<usize>,
-    dist_to: &mut Vec<usize>,
+    dist_to: &mut Vec<T>,
 ) {
     let nb = graph.nb_vertices();
     assert_eq!(edge_to.len(), dist_to.len());
     assert_eq!(nb, edge_to.len());
 
     let mut priority_queue = BinaryHeap::new();
-    dist_to[source] = 0;
+    dist_to[source] = Weight::zero();
     priority_queue.push(CurrentNode {
         vertex: source,
-        distance: 0,
+        distance: Weight::zero(),
     });
 
     while let Some(CurrentNode { vertex, distance }) = priority_queue.pop() {
@@ -65,12 +65,12 @@ pub fn dijkstra(
     }
 }
 
-pub fn relax(
-    dist_to: &mut [usize],
+pub fn relax<T: Weight>(
+    dist_to: &mut [T],
     edge_to: &mut [usize],
     origin: usize,
     destination: usize,
-    dist: usize,
+    dist: T,
 ) {
     dist_to[destination] = dist_to[origin] + dist;
     edge_to[destination] = origin;
@@ -78,11 +78,11 @@ pub fn relax(
 
 /// Function that computes the shortest paths from a source
 /// for edge weighted directed acyclic graph
-pub fn shortest_path_ewdag(
-    graph: &EdgeWeightedDigraph,
+pub fn shortest_path_ewdag<T: Weight>(
+    graph: &EdgeWeightedDigraph<T>,
     source: usize,
     edge_to: &mut Vec<usize>,
-    dist_to: &mut Vec<usize>,
+    dist_to: &mut Vec<T>,
 ) {
     let nb = graph.nb_vertices();
     assert_eq!(edge_to.len(), dist_to.len());
@@ -90,7 +90,7 @@ pub fn shortest_path_ewdag(
 
     let mut topo = TopologicalSort::init(nb);
     topo.depth_first_order(graph);
-    dist_to[source] = 0;
+    dist_to[source] = Weight::zero();
 
     // tells whether or not the source
     // vertex is processed in the topological

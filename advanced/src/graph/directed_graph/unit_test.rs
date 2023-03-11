@@ -26,7 +26,7 @@ mod tests {
     #[test]
     fn test_edge_weighted_directed_graph() {
         let n: usize = 10;
-        let mut graph = EdgeWeightedDigraph::init(n);
+        let mut graph = EdgeWeightedDigraph::<i8>::init(n);
         assert_eq!(graph.nb_vertices(), n);
         graph.add_edge(0, 5, 1);
         graph.add_edge(4, 8, 1);
