@@ -98,9 +98,3 @@ impl VertexInfo for UndirectedGraph {
         self.nb_vertices
     }
 }
-// impl VertexNumber for UndirectedGraph {
-//     fn nb_vertices(&self) -> usize {
-//         // run time complexity O(1)
-//         self.nb_vertices
-//     }
-// }

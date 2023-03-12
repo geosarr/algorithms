@@ -7,7 +7,7 @@ use std::path::Path;
 
 /// Implementation of directed graph
 /// ```
-/// use advanced::graph::DirectedGraph;
+/// use algods::graph::DirectedGraph;
 /// let mut graph = DirectedGraph::init(3);
 /// graph.add_edge(0,1);
 /// graph.add_edge(1,2);
@@ -132,7 +132,7 @@ impl DirectedGraph {
         // gives the number of vertices pointing to vertex v
         self.data
             .iter()
-            .map(|w| if w.contains(&v) { 1 } else { 0 })
+            .map(|w| if w.contains(v) { 1 } else { 0 })
             .sum()
     }
 
@@ -170,6 +170,12 @@ pub struct EdgeWeightedDigraph<T> {
     data: Vec<HashMap<usize, T>>,
     nb_edges: usize,
     nb_vertices: usize,
+}
+
+impl<T> Default for EdgeWeightedDigraph<T> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 impl<T> EdgeWeightedDigraph<T> {
     pub fn new() -> Self {
@@ -225,7 +231,7 @@ impl<T> EdgeWeightedDigraph<T> {
         // gives the number of vertices pointing to vertex v
         self.data
             .iter()
-            .map(|w| if w.contains_key(&v) { 1 } else { 0 })
+            .map(|w| if w.contains_key(v) { 1 } else { 0 })
             .sum()
     }
 
@@ -250,10 +256,7 @@ impl<T> VertexInfo for EdgeWeightedDigraph<T> {
     fn vertex_edges(&self, v: &usize) -> Vec<&usize> {
         // gets all the vertices linked to a given vertex v,
         // that is the adjacent vertices of v
-        self.data[*v]
-            .iter()
-            .map(|(k, _)| k)
-            .collect::<Vec<&usize>>()
+        self.data[*v].keys().collect::<Vec<&usize>>()
     }
     fn nb_vertices(&self) -> usize {
         // run time complexity O(1)

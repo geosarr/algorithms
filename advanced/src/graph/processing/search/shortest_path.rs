@@ -2,7 +2,7 @@ use crate::graph::{processing::TopologicalSort, EdgeWeightedDigraph, Weight};
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Eq, PartialEq)]
 struct CurrentNode<T> {
     vertex: usize,
     distance: T,
@@ -27,6 +27,9 @@ impl<T: Ord> PartialOrd for CurrentNode<T> {
     }
 }
 
+/// Function that computes the shortest paths from a source
+/// for edge weighted directed acyclic graph with only
+/// positive weights
 pub fn dijkstra<T: Weight>(
     graph: &EdgeWeightedDigraph<T>,
     source: usize,
@@ -77,7 +80,8 @@ pub fn relax<T: Weight>(
 }
 
 /// Function that computes the shortest paths from a source
-/// for edge weighted directed acyclic graph
+/// for edge weighted directed acyclic graph with possibly
+/// negative and or positive weights
 pub fn shortest_path_ewdag<T: Weight>(
     graph: &EdgeWeightedDigraph<T>,
     source: usize,
@@ -106,6 +110,27 @@ pub fn shortest_path_ewdag<T: Weight>(
                 if dist_to[*neighbor] > dist_to[*vertex] + *dist {
                     relax(dist_to, edge_to, *vertex, *neighbor, *dist);
                 }
+            }
+        }
+    }
+}
+
+/// Function that computes the shortest paths from a source
+/// for edge weighted directed graph with negative weights  
+/// and without any negative cycle
+pub fn bellman_ford<T: Weight>(
+    graph: &EdgeWeightedDigraph<T>,
+    source: usize,
+    edge_to: &mut [usize],
+    dist_to: &mut [T],
+) {
+    dist_to[source] = Weight::zero();
+    let nb = graph.nb_edges();
+    for vertex in 0..nb {
+        let adj_v = graph.vertex_edges(&vertex);
+        for (u, w) in adj_v {
+            if dist_to[*u] > dist_to[vertex] + *w {
+                relax(dist_to, edge_to, vertex, *u, *w);
             }
         }
     }

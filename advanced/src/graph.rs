@@ -14,12 +14,12 @@ pub trait VertexInfo {
 
 // Greatly inspired by :
 // https://github.com/s1ck/graph/blob/main/crates/builder/src/index.rs
-pub trait Weight: Copy + std::ops::Add<Output = Self> + Ord{
+pub trait Weight: Copy + std::ops::Add<Output = Self> + Ord {
     fn zero() -> Self;
     fn max() -> Self;
 }
 
-macro_rules! impl_weight{
+macro_rules! impl_weight {
     ($TYPE:ty) => {
         impl Weight for $TYPE {
             fn max() -> Self {
@@ -27,10 +27,10 @@ macro_rules! impl_weight{
             }
 
             fn zero() -> Self {
-               0 as $TYPE
+                0 as $TYPE
             }
         }
-    }
+    };
 }
 
 impl_weight!(u8);

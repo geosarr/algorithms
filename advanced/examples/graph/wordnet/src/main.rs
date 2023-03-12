@@ -1,9 +1,85 @@
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{processing::BreadthFirstSearch, DirectedGraph};
-use crate::utils::Reader;
+use algods::graph::{processing::BreadthFirstSearch, DirectedGraph};
+use algods::utils::Reader;
+use clap::{Parser};
 use std::collections::{HashMap, HashSet};
+use std::io;
+type SapOutput = Option<(usize, usize, usize, Vec<usize>, Vec<usize>)>;
 
+#[derive(Parser)]
+#[command(name = "Wordnet")]
+#[command(author = "Georges Mbissane SARR <georgesmbissanes@gmail.com>")]
+#[command(version = "0.0.0")]
+#[command(about = "Runs some algorithm on a wordnet", long_about = None)]
+
+struct Cli {
+    /// Path to the hypernyms .txt file. In this file, line i (counting from 0) 
+    /// contains the hypernyms of synset i. The first field is the synset id, 
+    /// which is always the integer i; subsequent fields are the id numbers of the synset’s hypernyms
+    #[arg(short = 'H', long)]
+    hyp_path: String,
+
+    /// Separator of the hypernyms file
+    #[arg(short = 'd', long)]
+    hyp_sep: char,
+
+    /// Path to the synsets .txt file. Line i of the file (counting from 0) contains 
+    /// the information for synset i. The first field is the synset id, which is 
+    /// always the integer i; the second field is the synonym set (or synset)
+    #[arg(short = 'S', long)]
+    syn_path: String,
+
+    /// Separator of the synsets file
+    #[arg(short = 's', long)]
+    syn_sep: char,
+
+    /// Maximum number of hypernyms to consider
+    #[arg(short, long)]
+    max_hyp_num: usize,
+}
+
+pub fn main() {
+    let cli = Cli::parse();
+    let wordnet = Wordnet::from_file(
+        cli.syn_path.as_str(),
+        cli.hyp_path.as_str(),
+        cli.hyp_sep,
+        cli.syn_sep,
+        cli.max_hyp_num,
+    );
+
+    // println!("{:?}", wordnet.is_noun("decade"));
+    // println!("{:?}", wordnet.is_noun("1780s"));
+    // println!("{:?}", wordnet.is_noun("decennary"));
+    // println!("{:?}", wordnet.is_noun("prout"));
+
+    // println!("{:?}", ShortestAncestralPath::new().ancestor(wordnet.hypernym_graph(), 9992,9993));
+    // println!("{:?}", wordnet.sap_distance("1750s", "1780s"));
+    loop {
+        let mut msg = String::new();
+
+        println!("\nPlease enter two nouns separated by a whitespace, press Ctrl + C to exit");
+
+        io::stdin()
+            .read_line(&mut msg)
+            .expect("Failed to read line");
+
+        let nouns: Vec<&str> = msg.split(' ').collect();
+
+        if nouns.len() >= 2 {
+            let a = nouns[0];
+            let b = nouns[1];
+            // println!("{a} {b}");
+            // println!("{} {}", a=="1780s", b=="1750s");
+            // println!("{:?}", wordnet.sap_distance(a, b));
+            let (dist, path) = wordnet.sap_distance(a, b);
+            println!("Shortest ancestral path betwen '{a}' and '{b}' is {:?} with distance = {:?}");
+        }
+    }
+}
+
+/// This struct implements a basic wordnet structure and some processing algorithm
 pub struct Wordnet {
     hypernym_graph: DirectedGraph,
     synset: HashMap<usize, String>,
@@ -59,17 +135,20 @@ impl Wordnet {
 
         let synset_a = self.synsets_of_noun(&noun_a);
         let synset_b = self.synsets_of_noun(&noun_b);
+        println!("{synset_a:?}");
+        println!("{synset_b:?}");
         let mut min_distance = 2 * self.hypernym_graph.nb_vertices();
         let mut distance: Option<usize> = None;
         let mut path: Option<Vec<&String>> = None;
         let sap = ShortestAncestralPath::new();
-        if !(synset_a.len() == 1 && synset_a.contains(&None)
-            || synset_b.len() == 1 && synset_b.contains(&None))
+        if !((synset_a.len() == 1 && synset_a.contains(&None))
+            || (synset_b.len() == 1 && synset_b.contains(&None)))
         {
             // both words are in Wordnet
             for a in synset_a.iter().flatten() {
                 for b in synset_b.iter().flatten() {
                     if let Some(ancestor) = sap.ancestor(&self.hypernym_graph, **a, **b) {
+                        println!("{ancestor:?}");
                         if ancestor.1 + ancestor.2 < min_distance {
                             min_distance = ancestor.1 + ancestor.2;
                             // computing the sap distance
@@ -110,12 +189,7 @@ impl ShortestAncestralPath {
     pub fn new() -> Self {
         Self {}
     }
-    pub fn ancestor(
-        &self,
-        graph: &DirectedGraph,
-        v: usize,
-        w: usize,
-    ) -> Option<(usize, usize, usize, Vec<usize>, Vec<usize>)> {
+    pub fn ancestor(&self, graph: &DirectedGraph, v: usize, w: usize) -> SapOutput {
         // a common ancestor of v and w that participates in a shortest ancestral path, if any;
         // along with the length of the paths from v to the ancestor and from w to the ancestor
         // run time complexity O(number_vertices + number_edges)
@@ -131,7 +205,7 @@ impl ShortestAncestralPath {
 
         // find a valid common ancestor
         let mut min_len = 2 * nb_vertices; // minimum ancestral path length
-        let mut ancestor: Option<(usize, usize, usize, Vec<usize>, Vec<usize>)> = None;
+        let mut ancestor: SapOutput = None;
         for u in 0..nb_vertices {
             // find out if a given vertex u in the graph is at the intersection
             // of two paths, one from v and the other from w
