@@ -2,5 +2,5 @@
 /// and some classical processing algorithms
 pub mod graph;
 
-///
+///This module contains some useful objects
 pub mod utils;
