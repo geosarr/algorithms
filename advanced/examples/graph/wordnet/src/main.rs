@@ -8,10 +8,10 @@ use std::io;
 type SapOutput = Option<(usize, usize, usize, Vec<usize>, Vec<usize>)>;
 
 #[derive(Parser)]
-#[command(name = "Wordnet")]
+#[command(name = "wordnet")]
 #[command(author = "Georges Mbissane SARR <georgesmbissanes@gmail.com>")]
 #[command(version = "0.0.0")]
-#[command(about = "Runs some algorithm on a wordnet", long_about = None)]
+#[command(about = "Runs some algorithms on a wordnet", long_about = None)]
 
 struct Cli {
     /// Path to the hypernyms .txt file. In this file, line i (counting from 0) 
@@ -49,33 +49,22 @@ pub fn main() {
         cli.max_hyp_num,
     );
 
-    // println!("{:?}", wordnet.is_noun("decade"));
-    // println!("{:?}", wordnet.is_noun("1780s"));
-    // println!("{:?}", wordnet.is_noun("decennary"));
-    // println!("{:?}", wordnet.is_noun("prout"));
-
-    // println!("{:?}", ShortestAncestralPath::new().ancestor(wordnet.hypernym_graph(), 9992,9993));
-    // println!("{:?}", wordnet.sap_distance("1750s", "1780s"));
     loop {
         let mut msg = String::new();
 
-        println!("\nPlease enter two nouns separated by a whitespace, press Ctrl + C to exit");
+        println!("\nPlease enter two words separated by a whitespace, press Ctrl + C to exit");
 
         io::stdin()
             .read_line(&mut msg)
             .expect("Failed to read line");
 
-        let nouns: Vec<&str> = msg.split(' ').collect();
+        let mut nouns = msg.split_whitespace();
 
-        if nouns.len() >= 2 {
-            let a = nouns[0];
-            let b = nouns[1];
-            // println!("{a} {b}");
-            // println!("{} {}", a=="1780s", b=="1750s");
-            // println!("{:?}", wordnet.sap_distance(a, b));
-            let (dist, path) = wordnet.sap_distance(a, b);
-            println!("Shortest ancestral path betwen '{a}' and '{b}' is {:?} with distance = {:?}");
-        }
+        let a = nouns.next().expect("failed to get the first word").trim();
+        let b = nouns.next().expect("failed to get the second word").trim();
+   
+        let (dist, path) = wordnet.sap_distance(a, b);
+        println!("Shortest ancestral path betwen {a} and {b} is {path:?} with distance = {dist:?}");
     }
 }
 
@@ -135,8 +124,6 @@ impl Wordnet {
 
         let synset_a = self.synsets_of_noun(&noun_a);
         let synset_b = self.synsets_of_noun(&noun_b);
-        println!("{synset_a:?}");
-        println!("{synset_b:?}");
         let mut min_distance = 2 * self.hypernym_graph.nb_vertices();
         let mut distance: Option<usize> = None;
         let mut path: Option<Vec<&String>> = None;
@@ -148,7 +135,6 @@ impl Wordnet {
             for a in synset_a.iter().flatten() {
                 for b in synset_b.iter().flatten() {
                     if let Some(ancestor) = sap.ancestor(&self.hypernym_graph, **a, **b) {
-                        println!("{ancestor:?}");
                         if ancestor.1 + ancestor.2 < min_distance {
                             min_distance = ancestor.1 + ancestor.2;
                             // computing the sap distance
@@ -172,10 +158,7 @@ impl Wordnet {
         }
         (distance, path)
     }
-    // pub fn sap(noun_a: &str, noun_b: str) -> String{
-    // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
-    // in a shortest ancestral path (defined below)
-    // }
+
 }
 
 struct ShortestAncestralPath {
@@ -224,7 +207,6 @@ impl ShortestAncestralPath {
                 }
             }
         }
-        // println!("ancestor {:?}, {:?}", bfs_v.path_to(38003), bfs_w.path_to(38003));
         ancestor
     }
 }
