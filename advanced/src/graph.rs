@@ -2,7 +2,7 @@ mod directed_graph;
 pub mod processing;
 mod undirected_graph;
 
-pub use directed_graph::{DirectedGraph, EdgeWeightedDigraph};
+pub use directed_graph::{DirectedGraph, EdgeWeightedDigraph, FlowEdge, FlowNetwork};
 pub use undirected_graph::UndirectedGraph;
 
 /// This trait gives some basic information on vertices
@@ -14,7 +14,16 @@ pub trait VertexInfo {
 
 // Greatly inspired by :
 // https://github.com/s1ck/graph/blob/main/crates/builder/src/index.rs
-pub trait Weight: Copy + std::ops::Add<Output = Self> + Ord {
+pub trait Weight:
+    Copy
+    + std::ops::Add<Output = Self>
+    + std::ops::Sub<Output = Self>
+    + Ord
+    + Eq
+    + std::hash::Hash
+    + PartialEq
+    + std::fmt::Display
+{
     fn zero() -> Self;
     fn max() -> Self;
 }

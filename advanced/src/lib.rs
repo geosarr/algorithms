@@ -4,3 +4,5 @@ pub mod graph;
 
 ///This module contains some useful objects
 pub mod utils;
+
+pub mod compression;

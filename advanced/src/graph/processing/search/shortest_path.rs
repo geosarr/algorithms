@@ -1,16 +1,19 @@
-use crate::graph::{processing::TopologicalSort, EdgeWeightedDigraph, Weight};
+use crate::graph::{processing::TopologicalSort, EdgeWeightedDigraph, FlowNetwork, Weight};
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 
 #[derive(Eq, PartialEq)]
-struct CurrentNode<T> {
+struct CurrentNode<T>
+where
+    T: std::hash::Hash,
+{
     vertex: usize,
     distance: T,
 }
 
 // Taken and adapted from the standard library documentation
 // for binary heap
-impl<T: Ord> Ord for CurrentNode<T> {
+impl<T: Ord + std::hash::Hash> Ord for CurrentNode<T> {
     fn cmp(&self, other: &Self) -> Ordering {
         // Notice that the we flip the ordering on distances.
         // In case of a tie we compare positions - this step is necessary
@@ -21,7 +24,7 @@ impl<T: Ord> Ord for CurrentNode<T> {
             .then_with(|| self.vertex.cmp(&other.vertex))
     }
 }
-impl<T: Ord> PartialOrd for CurrentNode<T> {
+impl<T: Ord + std::hash::Hash> PartialOrd for CurrentNode<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
@@ -29,8 +32,8 @@ impl<T: Ord> PartialOrd for CurrentNode<T> {
 
 /// Function that computes the shortest paths from a source
 /// for edge weighted directed acyclic graph with only
-/// positive weights
-pub fn dijkstra<T: Weight>(
+/// positive weights using Dijkstra's algorithm
+pub fn dijkstra<T: Weight + std::hash::Hash>(
     graph: &EdgeWeightedDigraph<T>,
     source: usize,
     edge_to: &mut Vec<usize>,
@@ -68,7 +71,7 @@ pub fn dijkstra<T: Weight>(
     }
 }
 
-pub fn relax<T: Weight>(
+fn relax<T: Weight + std::hash::Hash>(
     dist_to: &mut [T],
     edge_to: &mut [usize],
     origin: usize,
@@ -80,9 +83,9 @@ pub fn relax<T: Weight>(
 }
 
 /// Function that computes the shortest paths from a source
-/// for edge weighted directed acyclic graph with possibly
-/// negative and or positive weights
-pub fn shortest_path_ewdag<T: Weight>(
+/// for edge weighted directed acyclic graphs with possibly
+/// negative and/or positive weights
+pub fn shortest_path_ewdag<T: Weight + std::hash::Hash>(
     graph: &EdgeWeightedDigraph<T>,
     source: usize,
     edge_to: &mut Vec<usize>,
@@ -118,7 +121,7 @@ pub fn shortest_path_ewdag<T: Weight>(
 /// Function that computes the shortest paths from a source
 /// for edge weighted directed graph with negative weights  
 /// and without any negative cycle
-pub fn bellman_ford<T: Weight>(
+pub fn bellman_ford<T: Weight + std::hash::Hash>(
     graph: &EdgeWeightedDigraph<T>,
     source: usize,
     edge_to: &mut [usize],

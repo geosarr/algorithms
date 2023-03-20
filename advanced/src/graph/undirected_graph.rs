@@ -2,6 +2,7 @@
 mod unit_test;
 use crate::graph::VertexInfo;
 use std::collections::HashSet;
+
 pub struct UndirectedGraph {
     // implements an adjacency-list graph
     // where vertices have indices 0, ..., nb_objects
@@ -82,7 +83,7 @@ impl UndirectedGraph {
         self.data
             .iter()
             .enumerate()
-            .map(|(v, e)| if e.contains(&v) { 1 } else { 0 })
+            .map(|(v, e)| usize::from(e.contains(&v)))
             .sum()
     }
 }

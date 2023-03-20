@@ -50,6 +50,21 @@ where
         }
         comp
     }
+
+    pub fn expand(&self, comp: Vec<usize>) -> BitVec<usize, O> {
+        let len = comp.len();
+        let mut exp = BitVec::<usize, O>::with_capacity(len);
+        for (pos, run) in comp.iter().enumerate() {
+            if pos % 2 == 0 {
+                let bits = vec![0; *run];
+                exp.extend_from_raw_slice(&bits);
+            } else {
+                let bits = vec![1; *run];
+                exp.extend_from_raw_slice(&bits);
+            }
+        }
+        exp
+    }
 }
 impl<T, O> RunLength<T, O>
 where

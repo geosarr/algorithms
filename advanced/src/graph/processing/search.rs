@@ -2,7 +2,7 @@ mod first_search;
 mod shortest_path;
 #[cfg(test)]
 mod unit_test;
-use crate::graph::{EdgeWeightedDigraph, VertexInfo, Weight};
+use crate::graph::{EdgeWeightedDigraph, FlowEdge, FlowNetwork, VertexInfo, Weight};
 pub use first_search::{bfs, dfs};
 pub use shortest_path::{bellman_ford, dijkstra, shortest_path_ewdag};
 use std::marker::PhantomData;
@@ -127,7 +127,7 @@ pub struct ShortestPath<T> {
     // to an edge in the shortest path
     edge_to: Vec<usize>,
 }
-impl<T: Weight + Clone> ShortestPath<T> {
+impl<T: Weight + Clone + std::hash::Hash> ShortestPath<T> {
     pub fn init(from: usize, algorithm: ShortestPathAlgo, nb_vertices: usize) -> Self {
         Self {
             source: from,
@@ -141,6 +141,9 @@ impl<T: Weight + Clone> ShortestPath<T> {
 impl<T> ShortestPath<T> {
     pub fn dist_to(&self, v: usize) -> &T {
         &self.dist_to[v]
+    }
+    pub fn edge_to(&self, v: usize) -> usize {
+        self.edge_to[v]
     }
 }
 impl<T: Eq + Weight> ShortestPath<T> {
@@ -159,7 +162,7 @@ impl<T: Eq + Weight> ShortestPath<T> {
     }
 }
 
-impl<T: Ord + Weight + std::ops::Add<Output = T>> ShortestPath<T> {
+impl<T: Ord + Weight + std::ops::Add<Output = T> + std::hash::Hash> ShortestPath<T> {
     pub fn find_paths(&mut self, graph: &EdgeWeightedDigraph<T>) {
         match self.algo {
             ShortestPathAlgo::Dijkstra => {

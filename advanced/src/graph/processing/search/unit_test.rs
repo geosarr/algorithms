@@ -16,8 +16,11 @@ mod tests {
         graph.add_edge(6, 7, 2);
         graph.add_edge(6, 4, 1);
 
-        let mut dijkstra = ShortestPath::init(0, ShortestPathAlgo::Dijkstra, graph.nb_vertices());
+        let mut dijkstra =
+            ShortestPath::<usize>::init(0, ShortestPathAlgo::Dijkstra, graph.nb_vertices());
         dijkstra.find_paths(&graph);
+        // println!("{:?}",graph.vertex_edges(&0));
+        assert_eq!(dijkstra.path_to(0), Some(vec![0]));
         assert_eq!(dijkstra.path_to(1), Some(vec![1, 0]));
         assert_eq!(dijkstra.path_to(2), Some(vec![2, 0]));
         assert_eq!(dijkstra.path_to(3), Some(vec![3, 4, 6, 0]));

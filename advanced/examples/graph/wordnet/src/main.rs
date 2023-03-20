@@ -2,7 +2,7 @@
 mod unit_test;
 use algods::graph::{processing::BreadthFirstSearch, DirectedGraph};
 use algods::utils::Reader;
-use clap::{Parser};
+use clap::Parser;
 use std::collections::{HashMap, HashSet};
 use std::io;
 type SapOutput = Option<(usize, usize, usize, Vec<usize>, Vec<usize>)>;
@@ -14,8 +14,8 @@ type SapOutput = Option<(usize, usize, usize, Vec<usize>, Vec<usize>)>;
 #[command(about = "Runs some algorithms on a wordnet", long_about = None)]
 
 struct Cli {
-    /// Path to the hypernyms .txt file. In this file, line i (counting from 0) 
-    /// contains the hypernyms of synset i. The first field is the synset id, 
+    /// Path to the hypernyms .txt file. In this file, line i (counting from 0)
+    /// contains the hypernyms of synset i. The first field is the synset id,
     /// which is always the integer i; subsequent fields are the id numbers of the synset’s hypernyms
     #[arg(short = 'H', long)]
     hyp_path: String,
@@ -24,8 +24,8 @@ struct Cli {
     #[arg(short = 'd', long)]
     hyp_sep: char,
 
-    /// Path to the synsets .txt file. Line i of the file (counting from 0) contains 
-    /// the information for synset i. The first field is the synset id, which is 
+    /// Path to the synsets .txt file. Line i of the file (counting from 0) contains
+    /// the information for synset i. The first field is the synset id, which is
     /// always the integer i; the second field is the synonym set (or synset)
     #[arg(short = 'S', long)]
     syn_path: String,
@@ -62,7 +62,7 @@ pub fn main() {
 
         let a = nouns.next().expect("failed to get the first word").trim();
         let b = nouns.next().expect("failed to get the second word").trim();
-   
+
         let (dist, path) = wordnet.sap_distance(a, b);
         println!("Shortest ancestral path betwen {a} and {b} is {path:?} with distance = {dist:?}");
     }
@@ -100,14 +100,14 @@ impl Wordnet {
         // indicates whether or not word is a Wordnet noun
         self.synset
             .iter()
-            .any(|(_, v)| v.split(' ').collect::<Vec<&str>>().contains(&word))
+            .any(|(_, v)| v.split(' ').any(|x| x == word))
     }
-    fn synsets_of_noun<'a>(&'a self, noun: &&str) -> HashSet<Option<&'a usize>> {
+    fn synsets_of_noun<'a>(&'a self, noun: &str) -> HashSet<Option<&'a usize>> {
         return self
             .synset
             .iter()
             .map(|(k, v)| {
-                if v.split(' ').collect::<Vec<&str>>().contains(noun) {
+                if v.split(' ').any(|x| x == noun) {
                     Some(k)
                 } else {
                     None
@@ -122,8 +122,8 @@ impl Wordnet {
     ) -> (Option<usize>, Option<Vec<&String>>) {
         // shortest ancestor path distance along wiith the path
 
-        let synset_a = self.synsets_of_noun(&noun_a);
-        let synset_b = self.synsets_of_noun(&noun_b);
+        let synset_a = self.synsets_of_noun(noun_a);
+        let synset_b = self.synsets_of_noun(noun_b);
         let mut min_distance = 2 * self.hypernym_graph.nb_vertices();
         let mut distance: Option<usize> = None;
         let mut path: Option<Vec<&String>> = None;
@@ -158,7 +158,6 @@ impl Wordnet {
         }
         (distance, path)
     }
-
 }
 
 struct ShortestAncestralPath {

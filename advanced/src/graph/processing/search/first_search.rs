@@ -1,6 +1,7 @@
 use crate::graph::VertexInfo;
 use std::collections::LinkedList;
 
+/// Function that runs the depth-first search algorithm
 pub fn dfs<G>(
     graph: &G,
     marked: &mut [bool],
@@ -56,6 +57,7 @@ pub fn dfs<G>(
     }
 }
 
+/// Function that runs the breadth-first search algorithm
 pub fn bfs<G>(graph: &G, marked: &mut [bool], edge_to: &mut [usize], w: usize)
 where
     G: VertexInfo,
