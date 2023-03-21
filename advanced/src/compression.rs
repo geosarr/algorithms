@@ -6,6 +6,8 @@ use bitvec::vec::BitVec;
 use std::fs::File;
 use std::io;
 
+/// Compresses a sequence of bits using a `BitVec` representation of bits
+/// the run-length algorithm
 pub struct RunLength<T, O>
 where
     T: bitvec::store::BitStore,
@@ -25,6 +27,15 @@ where
     }
     pub fn init(bit_vec: BitVec<T, O>) -> Self {
         Self { bits: bit_vec }
+    }
+    pub fn bits(&self) -> &BitVec<T, O> {
+        &self.bits
+    }
+    pub fn push(&mut self, bit: bool) {
+        self.bits.push(bit)
+    }
+    pub fn extend_from_raw_slice(&mut self, slice: &[T]) {
+        self.bits.extend_from_raw_slice(slice)
     }
     pub fn compress(&self) -> Vec<usize> {
         let len = self.bits.len();
@@ -51,16 +62,14 @@ where
         comp
     }
 
-    pub fn expand(&self, comp: Vec<usize>) -> BitVec<usize, O> {
+    pub fn expand(&self, comp: Vec<usize>, capacity: usize) -> BitVec<usize, O> {
         let len = comp.len();
-        let mut exp = BitVec::<usize, O>::with_capacity(len);
+        assert!(capacity >= len);
+        let mut exp = BitVec::<usize, O>::with_capacity(capacity);
         for (pos, run) in comp.iter().enumerate() {
-            if pos % 2 == 0 {
-                let bits = vec![0; *run];
-                exp.extend_from_raw_slice(&bits);
-            } else {
-                let bits = vec![1; *run];
-                exp.extend_from_raw_slice(&bits);
+            let bit = pos % 2 == 1;
+            for _ in 0..*run {
+                exp.push(bit);
             }
         }
         exp
