@@ -62,10 +62,10 @@ where
         comp
     }
 
-    pub fn expand(&self, comp: Vec<usize>, capacity: usize) -> BitVec<usize, O> {
+    pub fn expand(&self, comp: Vec<usize>, capacity: usize) -> BitVec<T, O> {
         let len = comp.len();
         assert!(capacity >= len);
-        let mut exp = BitVec::<usize, O>::with_capacity(capacity);
+        let mut exp = BitVec::<T, O>::with_capacity(capacity);
         for (pos, run) in comp.iter().enumerate() {
             let bit = pos % 2 == 1;
             for _ in 0..*run {
