@@ -153,6 +153,14 @@ impl DirectedGraph {
             .map(|edge| edge.to())
             .collect::<Vec<&usize>>()
     }
+    ///
+    pub fn in_edges(&self, v: &usize) -> Vec<&usize> {
+        self.data
+            .iter()
+            .filter_map(|adj| adj.iter().find(|e| e.to() == v))
+            .map(|e| e.from())
+            .collect::<Vec<&usize>>()
+    }
     /// Gives the number of vertices a vertex point to
     pub fn out_degree(&self, v: &usize) -> usize {
         // the number of vertices the vertex v points to
@@ -163,8 +171,7 @@ impl DirectedGraph {
         // gives the number of vertices pointing to vertex v
         self.data
             .iter()
-            .enumerate()
-            .map(|(pos, adj)| usize::from(adj.contains(&DirectedEdge::init(pos, *v))))
+            .map(|adj| usize::from(adj.iter().any(|e| e.to() == v)))
             .sum()
     }
     /// Gives the integer part of the average number of edges per vertex
