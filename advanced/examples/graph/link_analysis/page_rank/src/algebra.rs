@@ -21,6 +21,9 @@ impl<T> Array<T> {
     pub fn coordinate(&self, i: usize) -> &T {
         &self.vec[i]
     }
+    pub fn get_mut_coordinate(&mut self, i: usize) -> &mut T {
+        &mut self.vec[i]
+    }
 }
 impl<T: Add<Output = T> + Copy + std::iter::Sum> Array<T> {
     pub fn sum(&self) -> T {
@@ -202,6 +205,32 @@ impl<T> Matrix<T> {
         let vec: Vec<&T> = self.vec.iter().map(|arr| arr.coordinate(j)).collect();
         Array::from_vec(vec)
     }
+    pub fn get_mut_coef(&mut self, i: usize, j: usize) -> &mut T {
+        self.vec[i].get_mut_coordinate(j)
+    }
+}
+
+impl<'a, T: 'a + Mul<Output = T> + Copy + Zero + std::iter::Sum> Matrix<T> {
+    pub fn dot(self, other: Self) -> Self {
+        let nb_row_lhs = self.vec.len();
+        let nb_col_lhs = self.vec[0].len();
+        let nb_row_rhs = other.vec.len();
+        let nb_col_rhs = other.vec[0].len();
+        if self.vec.is_empty() || other.vec.is_empty() {
+            panic!("can not multiply empty matrices");
+        } else if self.vec[0].len() != other.vec.len() {
+            panic!("can not multiply matrices with shapes ({nb_row_lhs},{nb_col_lhs}) and ({nb_row_rhs},{nb_col_rhs})");
+        } else {
+            let mut mat = Self::zero(nb_row_lhs, nb_col_rhs);
+            // mat.row(0).dot_ref(mat.col(1));
+            for i in 0..nb_row_lhs {
+                for j in 0..nb_col_rhs {
+                    *mat.get_mut_coef(i, j) = self.row(i).dot_ref(other.col(j));
+                }
+            }
+            mat
+        }
+    }
 }
 
 impl<T: Zero + Copy> Matrix<T> {
@@ -215,21 +244,16 @@ impl<T: Zero + Copy> Matrix<T> {
         Self { vec: vec }
     }
 }
-impl<'a, T: 'a + Mul<Output = T> + Copy + Zero + std::iter::Sum> Matrix<T> {
-    pub fn dot(self, other: Self) -> Self {
-        let nb_row_lhs = self.vec.len();
-        let nb_col_lhs = self.vec[0].len();
-        let nb_row_rhs = other.vec.len();
-        let nb_col_rhs = other.vec[0].len();
-        if self.vec.is_empty() || other.vec.is_empty() {
-            panic!("can not multiply empty matrices");
-        } else if self.vec[0].len() != other.vec.len() {
-            panic!("can not multiply matrices with shapes ({nb_row_lhs},{nb_col_lhs}) and ({nb_row_rhs},{nb_col_rhs})");
-        } else {
-            let mat = Self::zero(nb_row_lhs, nb_col_rhs);
-            mat.row(0).dot_ref(mat.col(1));
-            mat
+
+impl<T: One + Copy> Matrix<T> {
+    pub fn one(n: usize, m: usize) -> Self {
+        let mut vec = Vec::with_capacity(n);
+        let one = T::one();
+        for _ in 0..n {
+            let row_ones = vec![one; m];
+            vec.push(Array::from_vec(row_ones));
         }
+        Self { vec: vec }
     }
 }
 
@@ -237,27 +261,54 @@ trait Zero {
     fn zero() -> Self;
 }
 
-macro_rules! impl_zero {
+trait One {
+    fn one() -> Self;
+}
+
+macro_rules! impl_zero_one {
     ($TYPE:ty) => {
         impl Zero for $TYPE {
             fn zero() -> Self {
                 0 as $TYPE
             }
         }
+        impl One for $TYPE {
+            fn one() -> Self {
+                1 as $TYPE
+            }
+        }
     };
 }
 
-impl_zero!(u8);
-impl_zero!(u16);
-impl_zero!(u32);
-impl_zero!(u64);
-impl_zero!(usize);
+impl_zero_one!(u8);
+impl_zero_one!(u16);
+impl_zero_one!(u32);
+impl_zero_one!(u64);
+impl_zero_one!(usize);
 
-impl_zero!(i8);
-impl_zero!(i16);
-impl_zero!(i32);
-impl_zero!(i64);
-impl_zero!(isize);
+impl_zero_one!(i8);
+impl_zero_one!(i16);
+impl_zero_one!(i32);
+impl_zero_one!(i64);
+impl_zero_one!(isize);
 
-impl_zero!(f32);
-impl_zero!(f64);
+impl_zero_one!(f32);
+impl_zero_one!(f64);
+
+use std::fmt;
+
+impl<T: std::fmt::Debug> fmt::Display for Array<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.vec)
+    }
+}
+
+impl<T: std::fmt::Debug> fmt::Display for Matrix<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let len = self.vec.len();
+        for k in 0..len {
+            write!(f, "{}\n", self.vec[k]);
+        }
+        Ok(())
+    }
+}
