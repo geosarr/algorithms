@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::path::Path;
 
 #[derive(Eq, Hash, PartialEq, Copy, Clone)]
-struct DirectedEdge {
+pub struct DirectedEdge {
     from: usize, // not necessarily useful but keeps the idea of an edge
     to: usize,
 }
@@ -43,6 +43,7 @@ pub struct DirectedGraph {
     data: Vec<HashSet<DirectedEdge>>,
     nb_edges: usize,
     nb_vertices: usize,
+    in_edges: Vec<HashSet<usize>>,
 }
 impl Default for DirectedGraph {
     fn default() -> Self {
@@ -56,6 +57,7 @@ impl DirectedGraph {
             data: Vec::new(),
             nb_edges: 0,
             nb_vertices: 0,
+            in_edges: Vec::new(),
         }
     }
     /// Creates a new graph with unconnected `nb_objects` objects
@@ -65,6 +67,7 @@ impl DirectedGraph {
         graph.data = Vec::with_capacity(nb_objects);
         for _ in 0..nb_objects {
             graph.data.push(HashSet::new());
+            graph.in_edges.push(HashSet::new());
         }
         graph
     }
@@ -133,6 +136,7 @@ impl DirectedGraph {
         assert!(self.nb_vertices >= std::cmp::max(v, w));
         let edge = DirectedEdge::init(v, w);
         let w_is_in = self.data[v].insert(edge);
+        self.in_edges[w].insert(v);
         if w_is_in {
             // v --> w is a new directed edge
             self.nb_edges += 1;
@@ -154,12 +158,20 @@ impl DirectedGraph {
             .collect::<Vec<&usize>>()
     }
     ///
-    pub fn in_edges(&self, v: &usize) -> Vec<&usize> {
-        self.data
-            .iter()
-            .filter_map(|adj| adj.iter().find(|e| e.to() == v))
-            .map(|e| e.from())
-            .collect::<Vec<&usize>>()
+    pub fn out_edges(&self, v: &usize) -> &HashSet<DirectedEdge> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v
+        // run time complexity O(1)
+        &self.data[*v]
+    }
+    ///
+    pub fn in_edges(&self, v: &usize) -> &HashSet<usize> {
+        // self.data
+        //     .iter()
+        //     .filter_map(|adj| adj.iter().find(|e| e.to() == v))
+        //     .map(|e| e.from())
+        //     .collect::<Vec<&usize>>()
+        &self.in_edges[*v]
     }
     /// Gives the number of vertices a vertex point to
     pub fn out_degree(&self, v: &usize) -> usize {
