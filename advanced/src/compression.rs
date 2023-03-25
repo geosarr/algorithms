@@ -37,7 +37,7 @@ where
     pub fn extend_from_raw_slice(&mut self, slice: &[T]) {
         self.bits.extend_from_raw_slice(slice)
     }
-    pub fn compress(&self) -> Vec<usize> {
+    pub fn compress(&self) -> (Vec<usize>, usize) {
         let len = self.bits.len();
         let mut comp = Vec::<usize>::with_capacity(len);
         if len > 0 {
@@ -59,7 +59,7 @@ where
             }
             comp.push(run);
         }
-        comp
+        (comp, len)
     }
 
     pub fn expand(&self, comp: Vec<usize>, capacity: usize) -> BitVec<T, O> {
