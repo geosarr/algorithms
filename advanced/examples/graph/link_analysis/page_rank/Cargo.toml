@@ -6,5 +6,4 @@ edition = "2021"
 
 [dependencies]
 algods = { path = "../../../.."}
-clap = { version = "4.0", features = ["derive"] }
 rayon = "1.7"
