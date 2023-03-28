@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod unit_test;
 use algods::graph::{processing::BreadthFirstSearch, DirectedGraph};
-use algods::utils::Reader;
+use algods::utils::Reader2;
 use clap::Parser;
 use std::collections::{HashMap, HashSet};
 use std::io;
@@ -89,7 +89,7 @@ impl Wordnet {
     ) -> Self {
         let hypernyms = DirectedGraph::from_file(hypernyms_file, sep1, nb_vertices);
         let synsets =
-            Reader::<usize, String>::init(synsets_file.to_string(), sep2).hashmap_from_txt();
+            Reader2::<usize, String>::init(synsets_file.to_string(), sep2).hashmap_from_txt();
         Self::init(synsets, hypernyms)
     }
     pub fn nouns(&self) -> Vec<&String> {
