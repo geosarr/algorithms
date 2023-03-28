@@ -83,7 +83,7 @@ where
 {
     pub fn from_file(path: &str) -> Self {
         let mut writer = BitVec::<T, O>::new();
-        let mut reader = File::open(path);
+        let reader = File::open(path);
         match reader {
             Ok(mut file) => {
                 io::copy(&mut file, &mut writer);
