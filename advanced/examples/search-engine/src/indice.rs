@@ -24,6 +24,14 @@ impl InvertedIndex {
         }
     }
 
+    pub fn index(&self) -> &HashMap<String, Vec<usize>> {
+        &self.index
+    }
+
+    pub fn raw_freq(&self) -> &HashMap<usize, HashMap<String, usize>> {
+        &self.raw_freq
+    }
+
     pub fn init(sort_postings: bool, include_char_index: bool, ngram: usize) -> Self {
         let mut inv_index = Self::new();
         inv_index.sort_postings = sort_postings;
@@ -38,28 +46,29 @@ impl InvertedIndex {
             collection.insert(doc_id, document);
         }
         // Character indexing the document
-        if self.include_char_index {
-            let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
-            for term in cleaned_doc_terms {
-                let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
-                for _char in &chars {
-                    if !self.char_t_index.contains_key(_char) {
-                        self.char_t_index[_char] = HashSet::new();
-                    }
-                    self.char_t_index[_char].insert(term.to_string());
-                }
-                self.t_char_index[term] = chars;
-            }
-        }
+        // if self.include_char_index {
+        //     let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
+        //     for term in cleaned_doc_terms {
+        //         let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
+        //         for _char in &chars {
+        //             if let Some(h) = self.char_t_index.get_mut(_char) {
+        //                 (*h).insert(term.to_string());
+        //             } else {
+        //                 self.char_t_index.insert(_char.to_string(), HashSet::new());
+        //             }
+        //         }
+        //         self.t_char_index.insert(term.to_string(), chars);
+        //     }
+        // }
         // Invert indexing the document
         let terms = inv_index_preproc(collection.get_document(&doc_id).content()); // Either HashMap<tokens, usize>
         for (token, _) in &terms {
-            if !self.index.contains_key(token) {
-                self.index[token] = Vec::new();
+            if let Some(posting) = self.index.get_mut(token) {
+                (*posting).push(doc_id); // works if the documents are indexed iteratively with increasing IDs.
+            } else {
+                self.index.insert(token.to_string(), Vec::new());
             }
-            self.index[token].push(doc_id); // works if the documents are indexed iteratively with increasing IDs.
-                                            // bisect.insort(self.index[token], document.ID) // more robust but is more time costly
         }
-        self.raw_freq[&doc_id] = terms;
+        self.raw_freq.insert(doc_id, terms);
     }
 }

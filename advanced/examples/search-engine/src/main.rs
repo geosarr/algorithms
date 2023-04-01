@@ -49,11 +49,13 @@ fn main() {
             Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
             _ => (),
         }
-        if collection.len() == 10_000 {
+        if collection.len() == 10 {
             break;
         }
     }
     buf.clear();
-    println!("{:#?}", collection.get_document(&20));
+    println!("{:#?}", collection.get_document(&5));
     println!("{}", collection.len());
+    println!("{:#?}", index.index());
+    println!("{:#?}", index.raw_freq());
 }
