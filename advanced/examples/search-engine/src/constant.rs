@@ -1,0 +1,1 @@
+let const BASE_URL: &str = "https://en.wikipedia.org/wiki/";
