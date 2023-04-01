@@ -9,9 +9,20 @@ pub fn character_ngram(word: &str, size: usize) -> HashSet<String> {
     }
     let mut n_grams = HashSet::new();
     for i in 0..n - size + 1 {
-        println!("{:?}", &_word[i..i + size]);
-        n_grams.insert(_word[i..i + size].to_string());
+        // println!("{:?}", &_word[i..i + size]);
+        let mut chars = _word[i..].chars();
+        let mut ngram = String::new();
+        for _ in i..i + size {
+            let _char = chars.next();
+            // println!("{_char:?}");
+            ngram.push(_char.expect("Failed to retrieve char."));
+        }
+        // println!("{ngram:?}\n");
+        n_grams.insert(ngram);
     }
+    // n_grams = (0..n - size + 1)
+    //     .map(|i| (i..i + size + 1).map(|i| chars.nth(i)).collect::<String>())
+    //     .collect::<HashSet<_>>();
     println!("\n");
     n_grams
 }

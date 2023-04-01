@@ -46,20 +46,20 @@ impl InvertedIndex {
             collection.insert(doc_id, document);
         }
         // Character indexing the document
-        // if self.include_char_index {
-        //     let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
-        //     for term in cleaned_doc_terms {
-        //         let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
-        //         for _char in &chars {
-        //             if let Some(h) = self.char_t_index.get_mut(_char) {
-        //                 (*h).insert(term.to_string());
-        //             } else {
-        //                 self.char_t_index.insert(_char.to_string(), HashSet::new());
-        //             }
-        //         }
-        //         self.t_char_index.insert(term.to_string(), chars);
-        //     }
-        // }
+        if self.include_char_index {
+            let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
+            for term in cleaned_doc_terms {
+                let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
+                for _char in &chars {
+                    if let Some(h) = self.char_t_index.get_mut(_char) {
+                        (*h).insert(term.to_string());
+                    } else {
+                        self.char_t_index.insert(_char.to_string(), HashSet::new());
+                    }
+                }
+                self.t_char_index.insert(term.to_string(), chars);
+            }
+        }
         // Invert indexing the document
         let terms = inv_index_preproc(collection.get_document(&doc_id).content()); // Either HashMap<tokens, usize>
         for (token, _) in &terms {
