@@ -58,4 +58,8 @@ fn main() {
     println!("{}", collection.len());
     println!("{:#?}", index.index());
     println!("{:#?}", index.raw_freq());
+    println!("{:#?}", collection.get_document(&9));
+    println!("{:#?}", collection.get_document(&8));
+    println!("{:#?}", collection.get_document(&5));
+    println!("{:#?}", collection.get_document(&4));
 }

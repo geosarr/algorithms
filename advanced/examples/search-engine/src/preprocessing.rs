@@ -23,41 +23,49 @@ pub fn character_ngram(word: &str, size: usize) -> HashSet<String> {
 pub fn clean(doc: &Document) -> HashSet<&str> {
     return doc.content().split(" ").collect();
 }
+fn is_not_punct(character: char) -> bool {
+    !PUNCTUATION.contains(character)
+}
 
 pub fn preprocess(doc: &Document) -> HashMap<String, usize> {
-    let content = doc.content().replace("\n", " ").replace("\t", " ");
+    let mut content = doc
+        .content()
+        .replace("\n", " ")
+        .replace("\t", " ")
+        .to_lowercase();
+    content.retain(|c| !is_not_punct(c));
     let content = content.split(" ").collect();
     let mut counter = Counter::new();
-    counter.count(content);
-    counter.into_hashmap()
+    counter.count(content)
+    // counter.into_hashmap()
 }
 
 struct Counter {
-    data: HashMap<String, usize>,
+    // data: HashMap<String, usize>;
 }
 
 impl Counter {
     pub fn new() -> Self {
-        Self {
-            data: HashMap::new(),
-        }
+        Self {}
     }
-    pub fn count(&mut self, content: Vec<&str>) {
+    pub fn count(&mut self, content: Vec<&str>) -> HashMap<String, usize> {
+        let mut counter = HashMap::with_capacity(content.len());
         for word in content {
-            if let Some(count) = self.get_mut(word) {
+            if let Some(count) = counter.get_mut(word) {
                 *count += 1;
             } else {
-                self.data.insert(word.to_string(), 1);
+                counter.insert(word.to_string(), 1);
             }
         }
+        counter
     }
-    fn insert(&mut self, word: String, count: usize) {
-        self.data.insert(word, count);
-    }
-    fn get_mut(&mut self, word: &str) -> Option<&mut usize> {
-        self.data.get_mut(word)
-    }
-    pub fn into_hashmap(self) -> HashMap<String, usize> {
-        self.data
-    }
+    // fn insert(&mut self, word: String, count: usize) {
+    //     self.data.insert(word, count);
+    // }
+    // fn get_mut(&mut self, word: &str) -> Option<&mut usize> {
+    //     self.data.get_mut(word)
+    // }
+    // pub fn into_hashmap(self) -> HashMap<String, usize> {
+    //     self.data
+    // }
 }
