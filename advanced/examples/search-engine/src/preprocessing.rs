@@ -1,4 +1,5 @@
 use crate::collection::Document;
+use crate::constant::PUNCTUATION;
 use std::collections::{HashMap, HashSet};
 pub fn character_ngram(word: &str, size: usize) -> HashSet<String> {
     let _word = word.trim();
@@ -24,7 +25,8 @@ pub fn clean(doc: &Document) -> HashSet<&str> {
 }
 
 pub fn preprocess(doc: &Document) -> HashMap<String, usize> {
-    let content: Vec<_> = doc.content().split(" ").collect();
+    let content = doc.content().replace("\n", " ").replace("\t", " ");
+    let content = content.split(" ").collect();
     let mut counter = Counter::new();
     counter.count(content);
     counter.into_hashmap()
