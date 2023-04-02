@@ -1,5 +1,5 @@
 use search::collection::{Collection, Document};
-use search::preprocess::{character_ngram, clean, inv_index_preproc};
+use search::preprocessing::{character_ngram, clean, preprocess};
 use std::collections::{HashMap, HashSet};
 pub struct InvertedIndex {
     index: HashMap<String, Vec<usize>>, // stores the postings
@@ -45,10 +45,12 @@ impl InvertedIndex {
         if !collection.contains(&doc_id) {
             collection.insert(doc_id, document);
         }
-        // Character indexing the document
+
+        let terms = preprocess(collection.get_document(&doc_id)); // Either HashMap<tokens, usize>
+                                                                  // Character indexing the document
         if self.include_char_index {
-            let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
-            for term in cleaned_doc_terms {
+            // let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
+            for (term, _) in &terms {
                 let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
                 for _char in &chars {
                     if let Some(h) = self.char_t_index.get_mut(_char) {
@@ -61,12 +63,11 @@ impl InvertedIndex {
             }
         }
         // Invert indexing the document
-        let terms = inv_index_preproc(collection.get_document(&doc_id).content()); // Either HashMap<tokens, usize>
         for (token, _) in &terms {
             if let Some(posting) = self.index.get_mut(token) {
                 (*posting).push(doc_id); // works if the documents are indexed iteratively with increasing IDs.
             } else {
-                self.index.insert(token.to_string(), Vec::new());
+                self.index.insert(token.to_string(), vec![doc_id]);
             }
         }
         self.raw_freq.insert(doc_id, terms);
