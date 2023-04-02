@@ -1,12 +1,11 @@
 use search::collection::{Collection, Document};
-use search::preprocessing::{character_ngram, clean, preprocess};
+use search::preprocessing::{character_ngram, preprocess};
 use std::collections::{HashMap, HashSet};
 pub struct InvertedIndex {
     index: HashMap<String, Vec<usize>>, // stores the postings
     raw_freq: HashMap<usize, HashMap<String, usize>>, // stores the number of occurrences of tokens in the documents they appear
-    sort_postings: bool, // indicates whether or not the postings are sorted
-    char_t_index: HashMap<String, HashSet<String>>, // character to term index
-    t_char_index: HashMap<String, HashSet<String>>, // term to character index
+    char_t_index: HashMap<String, HashSet<String>>,   // character to term index
+    t_char_index: HashMap<String, HashSet<String>>,   // term to character index
     include_char_index: bool, // says whether or not to include the (term to) character (to term) index
     ngram: usize,             // the number of characters to consider for the character n-gram index
 }
@@ -16,7 +15,6 @@ impl InvertedIndex {
         Self {
             index: HashMap::new(),
             raw_freq: HashMap::new(),
-            sort_postings: true,
             char_t_index: HashMap::new(),
             t_char_index: HashMap::new(),
             include_char_index: true,
@@ -32,9 +30,8 @@ impl InvertedIndex {
         &self.raw_freq
     }
 
-    pub fn init(sort_postings: bool, include_char_index: bool, ngram: usize) -> Self {
+    pub fn init(include_char_index: bool, ngram: usize) -> Self {
         let mut inv_index = Self::new();
-        inv_index.sort_postings = sort_postings;
         inv_index.include_char_index = include_char_index;
         inv_index.ngram = ngram;
         inv_index
@@ -49,8 +46,7 @@ impl InvertedIndex {
         let terms = preprocess(collection.get_document(&doc_id)); // Either HashMap<tokens, usize>
                                                                   // Character indexing the document
         if self.include_char_index {
-            // let cleaned_doc_terms = clean(collection.get_document(&doc_id)); // String -> Vec<> or HashSet
-            for (term, _) in &terms {
+            for term in terms.keys() {
                 let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
                 for _char in &chars {
                     if let Some(h) = self.char_t_index.get_mut(_char) {
@@ -63,7 +59,7 @@ impl InvertedIndex {
             }
         }
         // Invert indexing the document
-        for (token, _) in &terms {
+        for token in terms.keys() {
             if let Some(posting) = self.index.get_mut(token) {
                 (*posting).push(doc_id); // works if the documents are indexed iteratively with increasing IDs.
             } else {

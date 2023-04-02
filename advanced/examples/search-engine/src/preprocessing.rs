@@ -20,16 +20,16 @@ pub fn character_ngram(word: &str, size: usize) -> HashSet<String> {
     n_grams
 }
 
-pub fn clean(doc: &Document) -> HashSet<&str> {
-    return doc.content().split(" ").collect();
-}
+// pub fn clean(doc: &Document) -> HashSet<&str> {
+//     return doc.content().split(" ").collect();
+// }
 fn is_not_punct(character: char) -> bool {
     !PUNCTUATION.contains(character)
 }
 
 pub fn preprocess(doc: &Document) -> HashMap<String, usize> {
     let mut content = doc.content().to_lowercase();
-    content.retain(|c| is_not_punct(c));
+    content.retain(is_not_punct);
     let content = content.split_whitespace().collect();
     let mut counter = Counter::new();
     counter.count(content)

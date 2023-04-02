@@ -12,6 +12,9 @@ impl Collection {
     pub fn len(&self) -> usize {
         self.data.len()
     }
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
     pub fn insert(&mut self, id: usize, doc: Document) {
         self.data.insert(id, doc);
     }
