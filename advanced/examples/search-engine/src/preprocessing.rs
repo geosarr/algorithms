@@ -33,7 +33,7 @@ pub fn preprocess(doc: &Document) -> HashMap<String, usize> {
         .replace("\n", " ")
         .replace("\t", " ")
         .to_lowercase();
-    content.retain(|c| !is_not_punct(c));
+    content.retain(|c| is_not_punct(c));
     let content = content.split(" ").collect();
     let mut counter = Counter::new();
     counter.count(content)
