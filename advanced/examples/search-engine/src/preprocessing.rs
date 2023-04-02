@@ -28,13 +28,9 @@ fn is_not_punct(character: char) -> bool {
 }
 
 pub fn preprocess(doc: &Document) -> HashMap<String, usize> {
-    let mut content = doc
-        .content()
-        .replace("\n", " ")
-        .replace("\t", " ")
-        .to_lowercase();
+    let mut content = doc.content().to_lowercase();
     content.retain(|c| is_not_punct(c));
-    let content = content.split(" ").collect();
+    let content = content.split_whitespace().collect();
     let mut counter = Counter::new();
     counter.count(content)
     // counter.into_hashmap()
