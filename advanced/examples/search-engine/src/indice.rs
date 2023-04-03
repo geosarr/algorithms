@@ -1,5 +1,5 @@
-use search::collection::{Collection, Document};
-use search::preprocessing::{character_ngram, preprocess};
+use crate::collection::{Collection, Document};
+use crate::preprocessing::{character_ngram, preprocess};
 use std::collections::{HashMap, HashSet};
 pub struct InvertedIndex {
     index: HashMap<String, Vec<usize>>, // stores the postings
