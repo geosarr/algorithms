@@ -3,27 +3,34 @@ use crate::constant::PUNCTUATION;
 use std::collections::{HashMap, HashSet};
 pub fn character_ngram(word: &str, size: usize) -> HashSet<String> {
     let _word = word.trim();
-    let n = _word.len();
+    // println!("word : {_word}\nlen = {}", _word.len());
+    let len_chars: Vec<_> = _word.chars().map(|ch| ch.len_utf8()).collect();
+    let n = len_chars.len();
     if n <= size {
-        return HashSet::from([_word.to_string()]);
+        return HashSet::from([word.to_string()]);
     }
-    let mut n_grams = HashSet::new();
+    let mut ngrams = HashSet::new();
+    let mut pos = 0;
+    let mut chars = _word.chars();
+    let mut i = 0;
+    // println!("len_chars = {}", len_chars.len());
     for i in 0..n - size + 1 {
-        let mut chars = _word[i..].chars();
-        let mut ngram = String::new();
-        for _ in i..i + size {
-            let _char = chars.next();
-            ngram.push(_char.expect("Failed to retrieve char."));
+        let mut len = 0;
+        for j in i..i + size {
+            len += len_chars[j]
         }
-        n_grams.insert(ngram);
+        let ngram = (&_word[pos..pos + len]).to_string();
+        // println!("{:?}", ngram);
+        ngrams.insert(ngram);
+        pos += len - len_chars[i + size - 1];
     }
-    n_grams
+    ngrams
 }
 
 // pub fn clean(doc: &Document) -> HashSet<&str> {
 //     return doc.content().split(" ").collect();
 // }
-fn is_not_punct(character: char) -> bool {
+pub fn is_not_punct(character: char) -> bool {
     !PUNCTUATION.contains(character)
 }
 

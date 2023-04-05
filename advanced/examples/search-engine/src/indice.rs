@@ -22,6 +22,13 @@ impl InvertedIndex {
         }
     }
 
+    pub fn init(include_char_index: bool, ngram: usize) -> Self {
+        let mut inv_index = Self::new();
+        inv_index.include_char_index = include_char_index;
+        inv_index.ngram = ngram;
+        inv_index
+    }
+
     pub fn index(&self) -> &HashMap<String, Vec<usize>> {
         &self.index
     }
@@ -30,11 +37,8 @@ impl InvertedIndex {
         &self.raw_freq
     }
 
-    pub fn init(include_char_index: bool, ngram: usize) -> Self {
-        let mut inv_index = Self::new();
-        inv_index.include_char_index = include_char_index;
-        inv_index.ngram = ngram;
-        inv_index
+    pub fn get_posting(&self, tok: &str) -> &Vec<usize> {
+        &self.index[tok]
     }
 
     pub fn index_document(&mut self, document: Document, collection: &mut Collection) {
@@ -43,8 +47,8 @@ impl InvertedIndex {
             collection.insert(doc_id, document);
         }
 
-        let terms = preprocess(collection.get_document(&doc_id)); // Either HashMap<tokens, usize>
-                                                                  // Character indexing the document
+        let terms = preprocess(collection.get_document(&doc_id));
+        // Character indexing the document
         if self.include_char_index {
             for term in terms.keys() {
                 let chars = character_ngram(term, self.ngram); // String, usize -> HashSet
