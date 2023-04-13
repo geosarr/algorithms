@@ -14,7 +14,7 @@ pub enum BQueryType {
 impl Boolean {
     pub fn new() -> Self {
         Self {
-            query_type: BQueryType::And,
+            query_type: BQueryType::Or,
         }
     }
     pub fn retrieve<'b, 'c>(
@@ -42,17 +42,23 @@ impl Boolean {
             vec![]
         }
     }
-
     fn union_many(list_posts: Vec<&Vec<usize>>) -> Vec<usize> {
-        panic!("WIP, not implemented yet");
-        vec![]
+        let mut rest = &list_posts[1..];
+        let mut result = list_posts[0];
+        let mut temp = Vec::new();
+        while !rest.is_empty() && !result.is_empty() {
+            let posting = rest[0];
+            temp = Self::union(result, posting);
+            result = &temp;
+            rest = &rest[1..];
+        }
+        return result.to_vec();
     }
-
     fn intersect_many(list_posts: Vec<&Vec<usize>>) -> Vec<usize> {
         // TODO: add sorting posting by incresing freq
         let mut rest = &list_posts[1..];
         let mut result = list_posts[0];
-        let mut temp = Vec::new();
+        let mut temp = Vec::with_capacity(result.len());
         while !rest.is_empty() && !result.is_empty() {
             let posting = rest[0];
             temp = Self::intersect(result, posting);
@@ -61,7 +67,38 @@ impl Boolean {
         }
         return result.to_vec();
     }
-    fn intersect<'b, 'c>(post1: &Vec<usize>, post2: &Vec<usize>) -> Vec<usize> {
+
+    fn union(post1: &Vec<usize>, post2: &Vec<usize>) -> Vec<usize> {
+        let mut p1 = 0;
+        let mut p2 = 0;
+        let n1 = post1.len();
+        let n2 = post2.len();
+        let mut result = Vec::with_capacity(n1 + n2);
+        while p1 < n1 && p2 < n2 {
+            if post1[p1] == post2[p2] {
+                result.push(post1[p1]);
+                p1 += 1;
+                p2 += 1;
+            } else if post1[p1] < post2[p2] {
+                result.push(post1[p1]);
+                p1 += 1;
+            } else {
+                result.push(post2[p2]);
+                p2 += 1;
+            }
+        }
+        while p1 < n1 {
+            result.push(post1[p1]);
+            p1 += 1;
+        }
+        while p2 < n2 {
+            result.push(post2[p2]);
+            p2 += 1;
+        }
+        return result;
+    }
+
+    fn intersect(post1: &Vec<usize>, post2: &Vec<usize>) -> Vec<usize> {
         let mut p1 = 0;
         let mut p2 = 0;
         let n1 = post1.len();
