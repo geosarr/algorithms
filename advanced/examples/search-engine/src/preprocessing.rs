@@ -133,8 +133,8 @@ impl PorterStemmer {
         // 'oo': V
         // 'n' : C
         // So form = [C,V,C,V,C] and form_str = CVCVC
-        let form = Vec::new();
-        let form_str = String::new();
+        let mut form = Vec::new();
+        let mut form_str = String::new();
         for i in 0..word.len() {
             if self.isConsonant(word, i) {
                 if i != 0 {

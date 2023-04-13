@@ -6,7 +6,7 @@ use std::io;
 #[derive(Parser)]
 #[command(about = "\nSearches among english Wikipedia abstracts.")]
 struct Cli {
-    /// Absolute path to the file with the integers of the problem
+    /// Absolute path to the xml.gz file containing the abstracts
     #[arg(short, long)]
     file_abs_path: String,
 
