@@ -1,4 +1,4 @@
-use basics::{
+use algods::{
     sort_algorithm::{BinaryHeapSort, InsertionSort},
     utils::Point,
 };

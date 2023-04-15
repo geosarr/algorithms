@@ -474,7 +474,7 @@ impl<T: Weight> FlowNetwork<T> {
         // run time complexity O(1)
         assert!(self.nb_vertices >= std::cmp::max(u, v));
         let forward_edge = FlowEdge::init(u, v, f, c);
-        let backward_edge = FlowEdge::init(v, u, f, c);
+        let backward_edge = FlowEdge::init(v, u, Weight::zero(), Weight::zero());
         // println!("{edge:?}");
         let is_new_u = self.data[u].insert(forward_edge);
         let is_new_v = self.data[v].insert(backward_edge);

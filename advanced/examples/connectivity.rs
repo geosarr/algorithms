@@ -1,4 +1,4 @@
-use basics::{search_algorithm::UnionFind, search_algorithm::UnionFindAlgorithm};
+use algods::{search_algorithm::UnionFind, search_algorithm::UnionFindAlgorithm};
 
 fn main() {
     // define n objects to connect, and an union-find algorithm
