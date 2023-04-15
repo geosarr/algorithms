@@ -393,31 +393,18 @@ impl<T: Weight> FlowEdge<T> {
     pub fn flow(&self) -> &T {
         &self.flow
     }
+    pub fn flow_mut(&mut self) -> &mut T {
+        &mut self.flow
+    }
 
     pub fn capacity(&self) -> &T {
         &self.capacity
     }
-
-    pub fn other(&self, vertex: &usize) -> &usize {
-        if vertex == self.from() {
-            self.to()
-        } else if vertex == self.to() {
-            self.from()
-        } else {
-            panic!("Illegal endpoint {vertex}")
-        }
-    }
 }
 
 impl<T: Weight> FlowEdge<T> {
-    pub fn residual_capacity_to(&self, vertex: &usize) -> T {
-        if vertex == self.from() {
-            self.flow
-        } else if vertex == self.to() {
-            self.capacity - self.flow
-        } else {
-            panic!("Illegal endpoint {vertex}")
-        }
+    pub fn residual_capacity(&self) -> T {
+        self.capacity - self.flow
     }
     pub fn add_residual_flow_to(&mut self, vertex: &usize, delta: T) {
         if vertex == self.from() {
@@ -434,7 +421,7 @@ pub struct FlowNetwork<T>
 where
     T: Weight,
 {
-    data: Vec<HashSet<FlowEdge<T>>>,
+    data: Vec<Vec<FlowEdge<T>>>,
     nb_edges: usize,
     nb_vertices: usize,
 }
@@ -454,7 +441,7 @@ impl<T: Weight> FlowNetwork<T> {
         graph.nb_vertices = nb_objects;
         graph.data = Vec::with_capacity(nb_objects);
         for _ in 0..nb_objects {
-            graph.data.push(HashSet::new());
+            graph.data.push(Vec::new());
         }
         graph
     }
@@ -469,24 +456,22 @@ impl<T: Weight> FlowNetwork<T> {
         self.nb_vertices
     }
     /// Adds a new edge of the graph
-    pub fn add_edge(&mut self, u: usize, v: usize, f: T, c: T) {
+    pub fn add_edge(&mut self, from: usize, to: usize, cap: T) {
         // adds an edge from v to w to the graph
         // run time complexity O(1)
-        assert!(self.nb_vertices >= std::cmp::max(u, v));
-        let forward_edge = FlowEdge::init(u, v, f, c);
-        let backward_edge = FlowEdge::init(v, u, Weight::zero(), Weight::zero());
-        // println!("{edge:?}");
-        let is_new_u = self.data[u].insert(forward_edge);
-        let is_new_v = self.data[v].insert(backward_edge);
-        if is_new_u || is_new_v {
-            // u --> v is a new directed edge
-            // or v --> u is a new directed edge
+        assert!(self.nb_vertices >= std::cmp::max(from, to));
+        let zero = Weight::zero();
+        let forward_edge = FlowEdge::init(from, to, zero, cap);
+        let backward_edge = FlowEdge::init(to, from, zero, zero);
+        if !self.data[from].contains(&forward_edge) {
+            self.data[from].push(forward_edge);
+            self.data[to].push(backward_edge);
             self.nb_edges += 1;
         }
     }
     /// Adds a new vertex to the graph
     pub fn add_vertex(&mut self) {
-        self.data.push(HashSet::new());
+        self.data.push(Vec::new());
         self.nb_vertices += 1;
     }
     /// Returns an immutable reference to the set of edges
@@ -495,6 +480,12 @@ impl<T: Weight> FlowNetwork<T> {
         // that is the adjacent vertices of v
         // run time complexity O(1)
         self.data[*v].iter().collect::<Vec<&FlowEdge<T>>>()
+    }
+    pub fn vertex_edges_mut(&mut self, v: &usize) -> std::slice::IterMut<'_, FlowEdge<T>> {
+        // gets all the vertices linked to a given vertex v,
+        // that is the adjacent vertices of v
+        // run time complexity O(1)
+        self.data[*v].iter_mut()
     }
     /// Gives the number of vertices a vertex point to
     pub fn out_degree(&self, v: &usize) -> usize {
