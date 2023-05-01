@@ -1,7 +1,7 @@
 //! # Basic algorithms and data structures
 //!
-//! `basics` is a collection of some classic algorithms and data structures
-//! that can be used as basis for complex programs.
+//! `algods` is a collection of some classic algorithms and data structures
+//! that can be used as basis for more complex programs.
 
 /// This module regroups implementations of classical graph structures
 /// and some classical processing algorithms
