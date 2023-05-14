@@ -18,7 +18,7 @@ impl<T> MergeSort<T> {
     /// Creates a new merge sort instance from a `Vec` and a merge sort algorithm
     /// (recursive or iterative (i.e bottom-up))
     /// ```
-    /// use algods::sort_algorithm::{MergeSort, MergeSortAlgorithm};
+    /// use algods::sort::{MergeSort, MergeSortAlgorithm};
     /// let ms = MergeSort::init(vec![100, 20, 9, 17], MergeSortAlgorithm::BottomUp);
     /// ```
     pub fn init(v: Vec<T>, algorithm: MergeSortAlgorithm) -> Self {
@@ -79,7 +79,7 @@ impl<T: Ord + Clone> MergeSort<T> {
 
     /// Sorts a `Vec` using merge sort algorithm. It moves the MergeSort.
     /// ```
-    /// use algods::sort_algorithm::{MergeSort, MergeSortAlgorithm};
+    /// use algods::sort::{MergeSort, MergeSortAlgorithm};
     /// let mut v = vec![10, 20, 9, 17];
     /// let ms = MergeSort::init(v.clone(), MergeSortAlgorithm::Recursive);
     /// v.sort_unstable();

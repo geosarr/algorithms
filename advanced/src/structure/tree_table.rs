@@ -137,13 +137,11 @@ impl<T: Ord, U> BinarySearchTree<T, U> {
     fn put(node: &mut Option<Box<Node<T, U>>>, key: T, value: U) {
         match node {
             None => *node = Some(Box::new(Node::init(key, value))),
-            Some(ref mut nod) => {
-                match key.cmp(&nod.key) {
-                    Ordering::Less => Self::put(&mut nod.left, key, value),
-                    Ordering::Greater => Self::put(&mut nod.right, key, value),
-                    Ordering::Equal => nod.value = value,
-                }
-            }
+            Some(ref mut nod) => match key.cmp(&nod.key) {
+                Ordering::Less => Self::put(&mut nod.left, key, value),
+                Ordering::Greater => Self::put(&mut nod.right, key, value),
+                Ordering::Equal => nod.value = value,
+            },
         }
     }
     pub fn insert(&mut self, key: T, value: U) {

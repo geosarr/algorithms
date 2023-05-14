@@ -10,14 +10,14 @@ pub mod graph;
 /// This module contains data compression algorithms
 pub mod compression;
 
-/// Encompasses some basic structures
-pub mod data_structure;
+/// Encompasses some basic data structures
+pub mod structure;
 
 /// Regroups some classic search algorithms
-pub mod search_algorithm;
+pub mod search;
 
 /// Regroups some classic sort algorithms
-pub mod sort_algorithm;
+pub mod sort;
 
 /// Regroups a collection of useful objects
 pub mod utils;

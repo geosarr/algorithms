@@ -1,4 +1,4 @@
-use algods::{search_algorithm::UnionFindAlgorithm, utils::PercolationStats};
+use algods::{search::UnionFindAlgorithm, utils::PercolationStats};
 use clap::Parser;
 
 #[derive(Parser)]

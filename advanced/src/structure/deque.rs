@@ -6,7 +6,7 @@ use std::collections::LinkedList;
 /// Implementation of deques with the standard library
 /// # Examples
 /// ```
-/// use algods::data_structure::deque::LinkedListDeque;
+/// use algods::structure::deque::LinkedListDeque;
 /// let mut deque = LinkedListDeque::new();
 /// assert_eq!(deque.len(), 0);
 /// deque.add_first(0);
@@ -26,7 +26,7 @@ impl<T> LinkedListDeque<T> {
     /// Creates an empty deque instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let deque = LinkedListDeque::<usize>::new();
     /// assert_eq!(deque.len(), 0);
     /// ```
@@ -39,7 +39,7 @@ impl<T> LinkedListDeque<T> {
     /// Creates a new deque with an initial object.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let deque = LinkedListDeque::init("deque");
     /// assert_eq!(deque.len(), 1);
     /// ```
@@ -54,7 +54,7 @@ impl<T> LinkedListDeque<T> {
     /// Tests whether or not the deque is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let deque = LinkedListDeque::<usize>::new();
     /// assert!(deque.is_empty());
     /// ```
@@ -65,7 +65,7 @@ impl<T> LinkedListDeque<T> {
     /// Gives the number of objects in the deque.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let deque = LinkedListDeque::<isize>::new();
     /// assert_eq!(deque.len(),0);
     /// ```
@@ -76,7 +76,7 @@ impl<T> LinkedListDeque<T> {
     /// Inserts an object at the beginning of the deque.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let mut deque = LinkedListDeque::<isize>::new();
     /// deque.add_first(-1);
     /// deque.add_first(-2);
@@ -89,7 +89,7 @@ impl<T> LinkedListDeque<T> {
     /// Inserts an object at the end of the deque.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let mut deque = LinkedListDeque::<isize>::new();
     /// deque.add_last(-1);
     /// deque.add_last(-2);
@@ -103,7 +103,7 @@ impl<T> LinkedListDeque<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let mut deque = LinkedListDeque::init(1);
     /// deque.add_last(0);
     /// deque.add_last(1);
@@ -117,7 +117,7 @@ impl<T> LinkedListDeque<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::deque::LinkedListDeque;
+    /// use algods::structure::deque::LinkedListDeque;
     /// let mut deque = LinkedListDeque::init(1);
     /// deque.add_last(0);
     /// deque.add_last(1);

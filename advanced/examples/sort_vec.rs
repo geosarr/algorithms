@@ -1,5 +1,5 @@
 use algods::{
-    sort_algorithm::{BinaryHeapSort, InsertionSort},
+    sort::{BinaryHeapSort, InsertionSort},
     utils::Point,
 };
 

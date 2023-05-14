@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-use crate::search_algorithm::binary_search;
+use crate::search::binary_search;
 
 pub struct ThreeSum {
     // Solves the problem find among distincts values a1, a2, .., an,

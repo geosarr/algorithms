@@ -8,7 +8,7 @@ use std::collections::LinkedList;
 /// with the standard library
 /// # Examples
 /// ```
-/// use algods::data_structure::queue::LinkedListQueue;
+/// use algods::structure::queue::LinkedListQueue;
 /// let mut queue = LinkedListQueue::new();
 /// assert_eq!(queue.len(), 0);
 /// queue.enqueue(0);
@@ -28,7 +28,7 @@ impl<T> LinkedListQueue<T> {
     /// Creates an empty queue instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let queue = LinkedListQueue::<usize>::new();
     /// assert_eq!(queue.len(), 0);
     /// ```
@@ -41,7 +41,7 @@ impl<T> LinkedListQueue<T> {
     /// Creates a new queue with an initial object.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let queue = LinkedListQueue::init("queue");
     /// assert_eq!(queue.len(), 1);
     /// ```
@@ -56,7 +56,7 @@ impl<T> LinkedListQueue<T> {
     /// Tests whether or not the queue is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let queue = LinkedListQueue::<usize>::new();
     /// assert!(queue.is_empty());
     /// ```
@@ -67,7 +67,7 @@ impl<T> LinkedListQueue<T> {
     /// Gives the number of objects in the queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let queue = LinkedListQueue::<isize>::new();
     /// assert_eq!(queue.len(),0);
     /// ```
@@ -79,7 +79,7 @@ impl<T> LinkedListQueue<T> {
     /// Otherwise, it returns `None`.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let mut queue = LinkedListQueue::init(1);
     /// assert_eq!(queue.dequeue(), Some(1));
     /// ```
@@ -90,7 +90,7 @@ impl<T> LinkedListQueue<T> {
     /// Inserts an object at the end the queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::queue::LinkedListQueue;
+    /// use algods::structure::queue::LinkedListQueue;
     /// let mut queue = LinkedListQueue::<isize>::new();
     /// queue.enqueue(-1);
     /// queue.enqueue(-2);

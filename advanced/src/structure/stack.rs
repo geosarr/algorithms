@@ -30,7 +30,7 @@ impl<T> Node<T> {
 /// Implementation of the First In Last Out concept, relatively from scratch
 /// # Examples
 /// ```
-/// use algods::data_structure::stack::Stack;
+/// use algods::structure::stack::Stack;
 /// let mut stack = Stack::new();
 /// assert_eq!(stack.len(), 0);
 /// stack.push(0);
@@ -50,7 +50,7 @@ impl<T> Stack<T> {
     /// Creates an empty stack instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let stack = Stack::<usize>::new();
     /// assert_eq!(stack.len(), 0);
     /// ```
@@ -65,7 +65,7 @@ impl<T> Stack<T> {
     /// Creates a new stack with an initial object.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let stack = Stack::init("stack");
     /// assert_eq!(stack.len(), 1);
     /// ```
@@ -85,7 +85,7 @@ impl<T> Stack<T> {
     /// i.e the last element inserted in the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let stack = Stack::init("0");
     /// assert_eq!(stack.get_first().as_ref().unwrap().get_item().clone(), "0");
     /// ```
@@ -96,7 +96,7 @@ impl<T> Stack<T> {
     /// Gives a mutable reference to the last element inserted in the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let mut stack = Stack::init("0");
     /// let mut mut_ref_first = stack.get_mut_first();
     /// if let Some(ref mut node) = mut_ref_first{
@@ -111,7 +111,7 @@ impl<T> Stack<T> {
     /// Tests whether or not the stack is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let stack = Stack::<usize>::new();
     /// assert!(stack.is_empty());
     /// ```
@@ -123,7 +123,7 @@ impl<T> Stack<T> {
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let stack = Stack::<isize>::new();
     /// assert_eq!(stack.len(),0);
     /// ```
@@ -139,7 +139,7 @@ impl<T: Clone> Stack<T> {
     /// When there is no element in the stack, it panics.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let mut stack = Stack::init(1);
     /// assert_eq!(stack.pop(), Some(1));
     /// ```
@@ -160,7 +160,7 @@ impl<T: Clone> Stack<T> {
     /// Inserts an object into the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::Stack;
+    /// use algods::structure::stack::Stack;
     /// let mut stack = Stack::<isize>::new();
     /// stack.push(-1);
     /// stack.push(-2);
@@ -181,7 +181,7 @@ impl<T: Clone> Stack<T> {
 /// Implementation of stacks using the standard library
 /// # Examples
 /// ```
-/// use algods::data_structure::stack::LinkedListStack;
+/// use algods::structure::stack::LinkedListStack;
 /// let mut stack = LinkedListStack::new();
 /// assert_eq!(stack.len(), 0);
 /// stack.push(0);
@@ -204,7 +204,7 @@ impl<T> LinkedListStack<T> {
     /// Creates an empty stack instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let stack = LinkedListStack::<usize>::new();
     /// assert_eq!(stack.len(), 0);
     /// ```
@@ -217,7 +217,7 @@ impl<T> LinkedListStack<T> {
     /// Creates a new stack with an initial object.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let stack = LinkedListStack::init("stack");
     /// assert_eq!(stack.len(), 1);
     /// ```
@@ -232,7 +232,7 @@ impl<T> LinkedListStack<T> {
     /// Tests whether or not the stack is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let stack = LinkedListStack::<usize>::new();
     /// assert!(stack.is_empty());
     /// ```
@@ -243,7 +243,7 @@ impl<T> LinkedListStack<T> {
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let stack = LinkedListStack::<isize>::new();
     /// assert_eq!(stack.len(),0);
     /// ```
@@ -255,7 +255,7 @@ impl<T> LinkedListStack<T> {
     /// Otherwise it returns `None`.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let mut stack = LinkedListStack::init(1);
     /// assert_eq!(stack.pop(), Some(1));
     /// ```
@@ -266,7 +266,7 @@ impl<T> LinkedListStack<T> {
     /// Inserts an object into the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::LinkedListStack;
+    /// use algods::structure::stack::LinkedListStack;
     /// let mut stack = LinkedListStack::<isize>::new();
     /// stack.push(-1);
     /// stack.push(-2);
@@ -281,7 +281,7 @@ impl<T> LinkedListStack<T> {
 /// capacity doubling when full and size halving when 25% full
 /// # Examples
 /// ```
-/// use algods::data_structure::stack::VecStack;
+/// use algods::structure::stack::VecStack;
 /// let mut stack = VecStack::<usize>::new();
 /// assert_eq!(stack.len(), 0);
 /// stack.push(0);
@@ -307,7 +307,7 @@ impl<T> VecStack<T> {
     /// Creates an empty stack instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let stack = VecStack::<usize>::new();
     /// assert_eq!(stack.len(), 0);
     /// ```
@@ -323,7 +323,7 @@ impl<T> VecStack<T> {
     /// If `capacity = 0`, then it panics.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let stack = VecStack::<usize>::with_capacity(2);
     /// assert_eq!(stack.len(), 0);
     /// ```
@@ -344,7 +344,7 @@ impl<T> VecStack<T> {
     /// Tests whether or not the stack is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let stack = VecStack::<usize>::new();
     /// assert!(stack.is_empty());
     /// ```
@@ -356,7 +356,7 @@ impl<T> VecStack<T> {
     /// Gives the number of objects in the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let stack = VecStack::<isize>::new();
     /// assert_eq!(stack.len(),0);
     /// ```
@@ -367,7 +367,7 @@ impl<T> VecStack<T> {
     /// Inserts an object into the stack.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let mut stack = VecStack::<isize>::new();
     /// stack.push(-1);
     /// stack.push(-2);
@@ -395,7 +395,7 @@ impl<T> VecStack<T> {
     /// When there is no element in the stack, it panics.
     /// # Example
     /// ```
-    /// use algods::data_structure::stack::VecStack;
+    /// use algods::structure::stack::VecStack;
     /// let mut stack = VecStack::new();
     /// stack.push(1);
     /// stack.push(0);

@@ -11,7 +11,7 @@ pub struct InsertionSort<T> {
 impl<T: Clone + Ord> InsertionSort<T> {
     /// Creates a new insertion sort instance from a `Vec`
     /// ```
-    /// use algods::sort_algorithm::InsertionSort;
+    /// use algods::sort::InsertionSort;
     /// let i_s = InsertionSort::init(vec![100, 20, 9, 17]);
     /// ```
     pub fn init(v: Vec<T>) -> Self {
@@ -20,7 +20,7 @@ impl<T: Clone + Ord> InsertionSort<T> {
 
     /// Sorts a `Vec` using insertion sort algorithm. It moves the InsertionSort.
     /// ```
-    /// use algods::sort_algorithm::InsertionSort;
+    /// use algods::sort::InsertionSort;
     /// let mut v = vec![100, 20, 9, 17];
     /// let i_s = InsertionSort::init(v.clone());
     /// v.sort_unstable();

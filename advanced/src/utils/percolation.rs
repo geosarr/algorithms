@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod unit_test;
-pub use crate::search_algorithm::{UnionFind, UnionFindAlgorithm};
+pub use crate::search::{UnionFind, UnionFindAlgorithm};
 use rand::prelude::*;
 use std::collections::HashMap;
 use std::thread;

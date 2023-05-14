@@ -8,7 +8,7 @@ use std::mem::replace;
 /// Implementation of priority queues with the standard library
 /// # Examples
 /// ```
-/// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+/// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
 /// let mut bhqueue = BinaryHeapPriorityQueue::with_capacity(3);
 /// assert_eq!(bhqueue.len(), 0);
 /// bhqueue.insert(0);
@@ -34,7 +34,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Creates an empty priority queue instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let bhqueue = BinaryHeapPriorityQueue::<usize>::new();
     /// assert_eq!(bhqueue.len(), 0);
     /// ```
@@ -47,7 +47,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Creates a new empty priority queue with an initial size.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let bhqueue = BinaryHeapPriorityQueue::<&str>::with_capacity(1);
     /// assert_eq!(bhqueue.len(), 0);
     /// ```
@@ -60,7 +60,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Tests whether or not the priority queue is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let mut bhqueue = BinaryHeapPriorityQueue::<usize>::new();
     /// bhqueue.insert(1);
     /// assert!(!bhqueue.is_empty());
@@ -72,7 +72,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Gives the number of objects in the priority queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let mut bhqueue = BinaryHeapPriorityQueue::<isize>::new();
     /// bhqueue.insert(-1);
     /// bhqueue.insert(-2);
@@ -86,7 +86,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Inserts an object into the priority queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let mut bhqueue = BinaryHeapPriorityQueue::<isize>::new();
     /// bhqueue.insert(-1);
     /// bhqueue.insert(-2);
@@ -101,7 +101,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let mut bhqueue = BinaryHeapPriorityQueue::new();
     /// bhqueue.insert(0);
     /// bhqueue.insert(1);
@@ -116,7 +116,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::BinaryHeapPriorityQueue;
+    /// use algods::structure::priority_queue::BinaryHeapPriorityQueue;
     /// let mut bhqueue = BinaryHeapPriorityQueue::new();
     /// bhqueue.insert(0);
     /// bhqueue.insert(1);
@@ -132,7 +132,7 @@ impl<T: Ord> BinaryHeapPriorityQueue<T> {
 /// Implementation of priority queues using a `Vec` structure
 /// # Examples
 /// ```
-/// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+/// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
 /// let mut bhqueue = PriorityQueue::with_capacity(3, PriorityQueueKind::Max);
 /// assert_eq!(bhqueue.len(), 0);
 /// bhqueue.insert(0);
@@ -167,7 +167,7 @@ impl<T> PriorityQueue<T> {
     /// If `capacity = 0`, then it panics.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let bhqueue = PriorityQueue::<&str>::with_capacity(1, PriorityQueueKind::Min);
     /// assert_eq!(bhqueue.len(), 0);
     /// ```
@@ -192,7 +192,7 @@ impl<T> PriorityQueue<T> {
     /// Tests whether or not the priority queue is empty.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let mut bhqueue = PriorityQueue::<usize>::with_capacity(1, PriorityQueueKind::Min);
     /// bhqueue.insert(1);
     /// assert!(!bhqueue.is_empty());
@@ -204,7 +204,7 @@ impl<T> PriorityQueue<T> {
     /// Gives the number of objects in the priority queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
     /// bhqueue.insert(-1);
     /// bhqueue.insert(-2);
@@ -222,7 +222,7 @@ impl<T> PriorityQueue<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
     /// bhqueue.insert(0);
     /// bhqueue.insert(1);
@@ -278,7 +278,7 @@ impl<T: Ord + Clone> PriorityQueue<T> {
     /// Inserts an object into the priority queue.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
     /// bhqueue.insert(-1);
     /// bhqueue.insert(-2);
@@ -354,7 +354,7 @@ impl<T: Ord + Clone> PriorityQueue<T> {
     /// Returns `None` otherwise.
     /// # Example
     /// ```
-    /// use algods::data_structure::priority_queue::{PriorityQueue, PriorityQueueKind};
+    /// use algods::structure::priority_queue::{PriorityQueue, PriorityQueueKind};
     /// let mut bhqueue = PriorityQueue::<isize>::with_capacity(3, PriorityQueueKind::Min);
     /// bhqueue.insert(0);
     /// bhqueue.insert(1);

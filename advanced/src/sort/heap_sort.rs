@@ -12,7 +12,7 @@ pub struct BinaryHeapSort<T> {
 impl<T: Ord> BinaryHeapSort<T> {
     /// Creates a new binary heap instance from a `Vec`
     /// ```
-    /// use algods::sort_algorithm::BinaryHeapSort;
+    /// use algods::sort::BinaryHeapSort;
     /// let bhs = BinaryHeapSort::init(vec![10, 20, 9, 17]);
     /// ```
     pub fn init(v: Vec<T>) -> Self {
@@ -23,7 +23,7 @@ impl<T: Ord> BinaryHeapSort<T> {
 
     /// Sorts a `Vec` using heap sort algorithm. It moves the BinaryHeapSort.
     /// ```
-    /// use algods::sort_algorithm::BinaryHeapSort;
+    /// use algods::sort::BinaryHeapSort;
     /// let mut v = vec![10, 20, 9, 17];
     /// let bhs = BinaryHeapSort::init(v.clone());
     /// v.sort_unstable();
@@ -43,7 +43,7 @@ pub struct HeapSort<T> {
 impl<T: Default + Clone> HeapSort<T> {
     /// Creates a new binary heap instance from a `Vec`
     /// ```
-    /// use algods::sort_algorithm::HeapSort;
+    /// use algods::sort::HeapSort;
     /// let bhs = HeapSort::init(vec![10, 20, 9, 17]);
     /// ```
     pub fn init(mut v: Vec<T>) -> Self {
@@ -100,7 +100,7 @@ impl<T: Ord + Clone> HeapSort<T> {
 
     /// Sorts a `Vec` using heap sort algorithm. It moves the HeapSort.
     /// ```
-    /// use algods::sort_algorithm::HeapSort;
+    /// use algods::sort::HeapSort;
     /// let mut v = vec![10, 20, 9, 17];
     /// let bhs = HeapSort::init(v.clone());
     /// v.sort_unstable();

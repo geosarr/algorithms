@@ -1,13 +1,13 @@
 #[cfg(test)]
 mod unit_test;
-use crate::data_structure::stack::Stack;
+use crate::structure::stack::Stack;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 /// Implementation of a separate chaining based symbol table
 /// # Example
 /// ```
-/// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+/// use algods::structure::hash_table::SeparateChainingSymbolTable;
 /// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
 /// st.insert(0, "0");
 /// st.insert(1, "1");
@@ -37,7 +37,7 @@ impl<T, U> SeparateChainingSymbolTable<T, U> {
     /// Gives the number of (key, value) pairs in the symbol table.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let mut st = SeparateChainingSymbolTable::<isize, usize>::new();
     /// st.insert(-2, 3);
     /// assert_eq!(st.len(), 1);
@@ -49,7 +49,7 @@ impl<T, U> SeparateChainingSymbolTable<T, U> {
     /// Indicates whether or not the symbol table is empty
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let mut st = SeparateChainingSymbolTable::<isize, usize>::new();
     /// st.insert(-1, 10);
     /// assert!(!st.is_empty());
@@ -87,7 +87,7 @@ impl<T: Hash + Clone, U: Clone> SeparateChainingSymbolTable<T, U> {
     /// Creates an empty symbol table instance.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let st = SeparateChainingSymbolTable::<usize, usize>::new();
     /// assert_eq!(st.len(), 0);
     /// ```
@@ -102,7 +102,7 @@ impl<T: Hash + Clone, U: Clone> SeparateChainingSymbolTable<T, U> {
     /// Creates a new symbol table from an initial (key, value) pair.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let st = SeparateChainingSymbolTable::init(1, 0, "sep_chain");
     /// assert_eq!(st.len(), 1);
     /// ```
@@ -123,7 +123,7 @@ impl<T: Hash + Clone + Eq, U: Clone + Eq> SeparateChainingSymbolTable<T, U> {
     /// Inserts a (key, value) pair into the symbol table.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let mut st = SeparateChainingSymbolTable::<isize, isize>::new();
     /// st.insert(1, -3);
     /// st.insert(-2, 10);
@@ -157,7 +157,7 @@ impl<T: Eq + Hash, U: Eq> SeparateChainingSymbolTable<T, U> {
     /// Tests whether or not the symbol table contains a given key.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
     /// st.insert(1, "1");
     /// assert!(st.contains(&1));
@@ -170,7 +170,7 @@ impl<T: Eq + Hash, U: Eq> SeparateChainingSymbolTable<T, U> {
     /// Otherwise returns `None`.
     /// # Example
     /// ```
-    /// use algods::data_structure::hash_symbol_table::SeparateChainingSymbolTable;
+    /// use algods::structure::hash_table::SeparateChainingSymbolTable;
     /// let mut st = SeparateChainingSymbolTable::<usize, &str>::new();
     /// st.insert(1, "1");
     /// assert_eq!(st.get(&1), Some(&"1"));

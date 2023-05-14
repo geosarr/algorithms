@@ -1,4 +1,4 @@
-use crate::sort_algorithm::InsertionSort;
+use crate::sort::InsertionSort;
 use crate::utils::{LineSegment, Point, Segment};
 // use std::collections::HashSet;
 

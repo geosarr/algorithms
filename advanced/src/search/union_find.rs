@@ -8,7 +8,7 @@ use std::path::Path;
 /// Implementation of union-find algorithms
 /// # Examples
 /// ```
-/// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+/// use algods::search::{UnionFind, UnionFindAlgorithm};
 /// let mut uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickUnion);
 /// uf.union(0, 1);
 /// uf.union(2, 3);
@@ -43,7 +43,7 @@ impl UnionFind {
     /// Creates a union find instance with one object, with a `QuickFind` algorithm.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let uf = UnionFind::new();
     /// assert_eq!(uf.len(), 1);
     /// assert_eq!(uf.algo(), UnionFindAlgorithm::QuickFind);
@@ -79,7 +79,7 @@ impl UnionFind {
     /// Returns the algorithm of a union find instance.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let uf = UnionFind::with_capacity(2, UnionFindAlgorithm::QuickUnion);
     /// assert_eq!(uf.algo(), UnionFindAlgorithm::QuickUnion);
     /// ```
@@ -90,7 +90,7 @@ impl UnionFind {
     /// Gives the number of objects collected.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickUnion);
     /// assert_eq!(uf.len(), 4);
     /// ```
@@ -101,7 +101,7 @@ impl UnionFind {
     /// Indicates whether or not a union find instance is empty
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let uf = UnionFind::with_capacity(0, UnionFindAlgorithm::QuickUnion);
     /// assert_eq!(uf.len(), 0);
     /// ```
@@ -115,7 +115,7 @@ impl UnionFind {
     /// It panics if the ids are not positive integers.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let uf = UnionFind::from_file("file_path", ';', UnionFindAlgorithm::QuickFind);
     /// ```
     pub fn from_file<P>(filename: P, sep: char, algo: UnionFindAlgorithm) -> Self
@@ -159,7 +159,7 @@ impl UnionFind {
     /// For the others, the value returned is the parent or the great parent or a great great .. parent.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let mut uf = UnionFind::with_capacity(2, UnionFindAlgorithm::WeightedQuickUnion);
     /// uf.union(0, 1);
     /// assert_eq!(uf.root(0), uf.root(1));
@@ -191,7 +191,7 @@ impl UnionFind {
     /// Indicates whether or not two objects in a union find instance are connected.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let mut uf = UnionFind::with_capacity(2, UnionFindAlgorithm::WeightedQuickUnion);
     /// uf.union(0, 1);
     /// assert!(uf.connected(0, 1));
@@ -215,7 +215,7 @@ impl UnionFind {
     /// Connects two objects of a union find algorithm.
     /// # Example
     /// ```
-    /// use algods::search_algorithm::{UnionFind, UnionFindAlgorithm};
+    /// use algods::search::{UnionFind, UnionFindAlgorithm};
     /// let mut uf = UnionFind::with_capacity(4, UnionFindAlgorithm::QuickFind);
     /// uf.union(0, 1);
     /// uf.union(2, 3);

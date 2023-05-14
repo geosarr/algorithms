@@ -16,7 +16,7 @@ pub struct QuickSort<T> {
 impl<T: Ord + Clone> QuickSort<T> {
     /// Creates a new quick sort instance from a `Vec`.
     /// ```
-    /// use algods::sort_algorithm::QuickSort;
+    /// use algods::sort::QuickSort;
     /// let ms = QuickSort::init(vec![100, 20, 9, 17]);
     /// ```
     pub fn init(v: Vec<T>) -> Self {
@@ -83,7 +83,7 @@ impl<T: Ord + Clone> QuickSort<T> {
 
     /// Sorts a `Vec` using quick sort algorithm. It moves the QuickSort.
     /// ```
-    /// use algods::sort_algorithm::QuickSort;
+    /// use algods::sort::QuickSort;
     /// let mut v = vec![100, 20, 9, 17];
     /// let qs = QuickSort::init(v.clone());
     /// v.sort_unstable();
@@ -97,7 +97,7 @@ impl<T: Ord + Clone> QuickSort<T> {
     /// Selects the kth largest element in the `Vec` instantiating the QuickSort using the
     /// quick select algorithm
     /// ```
-    /// use algods::sort_algorithm::QuickSort;
+    /// use algods::sort::QuickSort;
     /// let mut qs = QuickSort::init(vec![30, 13, 90, 50, 47, 100]);
     /// assert_eq!(qs.select(3), 50);
     /// ```
